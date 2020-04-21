@@ -3,7 +3,7 @@
 #$ -cwd
 #$ -l cuda=1
 #$ -l nv_mem_free=1.8G
-
+#$ -pe default 2
 #$ -l h_rt=1:30:00
 #$ -l hostname=!picture
 #$ -N log_test
