@@ -1,0 +1,46 @@
+#!/bin/bash
+#$ -l mem=6G
+#$ -cwd
+#$ -l cuda=1
+#$ -l nv_mem_free=1.8G
+
+#$ -l h_rt=1:30:00
+#$ -l hostname=!picture
+#$ -N log_test
+
+echo " Start of SGE job " 
+echo "$date"
+# Identify Job-ID
+echo ""
+echo "Hostname"
+echo "$HOSTNAME"
+echo 'Job-ID:'
+echo $JOB_ID
+echo 'user:'
+echo $USER
+echo ""
+echo "Start"
+echo ""
+
+setup_file=test.py
+export SCRATCH_WD_21="/net/projects/scratch/summer/valid_until_31_January_2021/sgroen"
+export PYTHONPATH=$SCRATCH_WD_21:$PYTHONPATH
+source $SCRATCH_WD_21/miniconda/bin/activate torch
+pip list
+
+echo "INFOS:"
+echo "Pythonpath:"
+echo $PYTHONPATH
+echo "PWD: "
+echo $PWD
+echo ""
+echo "scratch_wd: "
+echo $SCRATCH_WD_21
+echo ""
+
+echo "RUNNING: " $setup_file
+
+
+
+python $setup_file
+

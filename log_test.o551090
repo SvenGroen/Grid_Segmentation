@@ -1,0 +1,27 @@
+ Start of SGE job 
+
+
+Hostname
+cippy10.cogsci.uni-osnabrueck.de
+Job-ID:
+551090
+user:
+sgroen
+
+Start
+
+RUNNING:  /net/projects/scratch/summer/valid_until_31_January_2021/sgroen/Git_Repos/Grid_Segmentation/code/preprocessing/video_preprocessing.py
+Current Environemt:  torch
+
+
+Home Path:  /home/student/s/sgroen
+
+
+Home Path resolve():  /net/home/student/s/sgroen
+
+
+Home Path absolute():  /home/student/s/sgroen
+
+
+Current WD:  /net/projects/scratch/summer/valid_until_31_January_2021/sgroen/Git_Repos/Grid_Segmentation
+Video-file:  data/Videos/Examples/Asiatin_final.mp4
