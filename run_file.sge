@@ -1,12 +1,12 @@
 #!/bin/bash
-#$ -l mem=6G
+#$ -l mem=25G
 #$ -cwd
 #$ -l cuda=1
-#$ -l nv_mem_free=1.8G
+#$ -l nv_mem_free=2.8G
 #$ -pe default 2
 #$ -l h_rt=1:30:00
 #$ -l hostname=!picture
-#$ -N log_test
+#$ -N ann_train
 
 echo " Start of SGE job " 
 echo "$date"
@@ -22,7 +22,7 @@ echo ""
 echo "Start"
 echo ""
 
-setup_file=$PWD/code/preprocessing/video_preprocessing.py
+setup_file=code/train.py
 env_name=torch
 #Scratch_wd_21 is a variable that stores the path to my scratch folder in which i installed anaconda
 export SCRATCH_WD_21="/net/projects/scratch/summer/valid_until_31_January_2021/sgroen"
