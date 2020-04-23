@@ -7,7 +7,7 @@ import cv2
 import numpy as np
 from tqdm import tqdm
 from models.custom.simple_models.simple_models import ConvSame_3_net
-from DataLoader.Datasets.Examples.NY import *
+from DataLoader.Datasets.Examples.NY.NY import *
 from pathlib import Path
 
 # Model, Dataset, train_loader, Learning Parameters
