@@ -29,8 +29,8 @@ for vid in vid_path.glob("*.mp4"):
         fname = str(name) +"_"+ str(frame_count).zfill(num_filler) + ".jpg"
         if ret:
             label = (np.any(frame, axis=2, keepdims=False) * 255.)
-            cv2.imwrite(str(frame_path) + "\\"+ fname, frame)
-            cv2.imwrite(str(label_path) + "\\"+ fname , label)
+            cv2.imwrite(str(frame_path) + "/"+ fname, frame)
+            cv2.imwrite(str(label_path) + "/"+ fname , label)
             frame_count += 1
         else:
             break

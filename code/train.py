@@ -3,24 +3,25 @@ from torch import nn
 import torch
 import torchvision
 import torch.optim as optim
-import cv2
-import numpy as np
 from tqdm import tqdm
 from models.custom.simple_models.simple_models import ConvSame_3_net
 from DataLoader.Datasets.Examples.NY.NY import *
 from pathlib import Path
+print("Python Script Start")
+
 
 # Model, Dataset, train_loader, Learning Parameters
 net = ConvSame_3_net()    # <--- SET MODEL
+print("loading Dataset")
 dataset =  Example_NY()                 # <--- SET DATASET
 print("Dataset Loaded")
-batch_size = 2                          # <--- SET BATCHSIZE
+batch_size = 10                          # <--- SET BATCHSIZE
 lr = 1e-4                               # <--- SET LEARNINGRATE
 num_epochs = 1                         # <--- SET NUMBER OF EPOCHS
 
 
 train_loader = DataLoader(dataset=dataset, batch_size=batch_size)
-train_name = "ConvSame_3_net_bs" + str(batch_size) + "_lr" + str(lr) + "_ep" + str(num_epochs) # sets name of model based on parameters
+train_name = "ConvSame_3_net_bs" + str(batch_size) + "_lr" + str(lr) + "_ep" + str(num_epochs) + "_Version_2" # sets name of model based on parameters
 model_save_path = Path("code/models/custom/simple_models/trained_models") # <--- SET PATH WHERE MODEL WILL BE SAVED
 model_save_path = Path.cwd() / model_save_path / train_name
 
@@ -31,7 +32,12 @@ loss_criterion = nn.NLLLoss()
 # Flags
 LOAD_PREV_MODEL = False
 
+print("Cuda information: ")
+print("cuda_current device:{}; device_count:{}; is_available{}; is_initialized:{};".format(torch.cuda.current_device(),torch.cuda.device_count(), torch.cuda.is_available(), torch.cuda.is_initialized()))
+print("END OF CUDA INFORMATION")
 
+
+ 
 
 # Load previous model state if needed
 if LOAD_PREV_MODEL:

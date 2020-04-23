@@ -22,7 +22,7 @@ echo ""
 echo "Start"
 echo ""
 
-setup_file=test.py
+setup_file=code/test.py
 export SCRATCH_WD_21="/net/projects/scratch/summer/valid_until_31_January_2021/sgroen"
 export PYTHONPATH=$SCRATCH_WD_21:$PYTHONPATH
 source $SCRATCH_WD_21/miniconda/bin/activate torch
