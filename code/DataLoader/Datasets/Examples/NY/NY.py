@@ -62,10 +62,10 @@ class Example_NY(Dataset):
     def __getitem__(self, idx):
         inp = self.transform(Image.open(str(Path.cwd() / Path(self.dataset["Inputs"][idx]))))
         lbl = self.transform(Image.open(str(Path.cwd() / Path(self.dataset["Labels"][idx]))))
-        if cuda.is_availble():
+        if torch.cuda.is_available():
             return inp.cuda(), lbl.squeeze(0).cuda()
-	else:
-	    return inp, lbl.squeeze(0)	
+        else:
+            return inp, lbl.squeeze(0)	
     # def show(self, what="raw"):
     #     if what == "raw":
     #         print("Showing Input Frames as Video. This may take some time, since the images need to be converted.")

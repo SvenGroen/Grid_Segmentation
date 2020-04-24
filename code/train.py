@@ -10,7 +10,8 @@ from DataLoader.Datasets.Examples.NY.NY import *
 from pathlib import Path
 print("Python Script Start")
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "CPU")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print("Device: ", device)
 # Model, Dataset, train_loader, Learning Parameters
 net = ConvSame_3_net()    # <--- SET MODEL
 net.to(device)
@@ -35,7 +36,8 @@ loss_criterion = nn.NLLLoss()
 LOAD_PREV_MODEL = False
 
 print("Cuda information: ")
-print("cuda_current device:{}; device_count:{}; is_available{}; is_initialized:{};".format(torch.cuda.current_device(),torch.cuda.device_count(), torch.cuda.is_available(), torch.cuda.is_initialized()))
+if torch.cuda.is_available():
+    print("cuda_current device: {}; device_count: {}; is_available: {}; is_initialized: {};".format(torch.cuda.current_device(),torch.cuda.device_count(), torch.cuda.is_available(), torch.cuda.is_initialized()))
 print("END OF CUDA INFORMATION")
 
 
@@ -61,8 +63,7 @@ for epoch in tqdm(range(num_epochs)):
             # print(batch_count)
             images, labels = batch
             pred=net(images)
-            
-	    loss = F.cross_entropy(pred, labels)
+            loss = F.cross_entropy(pred, labels)
             #loss = F.cross_entropy(pred, labels.long())
             #loss = loss_criterion(pred, labels.long())
             optimizer.zero_grad()
