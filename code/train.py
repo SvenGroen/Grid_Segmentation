@@ -1,4 +1,5 @@
 from torch.utils.data import DataLoader
+import torch.nn.functional as F
 from torch import nn
 import torch
 import torchvision
@@ -9,19 +10,20 @@ from DataLoader.Datasets.Examples.NY.NY import *
 from pathlib import Path
 print("Python Script Start")
 
-
+device = torch.device("cuda:0" if torch.cuda.is_available() else "CPU")
 # Model, Dataset, train_loader, Learning Parameters
 net = ConvSame_3_net()    # <--- SET MODEL
+net.to(device)
 print("loading Dataset")
 dataset =  Example_NY()                 # <--- SET DATASET
 print("Dataset Loaded")
-batch_size = 10                          # <--- SET BATCHSIZE
+batch_size = 20                          # <--- SET BATCHSIZE
 lr = 1e-4                               # <--- SET LEARNINGRATE
-num_epochs = 1                         # <--- SET NUMBER OF EPOCHS
+num_epochs = 20                         # <--- SET NUMBER OF EPOCHS
 
 
 train_loader = DataLoader(dataset=dataset, batch_size=batch_size)
-train_name = "ConvSame_3_net_bs" + str(batch_size) + "_lr" + str(lr) + "_ep" + str(num_epochs) + "_Version_2" # sets name of model based on parameters
+train_name = "ConvSame_3_net_bs" + str(batch_size) + "_lr" + str(lr) + "_ep" + str(num_epochs) + "_Version_2_cross_entropy" # sets name of model based on parameters
 model_save_path = Path("code/models/custom/simple_models/trained_models") # <--- SET PATH WHERE MODEL WILL BE SAVED
 model_save_path = Path.cwd() / model_save_path / train_name
 
@@ -58,13 +60,11 @@ for epoch in tqdm(range(num_epochs)):
         for batch in train_loader:
             # print(batch_count)
             images, labels = batch
-            # images = images.long()
-            pred = net(images.float())
-            # print(labels.shape)
-            # labels = labels.squeeze(0).long()
-            # print(labels.shape)
-            # loss = F.cross_entropy(pred["out"], labels.long())
-            loss = loss_criterion(pred, labels.long())
+            pred=net(images)
+            
+	    loss = F.cross_entropy(pred, labels)
+            #loss = F.cross_entropy(pred, labels.long())
+            #loss = loss_criterion(pred, labels.long())
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()

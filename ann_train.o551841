@@ -1,0 +1,23 @@
+ Start of SGE job 
+
+
+Hostname
+cippy15.cogsci.uni-osnabrueck.de
+Job-ID:
+551841
+user:
+sgroen
+
+Start
+
+RUNNING:  code/train.py
+Current Environemt:  torch
+Python Script Start
+loading Dataset
+Dataset Loaded
+Cuda information: 
+cuda_current device:0; device_count:1; is_availableTrue; is_initialized:True;
+END OF CUDA INFORMATION
+Start of Training
+Learning with:
+Learning rate: 0.0001, batch_size: 20, number of epochs: 20

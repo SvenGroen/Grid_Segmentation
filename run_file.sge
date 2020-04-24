@@ -1,5 +1,5 @@
 #!/bin/bash
-#$ -l mem=25G
+#$ -l mem=8G
 #$ -cwd
 #$ -l cuda=1
 #$ -l nv_mem_free=2.8G
@@ -7,6 +7,9 @@
 #$ -l h_rt=1:30:00
 #$ -l hostname=!picture
 #$ -N ann_train
+#$ -l cuda=1
+#$ -l cuda_cores=640
+
 
 echo " Start of SGE job " 
 echo "$date"

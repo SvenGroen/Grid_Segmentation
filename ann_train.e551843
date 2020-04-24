@@ -1,0 +1,12 @@
+  File "code/train.py", line 65
+    loss = F.cross_entropy(pred, labels)
+                                       ^
+TabError: inconsistent use of tabs and spaces in indentation
+
+Lavish subscription of memory-resources:
+
+	8192 Mbytes requested,
+	but peak usage was only 39.9 Mbytes.
+
+------------> Please request grid resources more carefully! <------------
+

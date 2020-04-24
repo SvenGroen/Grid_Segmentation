@@ -35,9 +35,9 @@ class Example_NY(Dataset):
     def create_json(self):
         dset = defaultdict(list)
         for img in self.in_path.glob("*.jpg"):
-            dset["Inputs"].append(str(img))
+            dset["Inputs"].append(str(Path(img)))
         for lbl in self.lbl_path.glob("*.jpg"):
-            dset["Labels"].append(str(lbl))
+            dset["Labels"].append(str(Path(lbl)))
         
         with open("code/DataLoader/Datasets/Examples/NY/NY.json","w") as js:
             json.dump(dict(dset),js)
@@ -60,10 +60,12 @@ class Example_NY(Dataset):
         return len(self.dataset["Inputs"])
 
     def __getitem__(self, idx):
-        inp = self.transform(Image.open(self.dataset["Inputs"][idx]))
-        lbl = self.transform(Image.open(self.dataset["Labels"][idx]))
-        return inp, lbl.squeeze(0)
-
+        inp = self.transform(Image.open(str(Path.cwd() / Path(self.dataset["Inputs"][idx]))))
+        lbl = self.transform(Image.open(str(Path.cwd() / Path(self.dataset["Labels"][idx]))))
+        if cuda.is_availble():
+            return inp.cuda(), lbl.squeeze(0).cuda()
+	else:
+	    return inp, lbl.squeeze(0)	
     # def show(self, what="raw"):
     #     if what == "raw":
     #         print("Showing Input Frames as Video. This may take some time, since the images need to be converted.")
