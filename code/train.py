@@ -20,7 +20,7 @@ dataset =  Example_NY()                 # <--- SET DATASET
 print("Dataset Loaded")
 batch_size = 5                        # <--- SET BATCHSIZE
 lr = 1e-4                               # <--- SET LEARNINGRATE
-num_epochs = 200                         # <--- SET NUMBER OF EPOCHS
+num_epochs = 40                        # <--- SET NUMBER OF EPOCHS
 
 
 train_loader = DataLoader(dataset=dataset, batch_size=batch_size)
