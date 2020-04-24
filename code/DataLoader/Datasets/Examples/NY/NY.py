@@ -65,7 +65,10 @@ class Example_NY(Dataset):
         if torch.cuda.is_available():
             return inp.cuda(), lbl.squeeze(0).cuda()
         else:
-            return inp, lbl.squeeze(0)	
+            return inp, lbl.squeeze(0)
+        # return inp, lbl.squeeze(0)
+
+
     # def show(self, what="raw"):
     #     if what == "raw":
     #         print("Showing Input Frames as Video. This may take some time, since the images need to be converted.")

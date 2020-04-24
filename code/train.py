@@ -18,9 +18,9 @@ net.to(device)
 print("loading Dataset")
 dataset =  Example_NY()                 # <--- SET DATASET
 print("Dataset Loaded")
-batch_size = 20                          # <--- SET BATCHSIZE
+batch_size = 5                        # <--- SET BATCHSIZE
 lr = 1e-4                               # <--- SET LEARNINGRATE
-num_epochs = 20                         # <--- SET NUMBER OF EPOCHS
+num_epochs = 200                         # <--- SET NUMBER OF EPOCHS
 
 
 train_loader = DataLoader(dataset=dataset, batch_size=batch_size)
@@ -62,8 +62,12 @@ for epoch in tqdm(range(num_epochs)):
         for batch in train_loader:
             # print(batch_count)
             images, labels = batch
+            # if torch.cuda.is_available():
+            #     pred=net(images.cuda())
+            # else:
+            #     pred=net(images.Float())
             pred=net(images)
-            loss = F.cross_entropy(pred, labels)
+            loss = F.cross_entropy(pred, labels.long())
             #loss = F.cross_entropy(pred, labels.long())
             #loss = loss_criterion(pred, labels.long())
             optimizer.zero_grad()
