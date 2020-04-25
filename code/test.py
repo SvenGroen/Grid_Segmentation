@@ -1,12 +1,8 @@
 import torch
 import torchvision
-
-a = torch.Tensor([1,2,3])
-
-print("a:{}".format(a))
-
-print(torch.cuda.is_available())
-
+import torch.nn.functional as F
+print(range(5))
+print(range(0,0))
 print("END OF PYTHON FILE")
 
 

@@ -1,23 +1,0 @@
-  0%|          | 0/20 [00:00<?, ?it/s]  0%|          | 0/20 [00:02<?, ?it/s]
-Traceback (most recent call last):
-  File "code/train.py", line 63, in <module>
-    pred = net(images.float())
-  File "/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/miniconda/envs/torch/lib/python3.6/site-packages/torch/nn/modules/module.py", line 532, in __call__
-    result = self.forward(*input, **kwargs)
-  File "/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/Git_Repos/Grid_Segmentation/code/models/custom/simple_models/simple_models.py", line 14, in forward
-    x = self.conv1(x)
-  File "/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/miniconda/envs/torch/lib/python3.6/site-packages/torch/nn/modules/module.py", line 532, in __call__
-    result = self.forward(*input, **kwargs)
-  File "/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/miniconda/envs/torch/lib/python3.6/site-packages/torch/nn/modules/conv.py", line 345, in forward
-    return self.conv2d_forward(input, self.weight)
-  File "/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/miniconda/envs/torch/lib/python3.6/site-packages/torch/nn/modules/conv.py", line 342, in conv2d_forward
-    self.padding, self.dilation, self.groups)
-RuntimeError: Input type (torch.FloatTensor) and weight type (torch.cuda.FloatTensor) should be the same
-
-Lavish subscription of memory-resources:
-
-	8192 Mbytes requested,
-	but peak usage was only 4638.8 Mbytes.
-
-------------> Please request grid resources more carefully! <------------
-

@@ -26,21 +26,24 @@ class Example_NY(Dataset):
         self.lbl_path = Example_NY.label_path / Path(name +"/labels/")
         self.transform = transforms.Compose(transform)
         self.dataset = defaultdict(list)
+
+        
         try:
-            with open("code/DataLoader/Datasets/Examples/NY/NY.json", "r") as js:
+            with open("code/DataLoader/Datasets/Examples/NY/NY.json","r") as js:
                 self.dataset = json.load(js)
-        except IOError:
+        except FileNotFoundError or IOError or FileExistsError:
             self.dataset = self.create_json()
 
     def create_json(self):
         dset = defaultdict(list)
+
+
         for img in self.in_path.glob("*.jpg"):
             dset["Inputs"].append(str(Path(img)))
         for lbl in self.lbl_path.glob("*.jpg"):
             dset["Labels"].append(str(Path(lbl)))
-        
         with open("code/DataLoader/Datasets/Examples/NY/NY.json","w") as js:
-            json.dump(dict(dset),js)
+            json.dump(dict(dset), js)
         return dset
     
     # def load_frames(self):

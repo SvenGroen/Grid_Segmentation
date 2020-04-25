@@ -8,75 +8,110 @@ from tqdm import tqdm
 from models.custom.simple_models.simple_models import ConvSame_3_net
 from DataLoader.Datasets.Examples.NY.NY import *
 from pathlib import Path
-print("Python Script Start")
 
+# --- General Informations
+print("Python Script Start")
+print("Cuda information: ")
+if torch.cuda.is_available():
+    print("cuda_current device: {}; device_count: {}; is_available: {}; is_initialized: {};".format(
+        torch.cuda.current_device(), torch.cuda.device_count(), torch.cuda.is_available(), torch.cuda.is_initialized()))
+print("END OF CUDA INFORMATION")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device: ", device)
-# Model, Dataset, train_loader, Learning Parameters
-net = ConvSame_3_net()    # <--- SET MODEL
-net.to(device)
-print("loading Dataset")
-dataset =  Example_NY()                 # <--- SET DATASET
-print("Dataset Loaded")
-batch_size = 5                        # <--- SET BATCHSIZE
-lr = 1e-4                               # <--- SET LEARNINGRATE
-num_epochs = 40                        # <--- SET NUMBER OF EPOCHS
 
+# Model, Dataset, train_loader, Learning Parameters
+net = ConvSame_3_net()  # <--- SET MODEL
+dataset = Example_NY()  # <--- SET DATASET
+batch_size = 5  # <--- SET BATCHSIZE
+lr = 1e-04  # <--- SET LEARNINGRATE
+num_epochs = 0 # <--- SET NUMBER OF EPOCHS
+start_epoch = 0
 
 train_loader = DataLoader(dataset=dataset, batch_size=batch_size)
-train_name = "ConvSame_3_net_bs" + str(batch_size) + "_lr" + str(lr) + "_ep" + str(num_epochs) + "_Version_2_cross_entropy" # sets name of model based on parameters
-model_save_path = Path("code/models/custom/simple_models/trained_models") # <--- SET PATH WHERE MODEL WILL BE SAVED
+train_name = "ConvSame_3_net_bs" + str(batch_size) + "_lr" + format(lr, ".0e") + "_ep" + str(
+    num_epochs) + "_cross_entropy"  # sets name of model based on parameters
+model_save_path = Path("code/models/custom/simple_models/trained_models")  # <--- SET PATH WHERE MODEL WILL BE SAVED
 model_save_path = Path.cwd() / model_save_path / train_name
+model_save_path.mkdir(parents=True, exist_ok=True)  # create folder to save results
+model_save_path = model_save_path / train_name
 
 # Training Parameters
 optimizer = optim.Adam(net.parameters(), lr=1e-4)
 loss_criterion = nn.NLLLoss()
 
+
+def save_checkpoint(state, filename=str(model_save_path)+ ".pth.tar"):
+    print("=> Saving checkpoint at epoch {}".format(state["epoch"]))
+    print(filename)
+    torch.save(state, Path(filename))
+
+
 # Flags
-LOAD_PREV_MODEL = False
-
-print("Cuda information: ")
-if torch.cuda.is_available():
-    print("cuda_current device: {}; device_count: {}; is_available: {}; is_initialized: {};".format(torch.cuda.current_device(),torch.cuda.device_count(), torch.cuda.is_available(), torch.cuda.is_initialized()))
-print("END OF CUDA INFORMATION")
-
-
- 
-
+LOAD_CHECKPOINT = True
 # Load previous model state if needed
-if LOAD_PREV_MODEL:
+
+if LOAD_CHECKPOINT:
     try:
-        net.load_state_dict(torch.load(str(model_save_path)))
-        print("Model {} was loaded.".format(train_name))
+        checkpoint = torch.load(str(model_save_path) + ".pth.tar")
+        print("=> Loading checkpoint at epoch {}".format(checkpoint["epoch"]))
+        net.load_state_dict(checkpoint["state_dict"])
+        optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+        start_epoch = checkpoint["epoch"]
+        total_loss = checkpoint["total_loss"]
+        lr = checkpoint["lr"]
+        batch_size = checkpoint["batchsize"]
     except IOError:
-        print("model was not found")
-        pass
+        print("No previous checkpoint found")
+        checkpoint = {}
+        checkpoint["state_dict"] = net.state_dict()
+        checkpoint["optimizer_state_dict"] = optimizer.state_dict()
+        checkpoint["epoch"] = start_epoch
+        checkpoint["lr"] = lr
+        checkpoint["batchsize"] = batch_size
+        checkpoint["total_loss"] = 0
+else:
+    print("No previous checkpoint found")
+    checkpoint = {}
+    checkpoint["state_dict"] = net.state_dict()
+    checkpoint["optimizer_state_dict"] = optimizer.state_dict()
+    checkpoint["epoch"] = start_epoch
+    checkpoint["lr"] = lr
+    checkpoint["batchsize"] = batch_size
+    checkpoint["total_loss"] = 0
 
 # Start training
+net.to(device)
 print("Start of Training")
 print("Learning with:")
-print("Learning rate: {}, batch_size: {}, number of epochs: {}".format(lr,batch_size,num_epochs))
-for epoch in tqdm(range(num_epochs)):
-        total_loss = 0
-        batch_count = 0
-        for batch in train_loader:
-            # print(batch_count)
-            images, labels = batch
-            # if torch.cuda.is_available():
-            #     pred=net(images.cuda())
-            # else:
-            #     pred=net(images.Float())
-            pred=net(images)
-            loss = F.cross_entropy(pred, labels.long())
-            #loss = F.cross_entropy(pred, labels.long())
-            #loss = loss_criterion(pred, labels.long())
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
-            batch_count += 1
-            total_loss += loss.item()
-            
-        print("\nepoch: {}, \t batch: {}, \t loss: {}".format(epoch, batch_count, total_loss))
+print("Learning rate: {}, batch_size: {}, number of epochs: {}".format(lr, batch_size, num_epochs))
+for epoch in tqdm(range(start_epoch, start_epoch+num_epochs)):
+    total_loss = 0
+    batch_count = 0
+    for batch in train_loader:
+        # print(batch_count)
+        images, labels = batch
+        # if torch.cuda.is_available():
+        #     pred=net(images.cuda())
+        # else:
+        #     pred=net(images.Float())
+        pred = net(images)
+        loss = F.cross_entropy(pred, labels.long())
+        # loss = loss_criterion(pred, labels.long())
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+        batch_count += 1
+        total_loss += loss.item()
+        if epoch % 20 == 0:
+            checkpoint["state_dict"] = net.load_state_dict()
+            checkpoint["optimizer_state_dict"] = optimizer.load_state_dict()
+            checkpoint["epoch"] = start_epoch
+            checkpoint["lr"] = lr
+            checkpoint["batchsize"] = batch_size
+            checkpoint["total_loss"] = total_loss
+            save_checkpoint(checkpoint)
+
+    print("\nepoch: {}, \t batch: {}, \t loss: {}".format(epoch, batch_count, total_loss))
 
 # save model after training
-torch.save(net.state_dict(), str(model_save_path))
+save_checkpoint(checkpoint)
