@@ -5,9 +5,24 @@ import torch
 import torchvision
 import torch.optim as optim
 from tqdm import tqdm
-from models.custom.simple_models.simple_models import ConvSame_3_net
+from models.custom.simple_models.simple_models import *
+from models.custom.simple_models.UNet import *
 from DataLoader.Datasets.Examples.NY.NY import *
 from pathlib import Path
+
+model = "UNet" # Options available: "UNet", "Deep_Res101", "ConvSame_3"
+
+if model == "UNet":
+    net = UNet(in_channels=3, out_channels=2, n_class=2, kernel_size=3, padding=1, stride=1)
+    net.train()
+elif model == "Deep_Res101":
+    net = DeepRes_101()
+    net.train()
+elif model == "ConvSame_3"
+    net = ConvSame_3_net()  # <--- SET MODEL
+else:
+    print("Model unknown")
+
 
 # --- General Informations
 print("Python Script Start")
@@ -20,15 +35,14 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device: ", device)
 
 # Model, Dataset, train_loader, Learning Parameters
-net = ConvSame_3_net()  # <--- SET MODEL
 dataset = Example_NY()  # <--- SET DATASET
 batch_size = 5  # <--- SET BATCHSIZE
 lr = 1e-04  # <--- SET LEARNINGRATE
-num_epochs = 0 # <--- SET NUMBER OF EPOCHS
+num_epochs = 20  # <--- SET NUMBER OF EPOCHS
 start_epoch = 0
 
 train_loader = DataLoader(dataset=dataset, batch_size=batch_size)
-train_name = "ConvSame_3_net_bs" + str(batch_size) + "_lr" + format(lr, ".0e") + "_ep" + str(
+train_name = model + "_bs" + str(batch_size) + "_lr" + format(lr, ".0e") + "_ep" + str(
     num_epochs) + "_cross_entropy"  # sets name of model based on parameters
 model_save_path = Path("code/models/custom/simple_models/trained_models")  # <--- SET PATH WHERE MODEL WILL BE SAVED
 model_save_path = Path.cwd() / model_save_path / train_name
@@ -40,7 +54,7 @@ optimizer = optim.Adam(net.parameters(), lr=1e-4)
 loss_criterion = nn.NLLLoss()
 
 
-def save_checkpoint(state, filename=str(model_save_path)+ ".pth.tar"):
+def save_checkpoint(state, filename=str(model_save_path) + ".pth.tar"):
     print("=> Saving checkpoint at epoch {}".format(state["epoch"]))
     print(filename)
     torch.save(state, Path(filename))
@@ -84,7 +98,7 @@ net.to(device)
 print("Start of Training")
 print("Learning with:")
 print("Learning rate: {}, batch_size: {}, number of epochs: {}".format(lr, batch_size, num_epochs))
-for epoch in tqdm(range(start_epoch, start_epoch+num_epochs)):
+for epoch in tqdm(range(start_epoch, start_epoch + num_epochs)):
     total_loss = 0
     batch_count = 0
     for batch in train_loader:
@@ -102,7 +116,7 @@ for epoch in tqdm(range(start_epoch, start_epoch+num_epochs)):
         optimizer.step()
         batch_count += 1
         total_loss += loss.item()
-        if epoch % 20 == 0:
+        if epoch % 10 == 0:
             checkpoint["state_dict"] = net.load_state_dict()
             checkpoint["optimizer_state_dict"] = optimizer.load_state_dict()
             checkpoint["epoch"] = start_epoch
