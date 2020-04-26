@@ -11,8 +11,8 @@ from DataLoader.Datasets.Examples.NY.NY import *
 from pathlib import Path
 
 
-model = "UNet" # Options available: "UNet", "Deep_Res101", "ConvSame_3"
-norm_ImageNet = False
+model = "Deep_Res101" # Options available: "UNet", "Deep_Res101", "ConvSame_3"
+norm_ImageNet = True
 if model == "UNet":
     net = UNet(in_channels=3, out_channels=2, n_class=2, kernel_size=3, padding=1, stride=1)
     net.train()
@@ -45,7 +45,7 @@ print("Device: ", device)
 dataset = Example_NY(norm_ImageNet=norm_ImageNet,augmentation_transform = [transforms.CenterCrop((1080, 2048))])  # <--- SET DATASET
 batch_size = 1  # <--- SET BATCHSIZE
 lr = 1e-04  # <--- SET LEARNINGRATE
-num_epochs = 2000  # <--- SET NUMBER OF EPOCHS
+num_epochs = 1  # <--- SET NUMBER OF EPOCHS
 start_epoch = 0
 save_freq = 20
 

@@ -17,7 +17,11 @@ print("---Start of Python File---")
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device: ", device)
-model = "ConvSame_3"  # Options available: "UNet", "Deep_Res101", "ConvSame_3"
+
+model = "UNet"  # Options available: "UNet", "Deep_Res101", "ConvSame_3" <--CHANGE
+model_name = Path("UNet_bs1_lr1e-03_ep2000_cross_entropy") #<--CHANGE
+
+
 norm_ImageNet = False
 if model == "UNet":
     net = UNet(in_channels=3, out_channels=2, n_class=2, kernel_size=3, padding=1, stride=1)
@@ -35,17 +39,16 @@ elif model == "ConvSame_3":
 else:
     print("Model unknown")
 
-model_name = Path("UNet_bs1_lr1e-04_ep2000_cross_entropy")
 model_state_path = Path("code/models/custom/simple_models/trained_models/") / model_name
 
 print("Loading: " + str(model_state_path / model_name) + ".pth.tar")
 try:
     if torch.cuda.is_available():
         checkpoint = torch.load(str(model_state_path / model_name) + ".pth.tar")
-        net.load_state_dict(checkpoint["state_dict"])
+        net.load_state_dict(checkpoint["state_dict"],strict=False)
     else:
         checkpoint = torch.load(str(model_state_path / model_name) + ".pth.tar", map_location=torch.device("cpu"))
-        net.load_state_dict(checkpoint["state_dict"])
+        net.load_state_dict(checkpoint["state_dict"],strict=False)
     print("Model was loaded.")
 except IOError:
     print("model was not found")
