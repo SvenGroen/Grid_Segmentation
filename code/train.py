@@ -10,14 +10,20 @@ from models.custom.simple_models.UNet import *
 from DataLoader.Datasets.Examples.NY.NY import *
 from pathlib import Path
 
-model = "UNet" # Options available: "UNet", "Deep_Res101", "ConvSame_3"
 
+model = "UNet" # Options available: "UNet", "Deep_Res101", "ConvSame_3"
+norm_ImageNet = False
 if model == "UNet":
     net = UNet(in_channels=3, out_channels=2, n_class=2, kernel_size=3, padding=1, stride=1)
     net.train()
 elif model == "Deep_Res101":
-    net = DeepRes_101()
+    net = Deeplab_Res101()
+    norm_ImageNet = True
     net.train()
+# elif model == "Res18_Conv":
+#     net = Res18_Conv()
+#     norm_ImageNet=True
+#     net.train()
 elif model == "ConvSame_3":
     net = ConvSame_3_net()  # <--- SET MODEL
 else:
@@ -35,11 +41,13 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device: ", device)
 
 # Model, Dataset, train_loader, Learning Parameters
-dataset = Example_NY()  # <--- SET DATASET
+
+dataset = Example_NY(norm_ImageNet=norm_ImageNet,augmentation_transform = [transforms.CenterCrop((1080, 2048))])  # <--- SET DATASET
 batch_size = 5  # <--- SET BATCHSIZE
 lr = 1e-04  # <--- SET LEARNINGRATE
 num_epochs = 20  # <--- SET NUMBER OF EPOCHS
 start_epoch = 0
+save_freq = 5
 
 train_loader = DataLoader(dataset=dataset, batch_size=batch_size)
 train_name = model + "_bs" + str(batch_size) + "_lr" + format(lr, ".0e") + "_ep" + str(
@@ -56,7 +64,6 @@ loss_criterion = nn.NLLLoss()
 
 def save_checkpoint(state, filename=str(model_save_path) + ".pth.tar"):
     print("=> Saving checkpoint at epoch {}".format(state["epoch"]))
-    print(filename)
     torch.save(state, Path(filename))
 
 
@@ -108,6 +115,7 @@ for epoch in tqdm(range(start_epoch, start_epoch + num_epochs)):
         #     pred=net(images.cuda())
         # else:
         #     pred=net(images.Float())
+
         pred = net(images)
         loss = F.cross_entropy(pred, labels.long())
         # loss = loss_criterion(pred, labels.long())
@@ -116,14 +124,15 @@ for epoch in tqdm(range(start_epoch, start_epoch + num_epochs)):
         optimizer.step()
         batch_count += 1
         total_loss += loss.item()
-        if epoch % 10 == 0:
-            checkpoint["state_dict"] = net.load_state_dict()
-            checkpoint["optimizer_state_dict"] = optimizer.load_state_dict()
-            checkpoint["epoch"] = start_epoch
-            checkpoint["lr"] = lr
-            checkpoint["batchsize"] = batch_size
-            checkpoint["total_loss"] = total_loss
-            save_checkpoint(checkpoint)
+        break
+    if epoch % save_freq == 0:
+        checkpoint["state_dict"] = net.state_dict()
+        checkpoint["optimizer_state_dict"] = optimizer.state_dict()
+        checkpoint["epoch"] = start_epoch
+        checkpoint["lr"] = lr
+        checkpoint["batchsize"] = batch_size
+        checkpoint["total_loss"] = total_loss
+        save_checkpoint(checkpoint)
 
     print("\nepoch: {}, \t batch: {}, \t loss: {}".format(epoch, batch_count, total_loss))
 

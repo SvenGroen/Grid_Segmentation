@@ -32,10 +32,9 @@ except IOError:
 # evaluation mode:
 net.eval()
 batch_size = 1
-
 # Load test data
 dataset = Example_NY()
-train_loader = DataLoader(dataset=dataset, batch_size=5, shuffle=True)
+train_loader = DataLoader(norm_ImageNet=False,dataset=dataset, batch_size=5, shuffle=True)
 
 to_PIL = transforms.ToPILImage()
 tmp_img, tmp_lbl, tmp_pred = [], [], []
