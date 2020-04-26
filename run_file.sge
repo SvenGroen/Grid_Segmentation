@@ -6,6 +6,8 @@
 #$ -pe default 2
 #$ -l h_rt=1:30:00
 #$ -l hostname=!picture
+#$ -l hostname=!cippy19
+#$ -l hostname=!cippy12
 #$ -N ann_train
 #$ -l cuda=1
 #$ -l cuda_cores=640

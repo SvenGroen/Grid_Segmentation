@@ -1,0 +1,21 @@
+  0%|          | 0/20 [00:00<?, ?it/s]  0%|          | 0/20 [00:01<?, ?it/s]
+Traceback (most recent call last):
+  File "code/train.py", line 111, in <module>
+    pred = net(images)
+  File "/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/miniconda/envs/torch/lib/python3.6/site-packages/torch/nn/modules/module.py", line 532, in __call__
+    result = self.forward(*input, **kwargs)
+  File "/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/Git_Repos/Grid_Segmentation/code/models/custom/simple_models/UNet.py", line 95, in forward
+    x_up = self.up3(x3, x2)
+  File "/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/miniconda/envs/torch/lib/python3.6/site-packages/torch/nn/modules/module.py", line 532, in __call__
+    result = self.forward(*input, **kwargs)
+  File "/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/Git_Repos/Grid_Segmentation/code/models/custom/simple_models/UNet.py", line 55, in forward
+    x = torch.cat((x, x_skip), dim=1)
+RuntimeError: invalid argument 0: Sizes of tensors must match except in dimension 1. Got 511 and 510 in dimension 3 at /pytorch/aten/src/THC/generic/THCTensorMath.cu:71
+
+Lavish subscription of memory-resources:
+
+	8192 Mbytes requested,
+	but peak usage was only 3043.3 Mbytes.
+
+------------> Please request grid resources more carefully! <------------
+

@@ -18,7 +18,7 @@ if model == "UNet":
 elif model == "Deep_Res101":
     net = DeepRes_101()
     net.train()
-elif model == "ConvSame_3"
+elif model == "ConvSame_3":
     net = ConvSame_3_net()  # <--- SET MODEL
 else:
     print("Model unknown")
