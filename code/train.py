@@ -43,11 +43,11 @@ print("Device: ", device)
 # Model, Dataset, train_loader, Learning Parameters
 
 dataset = Example_NY(norm_ImageNet=norm_ImageNet,augmentation_transform = [transforms.CenterCrop((1080, 2048))])  # <--- SET DATASET
-batch_size = 5  # <--- SET BATCHSIZE
+batch_size = 1  # <--- SET BATCHSIZE
 lr = 1e-04  # <--- SET LEARNINGRATE
-num_epochs = 20  # <--- SET NUMBER OF EPOCHS
+num_epochs = 2000  # <--- SET NUMBER OF EPOCHS
 start_epoch = 0
-save_freq = 5
+save_freq = 20
 
 train_loader = DataLoader(dataset=dataset, batch_size=batch_size)
 train_name = model + "_bs" + str(batch_size) + "_lr" + format(lr, ".0e") + "_ep" + str(
@@ -133,8 +133,9 @@ for epoch in tqdm(range(start_epoch, start_epoch + num_epochs)):
         checkpoint["batchsize"] = batch_size
         checkpoint["total_loss"] = total_loss
         save_checkpoint(checkpoint)
+        print("\nepoch: {}, \t batch: {}, \t loss: {}".format(epoch, batch_count, total_loss))
 
-    print("\nepoch: {}, \t batch: {}, \t loss: {}".format(epoch, batch_count, total_loss))
+
 
 # save model after training
 save_checkpoint(checkpoint)

@@ -5,13 +5,13 @@
 #$ -l nv_mem_free=3.8G
 #$ -pe default 2
 #$ -l h_rt=1:30:00
-#$ -l hostname=1picture
-#$ -l hostname=!cippy19.cogsci.uni-osnabrueck.de
-#$ -l hostname=!cippy12.cogsci.uni-osnabrueck.de 
-#$ -l hostname=!cippy21.cogsci.uni-osnabrueck.de 
-#$ -N ann_train
+#$ -l hostname=!picture
+#$ -l hostname=!cippy19
+#$ -l hostname=!cippy12
+#$ -l hostname=!cippy21
+#$ -N ann_eval
 #$ -l cuda=1
-#$ -l cuda_cores=640
+
 
 
 echo " Start of SGE job " 
@@ -28,7 +28,7 @@ echo ""
 echo "Start"
 echo ""
 
-setup_file=code/train.py
+setup_file=code/eval_model.py
 env_name=torch
 #Scratch_wd_21 is a variable that stores the path to my scratch folder in which i installed anaconda
 export SCRATCH_WD_21="/net/projects/scratch/summer/valid_until_31_January_2021/sgroen"
