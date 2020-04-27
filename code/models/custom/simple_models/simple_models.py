@@ -34,6 +34,38 @@ class Deeplab_Res101(nn.Module):
         return x["out"]
 
 
+class Deeplab_Res50(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.base = torchvision.models.segmentation.deeplabv3_resnet50(pretrained=False, num_classes=2)
+
+    def forward(self, x):
+        x = self.base(x)
+        return x["out"]
+
+'''
+class Deeplab_Mobile(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.base = torchvision.models.mobilenet_v2(pretrained=True)
+        for param in self.base.parameters():
+            param.requires_grad = False
+        self.base.classifier = DeepLabHead(1280, 2)
+        self.up = nn.Sequential(
+            nn.ConvTranspose2d(in_channels=1280, out_channels=1280, kernel_size=3, stride=36, padding=3),
+            # nn.ConvTranspose2d(in_channels=640, out_channels=320, kernel_size=3, stride=2, padding=1),
+            # nn.ConvTranspose2d(in_channels=320, out_channels=160, kernel_size=3, stride=2, padding=1),
+            # nn.ConvTranspose2d(in_channels=160, out_channels=80, kernel_size=3, stride=2, padding=1),
+            # nn.ConvTranspose2d(in_channels=80, out_channels=40, kernel_size=3, stride=2, padding=1)
+            )
+
+    def forward(self, x):
+        x = self.base.features(x)
+        x = self.up(x)
+        x = self.base.classifier(x)
+        return x["out"]
+
+
 class Res18_Conv(nn.Module):
     def __init__(self):
         super().__init__()
@@ -52,3 +84,4 @@ class Res18_Conv(nn.Module):
         # x = self.out2(x)
         # x = self.out3(x)
         return x
+'''

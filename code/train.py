@@ -10,8 +10,9 @@ from models.custom.simple_models.UNet import *
 from DataLoader.Datasets.Examples.NY.NY import *
 from pathlib import Path
 
+model = "Deep_Res50"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50"
 
-model = "Deep_Res101" # Options available: "UNet", "Deep_Res101", "ConvSame_3"
+# torchvision.models.segmentation.DeepLabV3(backbone=)
 norm_ImageNet = True
 if model == "UNet":
     net = UNet(in_channels=3, out_channels=2, n_class=2, kernel_size=3, padding=1, stride=1)
@@ -20,15 +21,15 @@ elif model == "Deep_Res101":
     net = Deeplab_Res101()
     norm_ImageNet = True
     net.train()
-# elif model == "Res18_Conv":
-#     net = Res18_Conv()
-#     norm_ImageNet=True
-#     net.train()
+elif model == "Deep_Res50":
+    net = Deeplab_Res50()
+    norm_ImageNet = True
+    net.train()
+
 elif model == "ConvSame_3":
     net = ConvSame_3_net()  # <--- SET MODEL
 else:
     print("Model unknown")
-
 
 # --- General Informations
 print("Python Script Start")
@@ -42,10 +43,13 @@ print("Device: ", device)
 
 # Model, Dataset, train_loader, Learning Parameters
 
-dataset = Example_NY(norm_ImageNet=norm_ImageNet,augmentation_transform = [transforms.CenterCrop((1080, 2048))])  # <--- SET DATASET
-batch_size = 1  # <--- SET BATCHSIZE
+dataset = Example_NY(norm_ImageNet=norm_ImageNet,
+                     augmentation_transform=[transforms.CenterCrop((1080, 2048))])  # <--- SET DATASET
+batch_size = 2  # <--- SET BATCHSIZE
+if model == "Deep_Res101":
+    assert batch_size > 1, "Batch size must be larger 1 for Deeplab to work"
 lr = 1e-04  # <--- SET LEARNINGRATE
-num_epochs = 1  # <--- SET NUMBER OF EPOCHS
+num_epochs = 20  # <--- SET NUMBER OF EPOCHS
 start_epoch = 0
 save_freq = 20
 
@@ -134,8 +138,6 @@ for epoch in tqdm(range(start_epoch, start_epoch + num_epochs)):
         checkpoint["total_loss"] = total_loss
         save_checkpoint(checkpoint)
         print("\nepoch: {}, \t batch: {}, \t loss: {}".format(epoch, batch_count, total_loss))
-
-
 
 # save model after training
 save_checkpoint(checkpoint)

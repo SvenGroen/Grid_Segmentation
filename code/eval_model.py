@@ -19,7 +19,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device: ", device)
 
 model = "UNet"  # Options available: "UNet", "Deep_Res101", "ConvSame_3" <--CHANGE
-model_name = Path("UNet_bs1_lr1e-03_ep2000_cross_entropy") #<--CHANGE
+model_name = Path("UNet_bs1_lr1e-03_ep2000_cross_entropy") # <--CHANGE
 
 
 norm_ImageNet = False
@@ -59,8 +59,8 @@ net.eval()
 net.to(device)
 batch_size = 5
 # Load test data
-# dataset = Example_NY(norm_ImageNet=norm_ImageNet, augmentation_transform=[transforms.CenterCrop((1080, 2048))])
-dataset = Example_NY(norm_ImageNet=norm_ImageNet)
+dataset = Example_NY(norm_ImageNet=norm_ImageNet, augmentation_transform=[transforms.CenterCrop((1080, 2048))])
+# dataset = Example_NY(norm_ImageNet=norm_ImageNet)
 train_loader = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=True)
 
 to_PIL = transforms.ToPILImage()

@@ -2,3 +2,4 @@
 /__pycache__
 /venv
 /.vscode
+/code/models/custom/simple_models/trained_models/Deep*
