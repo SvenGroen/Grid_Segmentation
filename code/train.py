@@ -10,8 +10,8 @@ from models.custom.simple_models.UNet import *
 from DataLoader.Datasets.Examples.NY.NY import *
 from pathlib import Path
 
-model = "UNet"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50"
-
+model = "Deep_Res101"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50"
+output_size = (1080,2048)
 # torchvision.models.segmentation.DeepLabV3(backbone=)
 norm_ImageNet = False
 if model == "UNet":
@@ -20,10 +20,12 @@ if model == "UNet":
 elif model == "Deep_Res101":
     net = Deeplab_Res101()
     norm_ImageNet = True
+    output_size = (1080/2, 2048/2)
     net.train()
 elif model == "Deep_Res50":
     net = Deeplab_Res50()
     norm_ImageNet = True
+    output_size = (1080 / 2, 2048 / 2)
     net.train()
 
 elif model == "ConvSame_3":
@@ -44,11 +46,11 @@ print("Device: ", device)
 # Model, Dataset, train_loader, Learning Parameters
 
 dataset = Example_NY(norm_ImageNet=norm_ImageNet,
-                     augmentation_transform=[transforms.CenterCrop((1080, 2048))])  # <--- SET DATASET
+                     augmentation_transform=[transforms.CenterCrop(output_size)])  # <--- SET DATASET
 batch_size = 5  # <--- SET BATCHSIZE
 if model == "Deep_Res101":
     assert batch_size > 1, "Batch size must be larger 1 for Deeplab to work"
-lr = 5e-04  # <--- SET LEARNINGRATE
+lr = 5e-03  # <--- SET LEARNINGRATE
 num_epochs = 5000  # <--- SET NUMBER OF EPOCHS
 start_epoch = 0
 save_freq = 100
