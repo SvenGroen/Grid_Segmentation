@@ -19,10 +19,10 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device: ", device)
 
 model = "UNet"  # Options available: "UNet", "Deep_Res101", "ConvSame_3" <--CHANGE
-model_name = Path("UNet_bs1_lr1e-03_ep2000_cross_entropy") # <--CHANGE
+model_name = Path("UNet_bs5_lr5e-04_ep5000_cross_entropy") # <--CHANGE
 
 
-norm_ImageNet = False
+norm_ImageNet = False 
 if model == "UNet":
     net = UNet(in_channels=3, out_channels=2, n_class=2, kernel_size=3, padding=1, stride=1)
     net.train()
@@ -91,8 +91,8 @@ result = vstack(out)
 # out_folder = (model_state_path / model_name /"evaluation").mkdir(parents=True, exist_ok=True)
 
 # save results
-result.save(model_state_path / "output_example.jpg", "JPEG")
-with open(model_state_path / "metrics.json", "w") as js:
+result.save(model_state_path / Path(model+ "_example_output.jpg"), "JPEG")
+with open(model_state_path / Path(model+"_metrics.json"), "w") as js:
     json.dump(dict(metrics), js)
 
 print("---Python file Completed---")

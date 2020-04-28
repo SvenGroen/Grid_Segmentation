@@ -10,10 +10,10 @@ from models.custom.simple_models.UNet import *
 from DataLoader.Datasets.Examples.NY.NY import *
 from pathlib import Path
 
-model = "Deep_Res50"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50"
+model = "UNet"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50"
 
 # torchvision.models.segmentation.DeepLabV3(backbone=)
-norm_ImageNet = True
+norm_ImageNet = False
 if model == "UNet":
     net = UNet(in_channels=3, out_channels=2, n_class=2, kernel_size=3, padding=1, stride=1)
     net.train()
@@ -45,13 +45,13 @@ print("Device: ", device)
 
 dataset = Example_NY(norm_ImageNet=norm_ImageNet,
                      augmentation_transform=[transforms.CenterCrop((1080, 2048))])  # <--- SET DATASET
-batch_size = 2  # <--- SET BATCHSIZE
+batch_size = 5  # <--- SET BATCHSIZE
 if model == "Deep_Res101":
     assert batch_size > 1, "Batch size must be larger 1 for Deeplab to work"
-lr = 1e-04  # <--- SET LEARNINGRATE
-num_epochs = 20  # <--- SET NUMBER OF EPOCHS
+lr = 5e-04  # <--- SET LEARNINGRATE
+num_epochs = 5000  # <--- SET NUMBER OF EPOCHS
 start_epoch = 0
-save_freq = 20
+save_freq = 100
 
 train_loader = DataLoader(dataset=dataset, batch_size=batch_size)
 train_name = model + "_bs" + str(batch_size) + "_lr" + format(lr, ".0e") + "_ep" + str(
