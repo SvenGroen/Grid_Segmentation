@@ -4,7 +4,6 @@
 #$ -l cuda=2
 #$ -l nv_mem_free=3.8G
 #$ -pe default 2
-#$ -l h_rt=1:30:00
 #$ -l hostname=1picture
 #$ -l hostname=!cippy19.cogsci.uni-osnabrueck.de
 #$ -l hostname=!cippy12.cogsci.uni-osnabrueck.de 

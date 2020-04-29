@@ -10,10 +10,10 @@ from models.custom.simple_models.UNet import *
 from DataLoader.Datasets.Examples.NY.NY import *
 from pathlib import Path
 
-model = "Deep_Res101"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50"
+model = "Deep_Res50"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50"
 output_size = (1080,2048)
 # torchvision.models.segmentation.DeepLabV3(backbone=)
-norm_ImageNet = False
+norm_ImageNet = False 
 if model == "UNet":
     net = UNet(in_channels=3, out_channels=2, n_class=2, kernel_size=3, padding=1, stride=1)
     net.train()
@@ -25,7 +25,7 @@ elif model == "Deep_Res101":
 elif model == "Deep_Res50":
     net = Deeplab_Res50()
     norm_ImageNet = True
-    output_size = (1080 / 2, 2048 / 2)
+    output_size = (1080 / 4, 2048 / 4)
     net.train()
 
 elif model == "ConvSame_3":
@@ -42,29 +42,30 @@ if torch.cuda.is_available():
 print("END OF CUDA INFORMATION")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device: ", device)
-
+net.to(device)
 # Model, Dataset, train_loader, Learning Parameters
 
 dataset = Example_NY(norm_ImageNet=norm_ImageNet,
                      augmentation_transform=[transforms.CenterCrop(output_size)])  # <--- SET DATASET
-batch_size = 5  # <--- SET BATCHSIZE
+batch_size = 2  # <--- SET BATCHSIZE
 if model == "Deep_Res101":
     assert batch_size > 1, "Batch size must be larger 1 for Deeplab to work"
 lr = 5e-03  # <--- SET LEARNINGRATE
-num_epochs = 5000  # <--- SET NUMBER OF EPOCHS
+num_epochs = 1001  # <--- SET NUMBER OF EPOCHS
 start_epoch = 0
-save_freq = 100
+save_freq = 50
 
 train_loader = DataLoader(dataset=dataset, batch_size=batch_size)
 train_name = model + "_bs" + str(batch_size) + "_lr" + format(lr, ".0e") + "_ep" + str(
-    num_epochs) + "_cross_entropy"  # sets name of model based on parameters
+    num_epochs) + "_cross_entropy" + "_ImageNet_"+str(norm_ImageNet)  # sets name of model based on parameters
 model_save_path = Path("code/models/custom/simple_models/trained_models")  # <--- SET PATH WHERE MODEL WILL BE SAVED
 model_save_path = Path.cwd() / model_save_path / train_name
 model_save_path.mkdir(parents=True, exist_ok=True)  # create folder to save results
 model_save_path = model_save_path / train_name
+print("Model saved at: ", model_save_path)
 
 # Training Parameters
-optimizer = optim.Adam(net.parameters(), lr=1e-4)
+optimizer = optim.Adam(net.parameters(), lr=lr)
 loss_criterion = nn.NLLLoss()
 
 
@@ -107,7 +108,6 @@ else:
     checkpoint["total_loss"] = 0
 
 # Start training
-net.to(device)
 print("Start of Training")
 print("Learning with:")
 print("Learning rate: {}, batch_size: {}, number of epochs: {}".format(lr, batch_size, num_epochs))

@@ -11,7 +11,7 @@
 #$ -l hostname=!cippy21
 #$ -N ann_eval
 #$ -l cuda=1
-
+#$ -m n
 
 
 echo " Start of SGE job " 

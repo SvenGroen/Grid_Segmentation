@@ -13,27 +13,31 @@ from models.custom.simple_models.UNet import *
 from DataLoader.Datasets.Examples.NY.NY import *
 from collections import defaultdict
 from utils.metrics import get_IoU
+
 print("---Start of Python File---")
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device: ", device)
 
-model = "UNet"  # Options available: "UNet", "Deep_Res101", "ConvSame_3" <--CHANGE
-model_name = Path("UNet_bs5_lr5e-04_ep5000_cross_entropy") # <--CHANGE
+model = "Deep_Res50"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50" <--CHANGE
+model_name = Path("Deep_Res50_bs2_lr5e-04_ep1000_cross_entropy_ImageNet_True")  # <--CHANGE
 
-
-norm_ImageNet = False 
+output_size = (1080, 2048)
+# torchvision.models.segmentation.DeepLabV3(backbone=)
+norm_ImageNet = False
 if model == "UNet":
     net = UNet(in_channels=3, out_channels=2, n_class=2, kernel_size=3, padding=1, stride=1)
     net.train()
 elif model == "Deep_Res101":
     net = Deeplab_Res101()
     norm_ImageNet = True
+    output_size = (1080 / 2, 2048 / 2)
     net.train()
-# elif model == "Res18_Conv":
-#     net = Res18_Conv()
-#     norm_ImageNet=True
-#     net.train()
+elif model == "Deep_Res50":
+    net = Deeplab_Res50()
+    norm_ImageNet = True
+    output_size = (1080 / 4, 2048 / 4)
+    net.train()
 elif model == "ConvSame_3":
     net = ConvSame_3_net()  # <--- SET MODEL
 else:
@@ -45,10 +49,10 @@ print("Loading: " + str(model_state_path / model_name) + ".pth.tar")
 try:
     if torch.cuda.is_available():
         checkpoint = torch.load(str(model_state_path / model_name) + ".pth.tar")
-        net.load_state_dict(checkpoint["state_dict"],strict=False)
+        net.load_state_dict(checkpoint["state_dict"], strict=False)
     else:
         checkpoint = torch.load(str(model_state_path / model_name) + ".pth.tar", map_location=torch.device("cpu"))
-        net.load_state_dict(checkpoint["state_dict"],strict=False)
+        net.load_state_dict(checkpoint["state_dict"], strict=False)
     print("Model was loaded.")
 except IOError:
     print("model was not found")
@@ -57,9 +61,9 @@ except IOError:
 # evaluation mode:
 net.eval()
 net.to(device)
-batch_size = 5
+batch_size = 2
 # Load test data
-dataset = Example_NY(norm_ImageNet=norm_ImageNet, augmentation_transform=[transforms.CenterCrop((1080, 2048))])
+dataset = Example_NY(norm_ImageNet=norm_ImageNet, augmentation_transform=[transforms.CenterCrop(output_size)])
 # dataset = Example_NY(norm_ImageNet=norm_ImageNet)
 train_loader = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=True)
 
@@ -91,8 +95,8 @@ result = vstack(out)
 # out_folder = (model_state_path / model_name /"evaluation").mkdir(parents=True, exist_ok=True)
 
 # save results
-result.save(model_state_path / Path(model+ "_example_output.jpg"), "JPEG")
-with open(model_state_path / Path(model+"_metrics.json"), "w") as js:
+result.save(model_state_path / Path(model + "_example_output.jpg"), "JPEG")
+with open(model_state_path / Path(model + "_metrics.json"), "w") as js:
     json.dump(dict(metrics), js)
 
 print("---Python file Completed---")
