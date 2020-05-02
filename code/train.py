@@ -121,7 +121,6 @@ for epoch in tqdm(range(start_epoch, start_epoch + num_epochs)):
         #     pred=net(images.cuda())
         # else:
         #     pred=net(images.Float())
-
         pred = net(images)
         loss = F.cross_entropy(pred, labels.long())
         # loss = loss_criterion(pred, labels.long())
@@ -130,7 +129,7 @@ for epoch in tqdm(range(start_epoch, start_epoch + num_epochs)):
         optimizer.step()
         batch_count += 1
         total_loss += loss.item()
-        break
+
     if epoch % save_freq == 0:
         checkpoint["state_dict"] = net.state_dict()
         checkpoint["optimizer_state_dict"] = optimizer.state_dict()
