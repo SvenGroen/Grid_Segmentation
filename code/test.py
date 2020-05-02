@@ -14,9 +14,10 @@ mobile = torchvision.models.mobilenet_v2(pretrained=True)
 # print(mobile)
 a =np.array([34,64])
 b= [2,4,7,9,12,34,67,89,99]
-plt.plot(b)
-plt.show()
-
-print("END OF PYTHON FILE")
 
 
+
+from models.DeepLabV3PlusPytorch.network import *
+
+net = modeling.deeplabv3_mobilenet()
+print(net)
