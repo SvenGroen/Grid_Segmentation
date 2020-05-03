@@ -87,21 +87,22 @@ def save_checkpoint(state, filename=str(model_save_path) + ".pth.tar"):
 LOAD_CHECKPOINT = True
 LOAD_POSITION = -1
 # Load previous model state if needed
-loss_values = []
+
 
 if LOAD_CHECKPOINT:
     try:
-        checkpoint = torch.load(str(model_save_path) + ".pth.tar")
+        checkpoint = torch.load(str(model_save_path) + ".pth.tar", map_location=torch.device(device))
         print("=> Loading checkpoint at epoch {}".format(checkpoint["epoch"][LOAD_POSITION]))
         net.load_state_dict(checkpoint["state_dict"][LOAD_POSITION])
         optimizer.load_state_dict(checkpoint["optimizer_state_dict"][LOAD_POSITION])
         start_epoch = checkpoint["epoch"][LOAD_POSITION]
-        loss_values = checkpoint["loss_values"][LOAD_POSITION]
+        loss_values = checkpoint["loss_values"]
         lr = checkpoint["lr"][LOAD_POSITION]
         for param_group in optimizer.param_groups:
             param_group['lr'] = lr
         batch_size = checkpoint["batchsize"][LOAD_POSITION]
     except IOError:
+        loss_values = []
         print("No previous checkpoint found")
         checkpoint = defaultdict(list)
         checkpoint["state_dict"].append(net.state_dict())
@@ -109,8 +110,9 @@ if LOAD_CHECKPOINT:
         checkpoint["epoch"].append(start_epoch)
         checkpoint["lr"].append(lr)
         checkpoint["batchsize"].append(batch_size)
-        checkpoint["loss_values"] = []
+        checkpoint["loss_values"] = loss_values
 else:
+    loss_values = []
     print("No previous checkpoint found")
     checkpoint = defaultdict(list)
     checkpoint["state_dict"].append(net.state_dict())
@@ -118,7 +120,7 @@ else:
     checkpoint["epoch"].append(start_epoch)
     checkpoint["lr"].append(lr)
     checkpoint["batchsize"].append(batch_size)
-    checkpoint["loss_values"] = []
+    checkpoint["loss_values"] = loss_values
 
 # Start training
 print("Start of Training")
@@ -137,6 +139,7 @@ def save_loss_figure(loss_values):
     plt.ylabel("Loss")
     plt.savefig(str(model_save_path) + "_loss.jpg")
     plt.close()
+
     pass
 
 
@@ -153,7 +156,7 @@ for epoch in tqdm(range(start_epoch, start_epoch + num_epochs)):
         optimizer.step()
         batch_count += 1
         running_loss += loss.item() * images.size(0)
-
+        running_loss += 2 * batch_count
     loss_values.append(running_loss / len(dataset))
     if epoch % save_freq == 0:
         checkpoint["state_dict"].append(net.state_dict())
@@ -161,7 +164,7 @@ for epoch in tqdm(range(start_epoch, start_epoch + num_epochs)):
         checkpoint["epoch"].append(start_epoch)
         checkpoint["lr"].append(lr)
         checkpoint["batchsize"].append(batch_size)
-        checkpoint["loss_values"].append(loss_values)
+        checkpoint["loss_values"] = loss_values
         save_loss_figure(loss_values)
         save_checkpoint(checkpoint)
         print("\nepoch: {}, \t batch: {}, \t loss: {}".format(epoch, batch_count, running_loss))
