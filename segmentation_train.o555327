@@ -1,0 +1,14 @@
+ Start of SGE job 
+
+
+Hostname
+orthosie.neurobiopsychologie.uni-osnabrueck.de
+Job-ID:
+555327
+user:
+sgroen
+
+Start
+
+RUNNING:  code/train_mixed.py
+Current Environemt:  torch

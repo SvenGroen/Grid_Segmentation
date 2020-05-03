@@ -1,0 +1,9 @@
+  0%|          | 0/100 [00:00<?, ?it/s]  1%|          | 1/100 [09:30<15:41:52, 570.84s/it]  2%|▏         | 2/100 [19:09<15:36:07, 573.14s/it]  3%|▎         | 3/100 [28:56<15:33:14, 577.26s/it]  4%|▍         | 4/100 [38:40<15:26:56, 579.34s/it]  5%|▌         | 5/100 [48:26<15:20:16, 581.23s/it]  6%|▌         | 6/100 [57:58<15:06:28, 578.60s/it]  7%|▋         | 7/100 [1:07:17<14:47:37, 572.66s/it]  8%|▊         | 8/100 [1:17:15<14:49:51, 580.34s/it]  9%|▉         | 9/100 [1:27:07<14:45:28, 583.83s/it]/var/lib/gridengine/util/starter.sh: line 41: 27704 Killed                  /usr/bin/cgexec -g freezer,memory,cpuset:${CGPATH} $@
+
+Lavish subscription of memory-resources:
+
+	8192 Mbytes requested,
+	but peak usage was only 3355.2 Mbytes.
+
+------------> Please request grid resources more carefully! <------------
+
