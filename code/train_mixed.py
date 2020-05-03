@@ -27,11 +27,11 @@ elif model == "Deep+_mobile":
     net.train()
 elif model == "Deep_Res101":
     net = Deeplab_Res101()
-    norm_ImageNet = True
+    norm_ImageNet = False
     net.train()
 elif model == "Deep_Res50":
     net = Deeplab_Res50()
-    norm_ImageNet = True
+    norm_ImageNet = False
     net.train()
 elif model == "ConvSame_3":
     net = ConvSame_3_net()  # <--- SET MODEL
@@ -139,7 +139,6 @@ def save_loss_figure(loss_values):
     plt.ylabel("Loss")
     plt.savefig(str(model_save_path) + "_loss.jpg")
     plt.close()
-
     pass
 
 
