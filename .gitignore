@@ -4,3 +4,5 @@
 /.vscode
 /code/models/custom/simple_models/trained_models/Deep*
 /code/models/trained_models/Deep*
+**/*.tar
+**/*.pth.tar
