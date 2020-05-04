@@ -8,9 +8,10 @@ from tqdm import tqdm
 from models.custom.simple_models.simple_models import *
 from models.custom.simple_models.UNet import *
 from DataLoader.Datasets.Examples.NY.NY import *
+
 from pathlib import Path
 
-model = "Deep_Res50"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50"
+model = "Deep_Res50"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "ICNet"
 output_size = (1080,2048)
 # torchvision.models.segmentation.DeepLabV3(backbone=)
 norm_ImageNet = False 
