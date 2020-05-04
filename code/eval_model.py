@@ -23,8 +23,8 @@ print("---Start of Python File---")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device: ", device)
 
-model = "Deep+_mobile"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile" <--CHANGE
-model_name = Path("Deep+_mobile_bs2_lr5e-04_ep100_cross_entropy_ImageNet_False")  # <--CHANGE
+model = "Deep_Res50"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile" <--CHANGE
+model_name = Path("Deep_Res50_bs2_lr1e-04_ep100_cross_entropy_ImageNet_True")  # <--CHANGE
 
 # norm_ImageNet = False
 if model == "UNet":
