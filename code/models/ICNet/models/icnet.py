@@ -9,23 +9,24 @@ from torchsummary import summary
 __all__ = ['ICNet', 'get_icnet', 'get_icnet_resnet50_citys',
            'get_icnet_resnet101_citys', 'get_icnet_resnet152_citys']
 
+
 class ICNet(SegBaseModel):
     """Image Cascade Network"""
-    
-    def __init__(self, nclass = 19, backbone='resnet50', pretrained_base=True):
-        super(ICNet, self).__init__(nclass,backbone, pretrained_base=pretrained_base)
+
+    def __init__(self, nclass=19, backbone='resnet50', pretrained_base=True):
+        super(ICNet, self).__init__(nclass, backbone, pretrained_base=pretrained_base)
         self.conv_sub1 = nn.Sequential(
             _ConvBNReLU(3, 32, 3, 2),
             _ConvBNReLU(32, 32, 3, 2),
             _ConvBNReLU(32, 64, 3, 2)
         )
-        
+
         self.ppm = PyramidPoolingModule()
 
         self.head = _ICHead(nclass)
 
         self.__setattr__('exclusive', ['conv_sub1', 'head'])
-        
+
     def forward(self, x):
         # sub 1
         x_sub1 = self.conv_sub1(x)
@@ -33,35 +34,37 @@ class ICNet(SegBaseModel):
         # sub 2
         x_sub2 = F.interpolate(x, scale_factor=0.5, mode='bilinear', align_corners=True)
         _, x_sub2, _, _ = self.base_forward(x_sub2)
-        
+
         # sub 4
         x_sub4 = F.interpolate(x, scale_factor=0.25, mode='bilinear', align_corners=True)
         _, _, _, x_sub4 = self.base_forward(x_sub4)
         # add PyramidPoolingModule
         x_sub4 = self.ppm(x_sub4)
-        
+
         outputs = self.head(x_sub1, x_sub2, x_sub4)
-        
+
         return tuple(outputs)
 
-class PyramidPoolingModule(nn.Module):
-	def __init__(self, pyramids=[1,2,3,6]):
-		super(PyramidPoolingModule, self).__init__()
-		self.pyramids = pyramids
 
-	def forward(self, input):
-		feat = input
-		height, width = input.shape[2:]
-		for bin_size in self.pyramids:
-			x = F.adaptive_avg_pool2d(input, output_size=bin_size)
-			x = F.interpolate(x, size=(height, width), mode='bilinear', align_corners=True)
-			feat  = feat + x
-		return feat
-    
+class PyramidPoolingModule(nn.Module):
+    def __init__(self, pyramids=[1, 2, 3, 6]):
+        super(PyramidPoolingModule, self).__init__()
+        self.pyramids = pyramids
+
+    def forward(self, input):
+        feat = input
+        height, width = input.shape[2:]
+        for bin_size in self.pyramids:
+            x = F.adaptive_avg_pool2d(input, output_size=bin_size)
+            x = F.interpolate(x, size=(height, width), mode='bilinear', align_corners=True)
+            feat = feat + x
+        return feat
+
+
 class _ICHead(nn.Module):
     def __init__(self, nclass, norm_layer=nn.BatchNorm2d, **kwargs):
         super(_ICHead, self).__init__()
-        #self.cff_12 = CascadeFeatureFusion(512, 64, 128, nclass, norm_layer, **kwargs)
+        # self.cff_12 = CascadeFeatureFusion(512, 64, 128, nclass, norm_layer, **kwargs)
         self.cff_12 = CascadeFeatureFusion(128, 64, 128, nclass, norm_layer, **kwargs)
         self.cff_24 = CascadeFeatureFusion(2048, 512, 128, nclass, norm_layer, **kwargs)
 
@@ -141,4 +144,3 @@ if __name__ == '__main__':
     # print(outputs[2].size()) # torch.Size([1, 19, 50, 50])
     # print(outputs[3].size()) # torch.Size([1, 19, 50, 50])
     pass
-

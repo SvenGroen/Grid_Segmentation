@@ -18,7 +18,7 @@ from collections import defaultdict
 
 print("Python Script Start")
 
-model = "Deep+_mobile"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "ICNet"
+model = "ICNet"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "ICNet"
 criterion = F.cross_entropy
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 norm_ImageNet = False
@@ -61,7 +61,7 @@ batch_size = 10  # <--- SET BATCHSIZE
 if model == "Deep_Res101" or model == "Deep_Res50":
     assert batch_size > 1, "Batch size must be larger 1 for Deeplab to work"
 lr = 1e-04  # <--- SET LEARNINGRATE
-num_epochs = 100  # <--- SET NUMBER OF EPOCHS
+num_epochs = 1009  # <--- SET NUMBER OF EPOCHS
 start_epoch = 0
 save_freq = 2
 

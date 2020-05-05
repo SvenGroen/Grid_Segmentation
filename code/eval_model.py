@@ -14,6 +14,8 @@ from utils.metrics import get_IoU
 from torch.utils.data import DataLoader
 from models.DeepLabV3PlusPytorch.network import *
 from models.custom.simple_models.simple_models import ConvSame_3_net
+from models.ICNet.models import ICNet
+from models.ICNet.utils import ICNetLoss, IterationPolyLR, SegmentationMetric, SetupLogger
 from DataLoader.Datasets.Examples_Green.NY.NY_mixed import *
 from PIL import Image
 from pathlib import Path
@@ -23,8 +25,8 @@ print("---Start of Python File---")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device: ", device)
 
-model = "Deep_Res50"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile" <--CHANGE
-model_name = Path("Deep_Res50_bs2_lr1e-04_ep100_cross_entropy_ImageNet_True")  # <--CHANGE
+model = "ICNet"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile" <--CHANGE
+model_name = Path("ICNet_bs6_lr1e-04_ep100_cross_entropy_ImageNet_False")  # <--CHANGE
 
 # norm_ImageNet = False
 if model == "UNet":
@@ -43,6 +45,11 @@ elif model == "Deep_Res50":
     net.train()
 elif model == "ConvSame_3":
     net = ConvSame_3_net()  # <--- SET MODEL
+    net.train()
+elif model == "ICNet":
+    net = ICNet(nclass=2, backbone='resnet50', pretrained_base=False)  # https://github.com/liminn/ICNet-pytorch
+    criterion = ICNetLoss()
+    criterion.to(device)
     net.train()
 else:
     net = None
@@ -79,6 +86,7 @@ train_loader = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=True)
 to_PIL = transforms.ToPILImage()
 tmp_img, tmp_lbl, tmp_pred = [], [], []
 metrics = defaultdict(list)
+logger = defaultdict(list)
 
 if torch.cuda.is_available():
     start = torch.cuda.Event(enable_timing=True)
@@ -91,8 +99,12 @@ for batch in train_loader:
     if torch.cuda.is_available():
         start.record()
     start_time = time.time()
-    outputs = net(images)
-    outputs = torch.argmax(outputs, dim=1).float()
+    with torch.autograd.profiler.profile(use_cuda=torch.cuda.is_available()) as prof:
+        outputs = net(images)
+        if model == "ICNet":
+            outputs = outputs[0][:, :, :-2, :]
+        outputs = torch.argmax(outputs, dim=1).float()
+    logger["profiler_averages"].append(prof.total_average())
     if torch.cuda.is_available():
         end.record()
         torch.cuda.synchronize(device=device)
@@ -109,12 +121,12 @@ for batch in train_loader:
         tmp_img.append(img)
         tmp_lbl.append(lbl)
         tmp_pred.append(pred_img)
+    else:
+        break
 # print(prof.key_averages().table())
 
 metrics["Mean-IoU"] = [np.array(metrics["IoU"]).mean()]
-print("Mean-IoU: ", metrics["Mean-IoU"][0], "; Mean_time.time() (in Secounds): ", np.array(metrics["time.time()"]).mean())
-if torch.cuda.is_available():
-    print("Mean cuda_time: ", np.array(metrics["cuda_time"]).mean())
+
 # Save image file
 out = []
 for i in range(len(tmp_img)):
@@ -122,9 +134,24 @@ for i in range(len(tmp_img)):
 result = vstack(out)
 # out_folder = (model_state_path / model_name /"evaluation").mkdir(parents=True, exist_ok=True)
 
+
 # save results
 result.save(model_save_path / Path(model + "_example_output.jpg"), "JPEG")
 with open(model_save_path / Path(model + "_metrics.json"), "w") as js:
     json.dump(dict(metrics), js)
+
+with open(str(model_save_path / "eval_results.txt"), "w") as txt_file:
+    txt_file.write("Model: {}\n".format(model_name))
+    txt_file.write("Torch cudnn version: {}\n".format(torch.backends.cudnn.version()))
+    txt_file.write("Torch cudnn enabled: {}\n".format(torch.backends.cudnn.enabled))
+    txt_file.write("Cudnn benchmark: {}\n".format(torch.backends.cudnn.benchmark))
+    txt_file.write("Cudnn deterministic: {}\n".format( torch.backends.cudnn.deterministic))
+    if torch.cuda.is_available():
+        txt_file.write("Mean cuda_time: {}\n".format( np.array(metrics["cuda_time"]).mean()))
+    txt_file.write("Mean-IoU: {}; Mean_time.time() (in Secounds): {}\n".format(metrics["Mean-IoU"][0],
+                   np.array(metrics["time.time()"]).mean()))
+    txt_file.write("---Profiler Information---")
+    txt_file.write("total average(): {}\n".format(logger["profiler_averages"][-1]))
+    txt_file.write(prof.table(sort_by="self_cpu_time_total"))
 
 print("---Python file Completed---")
