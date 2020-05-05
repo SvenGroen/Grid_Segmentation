@@ -1,7 +1,7 @@
 #!/bin/bash
 #$ -l mem=8G
 #$ -cwd
-#$ -l cuda=2
+#$ -l cuda=1
 #$ -l nv_mem_free=3.8G
 #$ -pe default 2
 #$ -l hostname=1picture
@@ -9,7 +9,6 @@
 #$ -l hostname=!cippy12.cogsci.uni-osnabrueck.de 
 #$ -l hostname=!cippy21.cogsci.uni-osnabrueck.de 
 #$ -N segmentation_train
-#$ -l cuda=1
 
 
 echo " Start of SGE job " 
