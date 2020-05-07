@@ -1,0 +1,26 @@
+ Start of SGE job 
+
+
+Hostname
+themisto.neurobiopsychologie.uni-osnabrueck.de
+Job-ID:
+556760
+user:
+sgroen
+
+Start
+
+RUNNING:  code/train_mixed.py
+Current Environemt:  torch
+Python Script Start
+Trying to load previous Checkpoint ...
+=> Loading checkpoint at epoch 28
+--- Learning parameters: ---
+Device: cuda; Model: Deep+_mobile;
+Learning rate: 0.0001; Number of epochs: 100; Batch Size: 10
+Loss criterion:  <function cross_entropy at 0x2b062c179ae8>
+Applied Augmentation Transforms:  [RandomPerspective(p=0.5), ColorJitter(brightness=[0.5, 1.5], contrast=[0.5, 1.5], saturation=[0.5, 1.5], hue=None), RandomAffine(degrees=(-10, 10), scale=(1, 1.5)), RandomGrayscale(p=0.1), RandomGrayscale(p=0.1), RandomHorizontalFlip(p=0.7)]
+Normalized by Imagenet_Values:  False
+Model Deep+_mobile saved at: /net/projects/scratch/summer/valid_until_31_January_2021/sgroen/Git_Repos/Grid_Segmentation/code/models/trained_models/Examples_Green/Deep+_mobile_bs10_lr1e-04_ep100_cross_entropy_ImageNet_False/Deep+_mobile_bs10_lr1e-04_ep100_cross_entropy_ImageNet_False
+----------------------------
+>>>Start of Training<<<

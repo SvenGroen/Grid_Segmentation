@@ -1,0 +1,14 @@
+ Start of SGE job 
+
+
+Hostname
+electra.ni.uni-osnabrueck.de
+Job-ID:
+556756
+user:
+sgroen
+
+Start
+
+RUNNING:  code/train_mixed.py
+Current Environemt:  torch

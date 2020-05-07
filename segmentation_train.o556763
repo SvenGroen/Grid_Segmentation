@@ -1,0 +1,14 @@
+ Start of SGE job 
+
+
+Hostname
+voxel.cv.uni-osnabrueck.de
+Job-ID:
+556763
+user:
+sgroen
+
+Start
+
+RUNNING:  code/train_mixed.py
+Current Environemt:  torch

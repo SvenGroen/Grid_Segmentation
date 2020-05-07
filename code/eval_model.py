@@ -25,8 +25,8 @@ print("---Start of Python File---")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device: ", device)
 
-model = "ICNet"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile" <--CHANGE
-model_name = Path("ICNet_bs6_lr1e-04_ep100_cross_entropy_ImageNet_False")  # <--CHANGE
+model = "Deep+_mobile"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile" <--CHANGE
+model_name = Path("Deep+_mobile_bs10_lr1e-04_ep100_cross_entropy_ImageNet_False")  # <--CHANGE
 
 # norm_ImageNet = False
 if model == "UNet":
@@ -121,9 +121,7 @@ for batch in train_loader:
         tmp_img.append(img)
         tmp_lbl.append(lbl)
         tmp_pred.append(pred_img)
-    else:
-        break
-# print(prof.key_averages().table())
+
 
 metrics["Mean-IoU"] = [np.array(metrics["IoU"]).mean()]
 

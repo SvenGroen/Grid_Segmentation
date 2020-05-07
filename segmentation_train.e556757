@@ -1,0 +1,9 @@
+/var/lib/gridengine/util/starter.sh: line 41: 23153 Killed                  /usr/bin/cgexec -g freezer,memory,cpuset:${CGPATH} $@
+
+Lavish subscription of memory-resources:
+
+	8192 Mbytes requested,
+	but peak usage was only 13.7 Mbytes.
+
+------------> Please request grid resources more carefully! <------------
+

@@ -1,0 +1,43 @@
+  0%|          | 0/100 [00:00<?, ?it/s]  0%|          | 0/100 [00:06<?, ?it/s]
+Traceback (most recent call last):
+  File "code/train_mixed.py", line 153, in <module>
+    pred = net(images)
+  File "/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/miniconda/envs/torch/lib/python3.6/site-packages/torch/nn/modules/module.py", line 532, in __call__
+    result = self.forward(*input, **kwargs)
+  File "/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/Git_Repos/Grid_Segmentation/code/models/DeepLabV3PlusPytorch/network/utils.py", line 15, in forward
+    features = self.backbone(x)
+  File "/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/miniconda/envs/torch/lib/python3.6/site-packages/torch/nn/modules/module.py", line 532, in __call__
+    result = self.forward(*input, **kwargs)
+  File "/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/Git_Repos/Grid_Segmentation/code/models/DeepLabV3PlusPytorch/network/utils.py", line 72, in forward
+    x = module(x)
+  File "/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/miniconda/envs/torch/lib/python3.6/site-packages/torch/nn/modules/module.py", line 532, in __call__
+    result = self.forward(*input, **kwargs)
+  File "/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/miniconda/envs/torch/lib/python3.6/site-packages/torch/nn/modules/container.py", line 100, in forward
+    input = module(input)
+  File "/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/miniconda/envs/torch/lib/python3.6/site-packages/torch/nn/modules/module.py", line 532, in __call__
+    result = self.forward(*input, **kwargs)
+  File "/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/Git_Repos/Grid_Segmentation/code/models/DeepLabV3PlusPytorch/network/backbone/mobilenetv2.py", line 79, in forward
+    return self.conv(x_pad)
+  File "/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/miniconda/envs/torch/lib/python3.6/site-packages/torch/nn/modules/module.py", line 532, in __call__
+    result = self.forward(*input, **kwargs)
+  File "/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/miniconda/envs/torch/lib/python3.6/site-packages/torch/nn/modules/container.py", line 100, in forward
+    input = module(input)
+  File "/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/miniconda/envs/torch/lib/python3.6/site-packages/torch/nn/modules/module.py", line 532, in __call__
+    result = self.forward(*input, **kwargs)
+  File "/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/miniconda/envs/torch/lib/python3.6/site-packages/torch/nn/modules/container.py", line 100, in forward
+    input = module(input)
+  File "/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/miniconda/envs/torch/lib/python3.6/site-packages/torch/nn/modules/module.py", line 532, in __call__
+    result = self.forward(*input, **kwargs)
+  File "/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/miniconda/envs/torch/lib/python3.6/site-packages/torch/nn/modules/conv.py", line 345, in forward
+    return self.conv2d_forward(input, self.weight)
+  File "/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/miniconda/envs/torch/lib/python3.6/site-packages/torch/nn/modules/conv.py", line 342, in conv2d_forward
+    self.padding, self.dilation, self.groups)
+RuntimeError: CUDA out of memory. Tried to allocate 112.00 MiB (GPU 0; 3.94 GiB total capacity; 3.38 GiB already allocated; 67.75 MiB free; 3.42 GiB reserved in total by PyTorch)
+
+Lavish subscription of memory-resources:
+
+	8192 Mbytes requested,
+	but peak usage was only 3130.7 Mbytes.
+
+------------> Please request grid resources more carefully! <------------
+

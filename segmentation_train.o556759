@@ -1,0 +1,14 @@
+ Start of SGE job 
+
+
+Hostname
+hitode.ikw.uni-osnabrueck.de
+Job-ID:
+556759
+user:
+sgroen
+
+Start
+
+RUNNING:  code/train_mixed.py
+Current Environemt:  torch

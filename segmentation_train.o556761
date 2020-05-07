@@ -1,0 +1,14 @@
+ Start of SGE job 
+
+
+Hostname
+cippy23.cogsci.uni-osnabrueck.de
+Job-ID:
+556761
+user:
+sgroen
+
+Start
+
+RUNNING:  code/train_mixed.py
+Current Environemt:  torch
