@@ -13,9 +13,9 @@ from pathlib import Path
 
 
 vid_path = Path(Path.cwd()) / "data/Videos/Examples_Green"
-backgroundname = Path("raw")
+backgroundname = Path("raw_HD")
 
-output_size = (int(2048 / 4),int(1080 / 4))
+output_size = (int(2048),int(1080))
 lower_green = np.array([0, 150, 0])
 upper_green = np.array([100, 255, 120])
 

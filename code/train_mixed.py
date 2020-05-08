@@ -60,8 +60,8 @@ dataset = NY_mixed(transforms=transform)  # <--- SET DATASET
 batch_size = 6  # <--- SET BATCHSIZE
 if model == "Deep_Res101" or model == "Deep_Res50":
     assert batch_size > 1, "Batch size must be larger 1 for Deeplab to work"
-lr = 1e-03  # <--- SET LEARNINGRATE
-num_epochs = 100  # <--- SET NUMBER OF EPOCHS
+lr = 1e-02  # <--- SET LEARNINGRATE
+num_epochs = 1000  # <--- SET NUMBER OF EPOCHS
 start_epoch = 0
 save_freq = 1
 
@@ -136,17 +136,23 @@ print("Model {} saved at: {}".format(model, model_save_path))
 print("----------------------------")
 
 
-def save_loss_figure(loss_values):
+def save_figure(loss_values, what=""):
     plt.plot(loss_values)
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
-    plt.savefig(str(model_save_path) + "_loss.jpg")
+    plt.savefig(str(model_save_path) + "_" + what + ".jpg")
     plt.close()
     pass
 
 
+lrs = []
+scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=20, gamma=0.1)
+for param_group in optimizer.param_groups:
+    lrs.append(param_group['lr'])
 print(">>>Start of Training<<<")
 for epoch in tqdm(range(start_epoch, start_epoch + num_epochs)):
+    for param_group in optimizer.param_groups:
+        print("LR: ", param_group['lr'])
     running_loss = 0
     for batch in train_loader:
         images, labels = batch
@@ -157,15 +163,17 @@ for epoch in tqdm(range(start_epoch, start_epoch + num_epochs)):
         optimizer.step()
         running_loss += loss.item() * images.size(0)
     loss_values.append(running_loss / len(dataset))
-
+    scheduler.step()
     if epoch % save_freq == 0:
         checkpoint["state_dict"].append(net.state_dict())
         checkpoint["optimizer_state_dict"].append(optimizer.state_dict())
         checkpoint["epoch"].append(epoch)
-        checkpoint["lr"].append(lr)
+        for param_group in optimizer.param_groups:
+            checkpoint["lr"].append(param_group['lr'])
         checkpoint["batchsize"].append(batch_size)
         checkpoint["loss_values"] = loss_values
-        save_loss_figure(loss_values)
+        save_figure(loss_values, what="loss")
+        save_figure(lrs, what="LRs")
         save_checkpoint(checkpoint)
         print("\nepoch: {},\t loss: {}".format(epoch, running_loss))
 

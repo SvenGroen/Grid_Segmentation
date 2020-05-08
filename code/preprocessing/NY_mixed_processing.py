@@ -11,11 +11,11 @@ import os
 from collections import defaultdict
 from pathlib import Path
 
-raw_frames_path = Path(Path.cwd()) / "data/Images/Examples_Green/raw"
+raw_frames_path = Path(Path.cwd()) / "data/Images/Examples_Green/raw_HD"
 video_names = [vid.stem for vid in raw_frames_path.glob("*")]
 
-output_size = (int(2048 / 4), int(1080 / 4))
-backgroundname = Path("NY-city")
+output_size = (int(2048), int(1080))
+backgroundname = Path("NY-city_HD")
 backgroundimage = cv2.imread(str(Path.cwd() / "data/Images/Examples/NY-city/NY-city.jpg"))
 backgroundimage = cv2.resize(backgroundimage, output_size)
 
