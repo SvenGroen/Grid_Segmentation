@@ -18,7 +18,8 @@ from collections import defaultdict
 
 print("Python Script Start")
 
-model = "Deep+_mobile"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "ICNet"
+model = "Deep_Res50"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "ICNet"
+ID = "01"
 criterion = F.cross_entropy
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 norm_ImageNet = False
@@ -57,17 +58,17 @@ transform = [T.RandomPerspective(distortion_scale=0.1), T.ColorJitter(0.5, 0.5, 
              T.RandomAffine(degrees=10, scale=(1, 1.5)), T.RandomGrayscale(p=0.1), T.RandomGrayscale(p=0.1),
              T.RandomHorizontalFlip(p=0.7)]
 dataset = NY_mixed(transforms=transform)  # <--- SET DATASET
-batch_size = 6  # <--- SET BATCHSIZE
+batch_size = 2  # <--- SET BATCHSIZE
 if model == "Deep_Res101" or model == "Deep_Res50":
     assert batch_size > 1, "Batch size must be larger 1 for Deeplab to work"
 lr = 1e-02  # <--- SET LEARNINGRATE
-num_epochs = 1000  # <--- SET NUMBER OF EPOCHS
+num_epochs = 100  # <--- SET NUMBER OF EPOCHS
+scheduler_step_size = 15
 start_epoch = 0
 save_freq = 1
 
 train_loader = DataLoader(dataset=dataset, batch_size=batch_size)
-train_name = model + "_bs" + str(batch_size) + "_lr" + format(lr, ".0e") + "_ep" + str(
-    num_epochs) + "_cross_entropy" + "_ImageNet_" + str(norm_ImageNet)  # sets name of model based on parameters
+train_name = model + "_bs" + str(batch_size) + "_startLR" + format(lr, ".0e") +"Sched_Step_" +str(scheduler_step_size)+ "_cross_entropy" + "_ImageNet_" + str(norm_ImageNet) + "ID"+ID  # sets name of model based on parameters
 model_save_path = Path(
     "code/models/trained_models/Examples_Green")  # <--- SET PATH WHERE MODEL WILL BE SAVED
 model_save_path = Path.cwd() / model_save_path / train_name
@@ -87,7 +88,7 @@ def save_checkpoint(state, filename=str(model_save_path) + ".pth.tar"):
 LOAD_CHECKPOINT = True
 LOAD_POSITION = -1
 # Load previous model state if needed
-
+lrs = []
 
 if LOAD_CHECKPOINT:
     print("Trying to load previous Checkpoint ...")
@@ -98,9 +99,9 @@ if LOAD_CHECKPOINT:
         optimizer.load_state_dict(checkpoint["optimizer_state_dict"][LOAD_POSITION])
         start_epoch = checkpoint["epoch"][LOAD_POSITION]
         loss_values = checkpoint["loss_values"]
-        lr = checkpoint["lr"][LOAD_POSITION]
+        lrs = checkpoint["lr"]
         for param_group in optimizer.param_groups:
-            param_group['lr'] = lr
+            param_group['lr'] = lrs[LOAD_POSITION]
         batch_size = checkpoint["batchsize"][LOAD_POSITION]
     except IOError:
         loss_values = []
@@ -136,23 +137,22 @@ print("Model {} saved at: {}".format(model, model_save_path))
 print("----------------------------")
 
 
-def save_figure(loss_values, what=""):
-    plt.plot(loss_values)
+def save_figure(values, what=""):
+    plt.plot(values)
     plt.xlabel("Epoch")
-    plt.ylabel("Loss")
+    plt.ylabel(what)
     plt.savefig(str(model_save_path) + "_" + what + ".jpg")
     plt.close()
     pass
 
 
-lrs = []
-scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=20, gamma=0.1)
-for param_group in optimizer.param_groups:
-    lrs.append(param_group['lr'])
+# use schedular for learning rate
+scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=scheduler_step_size, gamma=0.1)
+
 print(">>>Start of Training<<<")
 for epoch in tqdm(range(start_epoch, start_epoch + num_epochs)):
     for param_group in optimizer.param_groups:
-        print("LR: ", param_group['lr'])
+        lrs.append(param_group['lr'])
     running_loss = 0
     for batch in train_loader:
         images, labels = batch
@@ -173,7 +173,7 @@ for epoch in tqdm(range(start_epoch, start_epoch + num_epochs)):
         checkpoint["batchsize"].append(batch_size)
         checkpoint["loss_values"] = loss_values
         save_figure(loss_values, what="loss")
-        save_figure(lrs, what="LRs")
+        save_figure(lrs, what="LR")
         save_checkpoint(checkpoint)
         print("\nepoch: {},\t loss: {}".format(epoch, running_loss))
 
