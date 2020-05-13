@@ -1,7 +1,10 @@
+import json
+import argparse
 from torch.utils.data import DataLoader
 import torch.nn.functional as F
 from torch import nn
 import torch
+import numpy as np
 import torchvision
 import torch.optim as optim
 import torchvision.transforms as T
@@ -15,33 +18,59 @@ from models.ICNet.utils import ICNetLoss, IterationPolyLR, SegmentationMetric, S
 from pathlib import Path
 import matplotlib.pyplot as plt
 from collections import defaultdict
+import time
+import sys
+start_time = time.time()
 
-print("Python Script Start")
-
-model = "Deep_Res50"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "ICNet"
-ID = "01"
-criterion = F.cross_entropy
+config = {
+    # DEFAULT CONFIG
+    "model": "ICNet",
+    # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "ICNet"
+    "ID": "01",
+    "lr": 1e-02,
+    "batch_size": 2,
+    "num_epochs": 1,
+    "scheduler_step_size": 15,
+    "save freq": 1,
+    "save_path": "code/models/trained_models/Examples_Green/multiples"
+}
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-norm_ImageNet = False
-if model == "UNet":
+parser = argparse.ArgumentParser()
+parser.add_argument("-cfg", "--config",
+                    help="The Path to the configuration json for the model.\nShould include: model, ID, lr, batchsize,"
+                         " num_epochs, scheduler_step_size, save_freq, save_path", type=str)
+
+args = parser.parse_args()
+if args.config is not None:
+    with open(args.config) as js:
+        print("Loading config: ", args.config)
+        config = json.load(js)
+
+
+# Assertions for config
+if config["model"] == "Deep_Res101" or config["model"] == "Deep_Res50":
+    assert config["batch_size"] > 1, "Batch size must be larger 1 for Deeplab to work"
+
+# selects model
+if config["model"] == "UNet":
     net = UNet(in_channels=3, out_channels=2, n_class=2, kernel_size=3, padding=1, stride=1)
     net.train()
-elif model == "Deep+_mobile":
+elif config["model"] == "Deep+_mobile":
     net = modeling.deeplabv3_mobilenet(num_classes=2,
                                        pretrained_backbone=True)  # https://github.com/VainF/DeepLabV3Plus-Pytorch
     net.train()
-elif model == "Deep_Res101":
+elif config["model"] == "Deep_Res101":
     net = Deeplab_Res101()
     norm_ImageNet = False
     net.train()
-elif model == "Deep_Res50":
+elif config["model"] == "Deep_Res50":
     net = Deeplab_Res50()
     norm_ImageNet = False
     net.train()
-elif model == "ConvSame_3":
+elif config["model"] == "ConvSame_3":
     net = ConvSame_3_net()
     net.train()
-elif model == "ICNet":
+elif config["model"] == "ICNet":
     net = ICNet(nclass=2, backbone='resnet50', pretrained_base=False)  # https://github.com/liminn/ICNet-pytorch
     criterion = ICNetLoss()
     criterion.to(device)
@@ -49,40 +78,33 @@ elif model == "ICNet":
 else:
     net = None
     print("Model unknown")
-
 net.to(device)
 
-# --- Set Training parameters
-# Augmentation transforms
+# parameters not set by config
+if config["model"] != "ICNet":
+    criterion = F.cross_entropy
+norm_ImageNet = False
+start_epoch = 0
+optimizer = optim.Adam(net.parameters(), lr=config["lr"])
+scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=config["scheduler_step_size"], gamma=0.1)
+runtime = time.time()-start_time
+
+# Dataset used (Greenscreen frames 512x270 (2048x1080 /4)
 transform = [T.RandomPerspective(distortion_scale=0.1), T.ColorJitter(0.5, 0.5, 0.5),
              T.RandomAffine(degrees=10, scale=(1, 1.5)), T.RandomGrayscale(p=0.1), T.RandomGrayscale(p=0.1),
              T.RandomHorizontalFlip(p=0.7)]
 dataset = NY_mixed(transforms=transform)  # <--- SET DATASET
-batch_size = 2  # <--- SET BATCHSIZE
-if model == "Deep_Res101" or model == "Deep_Res50":
-    assert batch_size > 1, "Batch size must be larger 1 for Deeplab to work"
-lr = 1e-02  # <--- SET LEARNINGRATE
-num_epochs = 100  # <--- SET NUMBER OF EPOCHS
-scheduler_step_size = 15
-start_epoch = 0
-save_freq = 1
+train_loader = DataLoader(dataset=dataset, batch_size=config["batch_size"])
 
-train_loader = DataLoader(dataset=dataset, batch_size=batch_size)
-train_name = model + "_bs" + str(batch_size) + "_startLR" + format(lr, ".0e") +"Sched_Step_" +str(scheduler_step_size)+ "_cross_entropy" + "_ImageNet_" + str(norm_ImageNet) + "ID"+ID  # sets name of model based on parameters
-model_save_path = Path(
-    "code/models/trained_models/Examples_Green")  # <--- SET PATH WHERE MODEL WILL BE SAVED
-model_save_path = Path.cwd() / model_save_path / train_name
+# saving the models
+train_name = config["model"] + "_bs" + str(config["batch_size"]) + "_startLR" + format(config["lr"],
+                                                                                       ".0e") + "Sched_Step_" + str(
+    config["scheduler_step_size"]) + "ID" + config["ID"]  # sets name of model based on parameters
+model_save_path = Path.cwd() / Path(config["save_path"]) / train_name
 model_save_path.mkdir(parents=True, exist_ok=True)  # create folder to save results
-model_save_path = model_save_path / train_name
-
-# Training Parameters
-optimizer = optim.Adam(net.parameters(), lr=lr)
-
-
-def save_checkpoint(state, filename=str(model_save_path) + ".pth.tar"):
-    print("=> Saving checkpoint at epoch {}".format(state["epoch"][-1]))
-    torch.save(state, Path(filename))
-
+with open(str(model_save_path / "train_config.json"), "w") as js:  # save learn config
+    json.dump(config, js)
+model_save_path = model_save_path / train_name  # "go" in the directory
 
 # Flags
 LOAD_CHECKPOINT = True
@@ -102,7 +124,8 @@ if LOAD_CHECKPOINT:
         lrs = checkpoint["lr"]
         for param_group in optimizer.param_groups:
             param_group['lr'] = lrs[LOAD_POSITION]
-        batch_size = checkpoint["batchsize"][LOAD_POSITION]
+        config["batch_size"] = checkpoint["batchsize"][LOAD_POSITION]
+        runtime = checkpoint["runtime"]
     except IOError:
         loss_values = []
         print("=> No previous checkpoint found")
@@ -110,9 +133,10 @@ if LOAD_CHECKPOINT:
         checkpoint["state_dict"].append(net.state_dict())
         checkpoint["optimizer_state_dict"].append(optimizer.state_dict())
         checkpoint["epoch"].append(start_epoch)
-        checkpoint["lr"].append(lr)
-        checkpoint["batchsize"].append(batch_size)
+        checkpoint["lr"].append(config["lr"])
+        checkpoint["batchsize"].append(config["batch_size"])
         checkpoint["loss_values"] = loss_values
+        checkpoint["runtime"] = time.time() - start_time
 else:
     print("Previous checkpoints may exists but are not loaded")
     loss_values = []
@@ -120,23 +144,28 @@ else:
     checkpoint["state_dict"].append(net.state_dict())
     checkpoint["optimizer_state_dict"].append(optimizer.state_dict())
     checkpoint["epoch"].append(start_epoch)
-    checkpoint["lr"].append(lr)
-    checkpoint["batchsize"].append(batch_size)
+    checkpoint["lr"].append(config["lr"])
+    checkpoint["batchsize"].append(config["batch_size"])
     checkpoint["loss_values"] = loss_values
+    checkpoint["runtime"] = time.time() - start_time
 
 # Start training
 
 print("--- Learning parameters: ---")
-print("Device: {}; Model: {};\nLearning rate: {}; Number of epochs: {}; Batch Size: {}".format(device, model, str(lr),
-                                                                                               str(num_epochs),
-                                                                                               str(batch_size)))
+print("Device: {}; Model: {};\nLearning rate: {}; Number of epochs: {}; Batch Size: {}".format(device, config["model"],
+                                                                                               str(config["lr"]),
+                                                                                               str(config[
+                                                                                                       "num_epochs"]),
+                                                                                               str(config[
+                                                                                                       "batch_size"])))
 print("Loss criterion: ", criterion)
 print("Applied Augmentation Transforms: ", transform)
 print("Normalized by Imagenet_Values: ", norm_ImageNet)
-print("Model {} saved at: {}".format(model, model_save_path))
+print("Model {} saved at: {}".format(config["model"], model_save_path))
 print("----------------------------")
 
 
+# usefull functions
 def save_figure(values, what=""):
     plt.plot(values)
     plt.xlabel("Epoch")
@@ -146,11 +175,47 @@ def save_figure(values, what=""):
     pass
 
 
-# use schedular for learning rate
-scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=scheduler_step_size, gamma=0.1)
+def save_checkpoint(state, filename=str(model_save_path) + ".pth.tar"):
+    print("=> Saving checkpoint at epoch {}".format(state["epoch"][-1]))
+    checkpoint["state_dict"].append(net.state_dict())
+    checkpoint["optimizer_state_dict"].append(optimizer.state_dict())
+    checkpoint["epoch"].append(epoch)
+    for param_group in optimizer.param_groups:
+        checkpoint["lr"].append(param_group['lr'])
+    checkpoint["batchsize"].append(config["batch_size"])
+    checkpoint["loss_values"] = loss_values
+    checkpoint["runtime"] = time.time() - start_time
+    save_figure(loss_values, what="loss")
+    save_figure(lrs, what="LR")
+    torch.save(state, Path(filename))
+
+time_tmp = []
+start_train_time = time.time()
+avrg_epoch_time = 60
+restart_time = 28800 # 8 Stunden
+max_time = 86400
 
 print(">>>Start of Training<<<")
-for epoch in tqdm(range(start_epoch, start_epoch + num_epochs)):
+
+
+def restart_script():
+    from subprocess import call
+    recallParameter = 'qsub -v CFG=' + str(model_save_path / "train_config.json") + ' train_mixed.sge'
+    call(recallParameter, shell=True)
+    pass
+
+
+for epoch in tqdm(range(start_epoch, config["num_epochs"])):
+    epoch_start = time.time()
+    if epoch_start -start_time > max_time:
+        sys.stderr.write("Stopping because programm was running to long (>24h)")
+        save_checkpoint(checkpoint)
+        break
+    if epoch_start -start_time > restart_time - avrg_epoch_time:
+        sys.stderr.write("Stopping at epoch {} because wall time would be reached".format(epoch))
+        save_checkpoint(checkpoint)
+        restart_script()
+        break
     for param_group in optimizer.param_groups:
         lrs.append(param_group['lr'])
     running_loss = 0
@@ -164,18 +229,14 @@ for epoch in tqdm(range(start_epoch, start_epoch + num_epochs)):
         running_loss += loss.item() * images.size(0)
     loss_values.append(running_loss / len(dataset))
     scheduler.step()
-    if epoch % save_freq == 0:
-        checkpoint["state_dict"].append(net.state_dict())
-        checkpoint["optimizer_state_dict"].append(optimizer.state_dict())
-        checkpoint["epoch"].append(epoch)
-        for param_group in optimizer.param_groups:
-            checkpoint["lr"].append(param_group['lr'])
-        checkpoint["batchsize"].append(batch_size)
-        checkpoint["loss_values"] = loss_values
-        save_figure(loss_values, what="loss")
-        save_figure(lrs, what="LR")
+    if epoch % config["save freq"] == 0:
         save_checkpoint(checkpoint)
         print("\nepoch: {},\t loss: {}".format(epoch, running_loss))
+
+    epoch_end = time.time() - epoch_start()
+    time_tmp.append(epoch_end)
+    avrg_epoch_time = np.array(time_tmp).mean()
+
 
 print(">>>End of Training<<<")
 # save model after training
