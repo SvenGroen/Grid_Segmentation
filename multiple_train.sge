@@ -1,14 +1,17 @@
 #!/bin/bash
-#$ -l mem=6G
+#$ -l mem=2G
 #$ -cwd
-#$ -l cuda=1
 #$ -pe default 1
-#$ -l hostname=!*cippy19*
+#$ -l hostname=1picture
 #$ -l hostname=!*cippy12* 
+#$ -l hostname=!*cippy19* 
 #$ -l hostname=!*cippy21*
+#$ -N job_starter 
 #$ -l hostname=!*cippy25*
-#$ -l h_rt=04:00:00 
-#$ -m n
+#$ -l hostname=*cippy*
+#$ -l hostname=!*cippy06*
+#$ -o /dev/null"
+#$ -e /dev/null"
 
 echo " Start of SGE job " 
 echo "$date"
@@ -23,11 +26,8 @@ echo $USER
 echo ""
 echo "Start"
 echo ""
-echo "PWD: "
-echo $PWD
 
-
-setup_file=code/train_mixed.py 
+setup_file=code/train_multiple.py 
 env_name=torch
 #Scratch_wd_21 is a variable that stores the path to my scratch folder in which i installed anaconda
 export SCRATCH_WD_21="/net/projects/scratch/summer/valid_until_31_January_2021/sgroen"
@@ -38,6 +38,7 @@ source $SCRATCH_WD_21/miniconda/bin/activate $env_name
 
 echo "RUNNING: " $setup_file
 echo "Current Environemt: " $env_name
-echo "CONFIG FOR RUNNING: " $CFG
 
-python $setup_file -cfg $CFG
+
+python $setup_file
+

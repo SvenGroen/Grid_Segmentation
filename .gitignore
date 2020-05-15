@@ -6,3 +6,8 @@
 /**/*.tar
 /**/__pycache__/
 /code/models/trained_models/Examples_Green/*/*.pth.tar
+/code/models/trained_models/Examples_Green/multiples/**/*.pth.tar
+/code/models/trained_models/Examples_Green/multiples/session*/*.pth.tar
+**/*.tar
+
+

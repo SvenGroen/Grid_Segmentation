@@ -1,13 +1,15 @@
 import json
 from pathlib import Path
 
-models = ["ICNet"]# Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "ICNet"
-start_lrs = [1e-02]
-step_sizes = [10]
-num_epochs = [100]
-batch_sizes = [2]
+models = ["ICNet", "Deep+_mobile",
+          "Deep_Res50"]  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "ICNet"
+start_lrs = [1e-02, 1e-02, 1e-02]
+step_sizes = [10, 20, 25]
+num_epochs = [100, 100, 100]
+batch_sizes = [2, 2, 2]
 config = {}
 config_paths = []
+models_name = []
 for model in models:
     for i in range(len(start_lrs)):
         config["lr"] = start_lrs[i]
@@ -27,9 +29,15 @@ for model in models:
         with open(str(model_save_path / "train_config.json"), "w") as js:  # save learn config
             json.dump(config, js)
         config_paths.append(str(model_save_path / "train_config.json"))
+        models_name.append(model)
 
-for cfg in config_paths:
+for i, cfg in enumerate(config_paths):
     from subprocess import call
 
-    recallParameter = 'qsub -v CFG=' + cfg + ' train_mixed.sge'
+    if "Deep_Res" in models_name[i]:
+        recallParameter = 'qsub -N ' + "log_" + str(i) + models_name[i] + ' -l nv_mem_free=3.9G -v CFG=' + cfg + ' train_mixed.sge'
+    else:
+        recallParameter = 'qsub -N ' + "log_" + str(i) + models_name[
+            i] + ' -l nv_mem_free=3.4G -v CFG=' + cfg + ' train_mixed.sge'
+
     call(recallParameter, shell=True)

@@ -104,7 +104,6 @@ model_save_path = Path.cwd() / Path(config["save_path"]) / train_name
 model_save_path.mkdir(parents=True, exist_ok=True)  # create folder to save results
 with open(str(model_save_path / "train_config.json"), "w") as js:  # save learn config
     json.dump(config, js)
-model_save_path = model_save_path / train_name  # "go" in the directory
 
 # Flags
 LOAD_CHECKPOINT = True
@@ -115,13 +114,14 @@ lrs = []
 if LOAD_CHECKPOINT:
     print("Trying to load previous Checkpoint ...")
     try:
-        checkpoint = torch.load(str(model_save_path) + ".pth.tar", map_location=torch.device(device))
+        checkpoint = torch.load(str(model_save_path / train_name ) + ".pth.tar", map_location=torch.device(device))
         print("=> Loading checkpoint at epoch {}".format(checkpoint["epoch"][LOAD_POSITION]))
         net.load_state_dict(checkpoint["state_dict"][LOAD_POSITION])
         optimizer.load_state_dict(checkpoint["optimizer_state_dict"][LOAD_POSITION])
         start_epoch = checkpoint["epoch"][LOAD_POSITION]
         loss_values = checkpoint["loss_values"]
         lrs = checkpoint["lr"]
+        scheduler.load_state_dict(checkpoint["scheduler"])
         for param_group in optimizer.param_groups:
             param_group['lr'] = lrs[LOAD_POSITION]
         config["batch_size"] = checkpoint["batchsize"][LOAD_POSITION]
@@ -137,6 +137,7 @@ if LOAD_CHECKPOINT:
         checkpoint["batchsize"].append(config["batch_size"])
         checkpoint["loss_values"] = loss_values
         checkpoint["runtime"] = time.time() - start_time
+        checkpoint["scheduler"] = scheduler.state_dict()
 else:
     print("Previous checkpoints may exists but are not loaded")
     loss_values = []
@@ -148,6 +149,7 @@ else:
     checkpoint["batchsize"].append(config["batch_size"])
     checkpoint["loss_values"] = loss_values
     checkpoint["runtime"] = time.time() - start_time
+    checkpoint["scheduler"] = scheduler.state_dict()
 
 # Start training
 
@@ -161,7 +163,7 @@ print("Device: {}; Model: {};\nLearning rate: {}; Number of epochs: {}; Batch Si
 print("Loss criterion: ", criterion)
 print("Applied Augmentation Transforms: ", transform)
 print("Normalized by Imagenet_Values: ", norm_ImageNet)
-print("Model {} saved at: {}".format(config["model"], model_save_path))
+print("Model {} saved at: {}".format(config["model"], str(model_save_path / train_name) ))
 print("----------------------------")
 
 
@@ -170,12 +172,12 @@ def save_figure(values, what=""):
     plt.plot(values)
     plt.xlabel("Epoch")
     plt.ylabel(what)
-    plt.savefig(str(model_save_path) + "_" + what + ".jpg")
+    plt.savefig(str(model_save_path/ train_name ) + "_" + what + ".jpg")
     plt.close()
     pass
 
 
-def save_checkpoint(state, filename=str(model_save_path) + ".pth.tar"):
+def save_checkpoint(state, filename=str(model_save_path/ train_name ) + ".pth.tar"):
     print("=> Saving checkpoint at epoch {}".format(state["epoch"][-1]))
     checkpoint["state_dict"].append(net.state_dict())
     checkpoint["optimizer_state_dict"].append(optimizer.state_dict())
@@ -185,35 +187,36 @@ def save_checkpoint(state, filename=str(model_save_path) + ".pth.tar"):
     checkpoint["batchsize"].append(config["batch_size"])
     checkpoint["loss_values"] = loss_values
     checkpoint["runtime"] = time.time() - start_time
-    save_figure(loss_values, what="loss")
-    save_figure(lrs, what="LR")
+    checkpoint["scheduler"] = scheduler.state_dict()
     torch.save(state, Path(filename))
 
 time_tmp = []
 start_train_time = time.time()
 avrg_epoch_time = 60
-restart_time = 28800 # 8 Stunden
-max_time = 86400
+restart_time =  60*60*4  
+max_time = 60*60 * 24
 
 print(">>>Start of Training<<<")
 
 
 def restart_script():
     from subprocess import call
-    recallParameter = 'qsub -v CFG=' + str(model_save_path / "train_config.json") + ' train_mixed.sge'
+    VRAM = "3.4"
+    if "Deep_Res" in config["model"]:
+        VRAM = "3.9"
+    recallParameter = 'qsub -N '+ "log_" + config["model"] +"_ep" + str(epoch) +' -l nv_mem_free='+VRAM+ ' -v CFG=' + str(model_save_path / "train_config.json") + ' train_mixed.sge'
     call(recallParameter, shell=True)
     pass
 
 
+
 for epoch in tqdm(range(start_epoch, config["num_epochs"])):
     epoch_start = time.time()
-    if epoch_start -start_time > max_time:
-        sys.stderr.write("Stopping because programm was running to long (>24h)")
-        save_checkpoint(checkpoint)
+    if epoch_start - start_time > max_time:
+        sys.stderr.write("Stopping because programm was running to long ({} seconds > {})".format(epoch_start - start_time, max_time))
         break
     if epoch_start -start_time > restart_time - avrg_epoch_time:
         sys.stderr.write("Stopping at epoch {} because wall time would be reached".format(epoch))
-        save_checkpoint(checkpoint)
         restart_script()
         break
     for param_group in optimizer.param_groups:
@@ -229,11 +232,13 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
         running_loss += loss.item() * images.size(0)
     loss_values.append(running_loss / len(dataset))
     scheduler.step()
-    if epoch % config["save freq"] == 0:
+    save_figure(loss_values, what="loss")
+    save_figure(lrs, what="LR")
+    if epoch % config["save_freq"] == 0:
         save_checkpoint(checkpoint)
         print("\nepoch: {},\t loss: {}".format(epoch, running_loss))
 
-    epoch_end = time.time() - epoch_start()
+    epoch_end = time.time() - epoch_start
     time_tmp.append(epoch_end)
     avrg_epoch_time = np.array(time_tmp).mean()
 
