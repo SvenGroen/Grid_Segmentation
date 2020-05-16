@@ -1,0 +1,111 @@
+ Start of SGE job 
+
+
+Hostname
+ocular.cv.uni-osnabrueck.de
+Job-ID:
+560513
+user:
+sgroen
+
+Start
+
+PWD: 
+/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/Git_Repos/Grid_Segmentation
+RUNNING:  code/train_mixed.py
+Current Environemt:  torch
+CONFIG FOR RUNNING:  /net/projects/scratch/summer/valid_until_31_January_2021/sgroen/Git_Repos/Grid_Segmentation/code/models/trained_models/Examples_Green/multiples/Deep+_mobile_bs2_startLR1e-02Sched_Step_10ID0/train_config.json
+Your job 560526 ("log_Deep+_mobile_ep83") has been submitted
+Loading config:  /net/projects/scratch/summer/valid_until_31_January_2021/sgroen/Git_Repos/Grid_Segmentation/code/models/trained_models/Examples_Green/multiples/Deep+_mobile_bs2_startLR1e-02Sched_Step_10ID0/train_config.json
+Trying to load previous Checkpoint ...
+=> Loading checkpoint at epoch 57
+--- Learning parameters: ---
+Device: cuda; Model: Deep+_mobile;
+Learning rate: 0.01; Number of epochs: 100; Batch Size: 2
+Loss criterion:  <function cross_entropy at 0x2abd775c8bf8>
+Applied Augmentation Transforms:  [RandomPerspective(p=0.5), ColorJitter(brightness=[0.5, 1.5], contrast=[0.5, 1.5], saturation=[0.5, 1.5], hue=None), RandomAffine(degrees=(-10, 10), scale=(1, 1.5)), RandomGrayscale(p=0.1), RandomGrayscale(p=0.1), RandomHorizontalFlip(p=0.7)]
+Normalized by Imagenet_Values:  False
+Model Deep+_mobile saved at: /net/projects/scratch/summer/valid_until_31_January_2021/sgroen/Git_Repos/Grid_Segmentation/code/models/trained_models/Examples_Green/multiples/Deep+_mobile_bs2_startLR1e-02Sched_Step_10ID0/Deep+_mobile_bs2_startLR1e-02Sched_Step_10ID0
+----------------------------
+>>>Start of Training<<<
+=> Saving checkpoint at epoch 57
+
+epoch: 57,	 loss: 197.81367497635074
+=> Saving checkpoint at epoch 57
+
+epoch: 58,	 loss: 197.91247987467796
+=> Saving checkpoint at epoch 58
+
+epoch: 59,	 loss: 198.05507698724978
+=> Saving checkpoint at epoch 59
+
+epoch: 60,	 loss: 198.7412328941282
+=> Saving checkpoint at epoch 60
+
+epoch: 61,	 loss: 199.86627039313316
+=> Saving checkpoint at epoch 61
+
+epoch: 62,	 loss: 198.21064733737148
+=> Saving checkpoint at epoch 62
+
+epoch: 63,	 loss: 200.049930127454
+=> Saving checkpoint at epoch 63
+
+epoch: 64,	 loss: 196.69384046364576
+=> Saving checkpoint at epoch 64
+
+epoch: 65,	 loss: 199.77321935410146
+=> Saving checkpoint at epoch 65
+
+epoch: 66,	 loss: 200.836877604248
+=> Saving checkpoint at epoch 66
+
+epoch: 67,	 loss: 198.22815451293718
+=> Saving checkpoint at epoch 67
+
+epoch: 68,	 loss: 199.10295648989268
+=> Saving checkpoint at epoch 68
+
+epoch: 69,	 loss: 197.26299057214055
+=> Saving checkpoint at epoch 69
+
+epoch: 70,	 loss: 198.82173617836088
+=> Saving checkpoint at epoch 70
+
+epoch: 71,	 loss: 200.32513492996804
+=> Saving checkpoint at epoch 71
+
+epoch: 72,	 loss: 200.3193502733484
+=> Saving checkpoint at epoch 72
+
+epoch: 73,	 loss: 197.89115487667732
+=> Saving checkpoint at epoch 73
+
+epoch: 74,	 loss: 200.31996075366624
+=> Saving checkpoint at epoch 74
+
+epoch: 75,	 loss: 197.38162958610337
+=> Saving checkpoint at epoch 75
+
+epoch: 76,	 loss: 199.05228137387894
+=> Saving checkpoint at epoch 76
+
+epoch: 77,	 loss: 199.2804698785767
+=> Saving checkpoint at epoch 77
+
+epoch: 78,	 loss: 198.59772160253488
+=> Saving checkpoint at epoch 78
+
+epoch: 79,	 loss: 197.34666202380322
+=> Saving checkpoint at epoch 79
+
+epoch: 80,	 loss: 199.26580704632215
+=> Saving checkpoint at epoch 80
+
+epoch: 81,	 loss: 198.91005241149105
+=> Saving checkpoint at epoch 81
+
+epoch: 82,	 loss: 197.60092851356603
+>>>End of Training<<<
+=> Saving checkpoint at epoch 82
+End of Python Script

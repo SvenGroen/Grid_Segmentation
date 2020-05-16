@@ -1,0 +1,45 @@
+ Start of SGE job 
+
+
+Hostname
+vector.cv.uni-osnabrueck.de
+Job-ID:
+560495
+user:
+sgroen
+
+Start
+
+PWD: 
+/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/Git_Repos/Grid_Segmentation
+RUNNING:  code/train_mixed.py
+Current Environemt:  torch
+CONFIG FOR RUNNING:  /net/projects/scratch/summer/valid_until_31_January_2021/sgroen/Git_Repos/Grid_Segmentation/code/models/trained_models/Examples_Green/multiples/Deep_Res50_bs2_startLR1e-02Sched_Step_20ID1/train_config.json
+Your job 560524 ("log_Deep_Res50_ep4") has been submitted
+Loading config:  /net/projects/scratch/summer/valid_until_31_January_2021/sgroen/Git_Repos/Grid_Segmentation/code/models/trained_models/Examples_Green/multiples/Deep_Res50_bs2_startLR1e-02Sched_Step_20ID1/train_config.json
+Trying to load previous Checkpoint ...
+=> No previous checkpoint found
+--- Learning parameters: ---
+Device: cuda; Model: Deep_Res50;
+Learning rate: 0.01; Number of epochs: 100; Batch Size: 2
+Loss criterion:  <function cross_entropy at 0x2b4101519bf8>
+Applied Augmentation Transforms:  [RandomPerspective(p=0.5), ColorJitter(brightness=[0.5, 1.5], contrast=[0.5, 1.5], saturation=[0.5, 1.5], hue=None), RandomAffine(degrees=(-10, 10), scale=(1, 1.5)), RandomGrayscale(p=0.1), RandomGrayscale(p=0.1), RandomHorizontalFlip(p=0.7)]
+Normalized by Imagenet_Values:  False
+Model Deep_Res50 saved at: /net/projects/scratch/summer/valid_until_31_January_2021/sgroen/Git_Repos/Grid_Segmentation/code/models/trained_models/Examples_Green/multiples/Deep_Res50_bs2_startLR1e-02Sched_Step_20ID1/Deep_Res50_bs2_startLR1e-02Sched_Step_20ID1
+----------------------------
+>>>Start of Training<<<
+=> Saving checkpoint at epoch 0
+
+epoch: 0,	 loss: 433.3890625766944
+=> Saving checkpoint at epoch 0
+
+epoch: 1,	 loss: 362.8684919648804
+=> Saving checkpoint at epoch 1
+
+epoch: 2,	 loss: 334.0406321051996
+=> Saving checkpoint at epoch 2
+
+epoch: 3,	 loss: 318.1666487227194
+>>>End of Training<<<
+=> Saving checkpoint at epoch 3
+End of Python Script

@@ -201,9 +201,9 @@ print(">>>Start of Training<<<")
 
 def restart_script():
     from subprocess import call
-    VRAM = "3.4"
+    VRAM = "3.4G"
     if "Deep_Res" in config["model"]:
-        VRAM = "3.9"
+        VRAM = "5G"
     recallParameter = 'qsub -N '+ "log_" + config["model"] +"_ep" + str(epoch) +' -l nv_mem_free='+VRAM+ ' -v CFG=' + str(model_save_path / "train_config.json") + ' train_mixed.sge'
     call(recallParameter, shell=True)
     pass

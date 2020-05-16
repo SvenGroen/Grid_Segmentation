@@ -1,8 +1,7 @@
 import json
 from pathlib import Path
 
-models = ["ICNet", "Deep+_mobile",
-          "Deep_Res50"]  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "ICNet"
+models = ["Deep_Res50"]  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "ICNet"
 start_lrs = [1e-02, 1e-02, 1e-02]
 step_sizes = [10, 20, 25]
 num_epochs = [100, 100, 100]
@@ -35,7 +34,7 @@ for i, cfg in enumerate(config_paths):
     from subprocess import call
 
     if "Deep_Res" in models_name[i]:
-        recallParameter = 'qsub -N ' + "log_" + str(i) + models_name[i] + ' -l nv_mem_free=3.9G -v CFG=' + cfg + ' train_mixed.sge'
+        recallParameter = 'qsub -N ' + "log_" + str(i) + models_name[i] + ' -l nv_mem_free=5G -v CFG=' + cfg + ' train_mixed.sge'
     else:
         recallParameter = 'qsub -N ' + "log_" + str(i) + models_name[
             i] + ' -l nv_mem_free=3.4G -v CFG=' + cfg + ' train_mixed.sge'

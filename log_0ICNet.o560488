@@ -15,3 +15,88 @@ PWD:
 RUNNING:  code/train_mixed.py
 Current Environemt:  torch
 CONFIG FOR RUNNING:  /net/projects/scratch/summer/valid_until_31_January_2021/sgroen/Git_Repos/Grid_Segmentation/code/models/trained_models/Examples_Green/multiples/ICNet_bs2_startLR1e-02Sched_Step_10ID0/train_config.json
+Your job 560502 ("log_ICNet_ep23") has been submitted
+Loading config:  /net/projects/scratch/summer/valid_until_31_January_2021/sgroen/Git_Repos/Grid_Segmentation/code/models/trained_models/Examples_Green/multiples/ICNet_bs2_startLR1e-02Sched_Step_10ID0/train_config.json
+Trying to load previous Checkpoint ...
+=> No previous checkpoint found
+--- Learning parameters: ---
+Device: cuda; Model: ICNet;
+Learning rate: 0.01; Number of epochs: 100; Batch Size: 2
+Loss criterion:  ICNetLoss()
+Applied Augmentation Transforms:  [RandomPerspective(p=0.5), ColorJitter(brightness=[0.5, 1.5], contrast=[0.5, 1.5], saturation=[0.5, 1.5], hue=None), RandomAffine(degrees=(-10, 10), scale=(1, 1.5)), RandomGrayscale(p=0.1), RandomGrayscale(p=0.1), RandomHorizontalFlip(p=0.7)]
+Normalized by Imagenet_Values:  False
+Model ICNet saved at: /net/projects/scratch/summer/valid_until_31_January_2021/sgroen/Git_Repos/Grid_Segmentation/code/models/trained_models/Examples_Green/multiples/ICNet_bs2_startLR1e-02Sched_Step_10ID0/ICNet_bs2_startLR1e-02Sched_Step_10ID0
+----------------------------
+>>>Start of Training<<<
+=> Saving checkpoint at epoch 0
+
+epoch: 0,	 loss: 811.6233011288568
+=> Saving checkpoint at epoch 0
+
+epoch: 1,	 loss: 745.3944820836186
+=> Saving checkpoint at epoch 1
+
+epoch: 2,	 loss: 640.8856547363102
+=> Saving checkpoint at epoch 2
+
+epoch: 3,	 loss: 610.4036903046072
+=> Saving checkpoint at epoch 3
+
+epoch: 4,	 loss: 595.7254518694244
+=> Saving checkpoint at epoch 4
+
+epoch: 5,	 loss: 573.4674944714643
+=> Saving checkpoint at epoch 5
+
+epoch: 6,	 loss: 553.6443678014912
+=> Saving checkpoint at epoch 6
+
+epoch: 7,	 loss: 534.5507473014295
+=> Saving checkpoint at epoch 7
+
+epoch: 8,	 loss: 514.7290404550731
+=> Saving checkpoint at epoch 8
+
+epoch: 9,	 loss: 494.36567214969546
+=> Saving checkpoint at epoch 9
+
+epoch: 10,	 loss: 581.5376733317971
+=> Saving checkpoint at epoch 10
+
+epoch: 11,	 loss: 498.69721560552716
+=> Saving checkpoint at epoch 11
+
+epoch: 12,	 loss: 450.2634467892349
+=> Saving checkpoint at epoch 12
+
+epoch: 13,	 loss: 429.96940767392516
+=> Saving checkpoint at epoch 13
+
+epoch: 14,	 loss: 406.52175907604396
+=> Saving checkpoint at epoch 14
+
+epoch: 15,	 loss: 395.42340515647084
+=> Saving checkpoint at epoch 15
+
+epoch: 16,	 loss: 380.21845798008144
+=> Saving checkpoint at epoch 16
+
+epoch: 17,	 loss: 366.80066559277475
+=> Saving checkpoint at epoch 17
+
+epoch: 18,	 loss: 359.18076980579644
+=> Saving checkpoint at epoch 18
+
+epoch: 19,	 loss: 354.5864907242358
+=> Saving checkpoint at epoch 19
+
+epoch: 20,	 loss: 385.0716121420264
+=> Saving checkpoint at epoch 20
+
+epoch: 21,	 loss: 371.91661589592695
+=> Saving checkpoint at epoch 21
+
+epoch: 22,	 loss: 363.29696152731776
+>>>End of Training<<<
+=> Saving checkpoint at epoch 22
+End of Python Script

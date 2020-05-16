@@ -1,0 +1,17 @@
+ Start of SGE job 
+
+
+Hostname
+voxel.cv.uni-osnabrueck.de
+Job-ID:
+560809
+user:
+sgroen
+
+Start
+
+PWD: 
+/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/Git_Repos/Grid_Segmentation
+RUNNING:  code/train_mixed.py
+Current Environemt:  torch
+CONFIG FOR RUNNING:  /net/projects/scratch/summer/valid_until_31_January_2021/sgroen/Git_Repos/Grid_Segmentation/code/models/trained_models/Examples_Green/multiples/Deep_Res50_bs2_startLR1e-02Sched_Step_10ID0/train_config.json
