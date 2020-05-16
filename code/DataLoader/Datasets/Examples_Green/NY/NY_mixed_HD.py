@@ -14,13 +14,13 @@ import json
 from torch.utils import data
 
 
-class NY_mixed(data.Dataset):
+class NY_mixed_HD(data.Dataset):
     with open("data/Images/Examples_Green/NY-city_HD/out_log.json", "r") as json_file:
         data = json.load(json_file)
 
     def __init__(self, transforms: list = None, norm_ImageNet=False):
         # set data
-        self.data = NY_mixed.data
+        self.data = NY_mixed_HD.data
         self.transform, self.transform_out = self.preprocess_transforms(norm_ImageNet=norm_ImageNet,
                                                                         transforms=transforms)
 
