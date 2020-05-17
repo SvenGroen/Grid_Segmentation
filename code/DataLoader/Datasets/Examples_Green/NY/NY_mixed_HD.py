@@ -122,7 +122,7 @@ if __name__ == "__main__":
                  T.RandomAffine(degrees=10, scale=(1, 2)), T.RandomGrayscale(p=0.1), T.RandomGrayscale(p=0.1),
                  T.RandomHorizontalFlip(p=0.7)]
     print(transform)
-    dataset = NY_mixed(transforms=transform)
+    dataset = NY_mixed_HD()
     loader = DataLoader(dataset=dataset, batch_size=1)
     inp, label = next(iter(loader))
     dataset.show(10)

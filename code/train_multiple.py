@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-models = ["Deep_Res50"]  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "ICNet"
+models = ["Deep_Res50"]  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "ICNet", "FCN_Res50"
 start_lrs = [1e-02, 1e-02, 1e-02]
 step_sizes = [10, 20, 25]
 num_epochs = [100, 100, 100]

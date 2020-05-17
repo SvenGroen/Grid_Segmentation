@@ -67,6 +67,10 @@ elif config["model"] == "Deep_Res50":
     net = Deeplab_Res50()
     norm_ImageNet = False
     net.train()
+elif config["model"] == "FCN_Res50":
+    net = FCN_Res50()
+    norm_ImageNet = False
+    net.train()
 elif config["model"] == "ConvSame_3":
     net = ConvSame_3_net()
     net.train()
@@ -234,9 +238,9 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
     scheduler.step()
     save_figure(loss_values, what="loss")
     save_figure(lrs, what="LR")
-    if epoch % config["save_freq"] == 0:
-        save_checkpoint(checkpoint)
-        print("\nepoch: {},\t loss: {}".format(epoch, running_loss))
+    # if epoch % config["save_freq"] == 0:
+    #     save_checkpoint(checkpoint)
+    #     print("\nepoch: {},\t loss: {}".format(epoch, running_loss))
 
     epoch_end = time.time() - epoch_start
     time_tmp.append(epoch_end)

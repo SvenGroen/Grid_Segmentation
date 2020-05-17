@@ -43,6 +43,15 @@ class Deeplab_Res50(nn.Module):
         x = self.base(x)
         return x["out"]
 
+class FCN_Res50(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.base = torchvision.models.segmentation.fcn_resnet50(pretrained=False,num_classes=2)
+
+    def forward(self, x):
+        x = self.base(x)
+        return x["out"]
+
 '''
 class Deeplab_Mobile(nn.Module):
     def __init__(self):

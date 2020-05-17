@@ -11,7 +11,7 @@ import os
 from collections import defaultdict
 from pathlib import Path
 
-raw_frames_path = Path(Path.cwd()) / "data/Images/Examples_Green/raw_HD"
+raw_frames_path = Path(Path.cwd()) / "data/Images/Examples_Green/raw"
 video_names = [vid.stem for vid in raw_frames_path.glob("*")]
 
 output_size = (int(2048), int(1080))

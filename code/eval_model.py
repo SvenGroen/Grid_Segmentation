@@ -26,8 +26,8 @@ print("---Start of Python File---")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device: ", device)
 
-model = "Deep+_mobile"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile" <--CHANGE
-model_name = Path("Deep+_mobile_bs2_startLR1e-02Sched_Step_10ID0")  # <--CHANGE
+model = "ICNet"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile" <--CHANGE
+model_name = Path("ICNet_bs2_startLR1e-02Sched_Step_25ID2")  # <--CHANGE
 
 # norm_ImageNet = False
 if model == "UNet":
@@ -85,8 +85,8 @@ train_loader = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=True)
 dataset_HD = NY_mixed_HD()
 train_loader_HD = DataLoader(dataset=dataset_HD, batch_size=batch_size, shuffle=True)
 
-
-for loader in [train_loader,train_loader_HD]:
+for mode in ["Compressed", "HD"]:
+    loader = train_loader if mode == "Compressed" else train_loader_HD
 
     to_PIL = transforms.ToPILImage()
     tmp_img, tmp_lbl, tmp_pred = [], [], []
@@ -107,7 +107,9 @@ for loader in [train_loader,train_loader_HD]:
         with torch.autograd.profiler.profile(use_cuda=torch.cuda.is_available()) as prof:
             outputs = net(images)
             if model == "ICNet":
-                outputs = outputs[0][:, :, :-2, :]
+                outputs = outputs[0]
+                if mode == "Compressed":
+                    outputs = outputs[:, :, :-2, :]
             outputs = torch.argmax(outputs, dim=1).float()
         logger["profiler_averages"].append(prof.total_average())
         if torch.cuda.is_available():
@@ -129,7 +131,6 @@ for loader in [train_loader,train_loader_HD]:
         else:
             break
 
-
     metrics["Mean-IoU"] = [np.array(metrics["IoU"]).mean()]
 
     # Save image file
@@ -139,9 +140,8 @@ for loader in [train_loader,train_loader_HD]:
     result = vstack(out)
     # out_folder = (model_state_path / model_name /"evaluation").mkdir(parents=True, exist_ok=True)
 
-
     # save results
-    result.save(model_save_path / Path(model + "_example_output.jpg"), "JPEG")
+    result.save(model_save_path / Path(model + mode + "_example_output.jpg"), "JPEG")
     with open(model_save_path / Path(model + "_metrics.json"), "w") as js:
         json.dump(dict(metrics), js)
 
@@ -150,17 +150,15 @@ for loader in [train_loader,train_loader_HD]:
         txt_file.write("Torch cudnn version: {}\n".format(torch.backends.cudnn.version()))
         txt_file.write("Torch cudnn enabled: {}\n".format(torch.backends.cudnn.enabled))
         txt_file.write("Cudnn benchmark: {}\n".format(torch.backends.cudnn.benchmark))
-        txt_file.write("Cudnn deterministic: {}\n".format( torch.backends.cudnn.deterministic))
+        txt_file.write("Cudnn deterministic: {}\n".format(torch.backends.cudnn.deterministic))
         if torch.cuda.is_available():
-            txt_file.write("Mean cuda_time: {}\n".format( np.array(metrics["cuda_time"]).mean()))
+            txt_file.write("Mean cuda_time: {}\n".format(np.array(metrics["cuda_time"]).mean()))
         txt_file.write("Mean-IoU: {}; Mean_time.time() (in Secounds): {}\n".format(metrics["Mean-IoU"][0],
-                       np.array(metrics["time.time()"]).mean()))
+                                                                                   np.array(
+                                                                                       metrics["time.time()"]).mean()))
         txt_file.write("---Profiler Information---")
         txt_file.write("total average(): {}\n".format(logger["profiler_averages"][-1]))
         txt_file.write(prof.table(sort_by="self_cpu_time_total"))
         txt_file.write("\n--------------------------------------\n")
 
 print("---Python file Completed---")
-
-
-
