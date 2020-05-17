@@ -5,10 +5,9 @@
 #$ -l nv_mem_free=3.8G
 #$ -pe default 2
 #$ -l h_rt=1:30:00
-#$ -l hostname=!picture
-#$ -l hostname=!cippy19
-#$ -l hostname=!cippy12
-#$ -l hostname=!cippy21
+#$ -l hostname=!*cippy19*
+#$ -l hostname=!*cippy12*
+#$ -l hostname=!*cippy21*
 #$ -N ann_eval
 #$ -l cuda=1
 #$ -m n

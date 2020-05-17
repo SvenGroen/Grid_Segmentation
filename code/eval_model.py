@@ -26,8 +26,8 @@ print("---Start of Python File---")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device: ", device)
 
-model = "ICNet"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile" <--CHANGE
-model_name = Path("ICNet_bs2_startLR1e-02Sched_Step_20ID1")  # <--CHANGE
+model = "Deep+_mobile"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile" <--CHANGE
+model_name = Path("Deep+_mobile_bs2_startLR1e-02Sched_Step_10ID0")  # <--CHANGE
 
 # norm_ImageNet = False
 if model == "UNet":
@@ -56,7 +56,7 @@ else:
     net = None
     print("Model unknown")
 
-model_save_path = Path("code/models/trained_models/Examples_Green/multiples") / model_name
+model_save_path = Path("code/models/trained_models/Examples_Green/multiples/session02") / model_name
 
 print("Loading: " + str(model_save_path / model_name) + ".pth.tar")
 device = "cuda" if torch.cuda.is_available() else "cpu"
