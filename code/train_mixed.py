@@ -20,10 +20,11 @@ import matplotlib.pyplot as plt
 from collections import defaultdict
 import time
 import sys
+
 start_time = time.time()
 
-config = {
-    # DEFAULT CONFIG
+config = {  # DEFAULT CONFIG
+
     "model": "ICNet",
     # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "ICNet"
     "ID": "01",
@@ -32,7 +33,7 @@ config = {
     "num_epochs": 1,
     "scheduler_step_size": 15,
     "save freq": 1,
-    "save_path": "code/models/trained_models/Examples_Green/multiples"
+    "save_path": "code/models/trained_models/Examples_Green/multiples/session05"
 }
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 parser = argparse.ArgumentParser()
@@ -45,7 +46,6 @@ if args.config is not None:
     with open(args.config) as js:
         print("Loading config: ", args.config)
         config = json.load(js)
-
 
 # Assertions for config
 if config["model"] == "Deep_Res101" or config["model"] == "Deep_Res50":
@@ -91,11 +91,11 @@ norm_ImageNet = False
 start_epoch = 0
 optimizer = optim.Adam(net.parameters(), lr=config["lr"])
 scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=config["scheduler_step_size"], gamma=0.1)
-runtime = time.time()-start_time
+runtime = time.time() - start_time
 
 # Dataset used (Greenscreen frames 512x270 (2048x1080 /4)
-transform = [T.RandomPerspective(distortion_scale=0.1), T.ColorJitter(0.5, 0.5, 0.5),
-             T.RandomAffine(degrees=10, scale=(1, 1.5)), T.RandomGrayscale(p=0.1), T.RandomGrayscale(p=0.1),
+transform = [T.RandomPerspective(distortion_scale=0.1), T.ColorJitter(0.2, 0.2, 0.2),
+             T.RandomAffine(degrees=10, scale=(1, 1.1)), T.RandomGrayscale(p=0.1),
              T.RandomHorizontalFlip(p=0.7)]
 dataset = NY_mixed(transforms=transform)  # <--- SET DATASET
 train_loader = DataLoader(dataset=dataset, batch_size=config["batch_size"])
@@ -118,10 +118,10 @@ lrs = []
 if LOAD_CHECKPOINT:
     print("Trying to load previous Checkpoint ...")
     try:
-        checkpoint = torch.load(str(model_save_path / train_name ) + ".pth.tar", map_location=torch.device(device))
+        checkpoint = torch.load(str(model_save_path / train_name) + ".pth.tar", map_location=torch.device(device))
         print("=> Loading checkpoint at epoch {}".format(checkpoint["epoch"][LOAD_POSITION]))
-        net.load_state_dict(checkpoint["state_dict"][LOAD_POSITION])
-        optimizer.load_state_dict(checkpoint["optimizer_state_dict"][LOAD_POSITION])
+        net.load_state_dict(checkpoint["state_dict"])
+        optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
         start_epoch = checkpoint["epoch"][LOAD_POSITION]
         loss_values = checkpoint["loss_values"]
         lrs = checkpoint["lr"]
@@ -134,8 +134,8 @@ if LOAD_CHECKPOINT:
         loss_values = []
         print("=> No previous checkpoint found")
         checkpoint = defaultdict(list)
-        checkpoint["state_dict"].append(net.state_dict())
-        checkpoint["optimizer_state_dict"].append(optimizer.state_dict())
+        checkpoint["state_dict"] = net.state_dict()
+        checkpoint["optimizer_state_dict"]=optimizer.state_dict()
         checkpoint["epoch"].append(start_epoch)
         checkpoint["lr"].append(config["lr"])
         checkpoint["batchsize"].append(config["batch_size"])
@@ -146,8 +146,8 @@ else:
     print("Previous checkpoints may exists but are not loaded")
     loss_values = []
     checkpoint = defaultdict(list)
-    checkpoint["state_dict"].append(net.state_dict())
-    checkpoint["optimizer_state_dict"].append(optimizer.state_dict())
+    checkpoint["state_dict"] = net.state_dict()
+    checkpoint["optimizer_state_dict"]=optimizer.state_dict()
     checkpoint["epoch"].append(start_epoch)
     checkpoint["lr"].append(config["lr"])
     checkpoint["batchsize"].append(config["batch_size"])
@@ -167,7 +167,7 @@ print("Device: {}; Model: {};\nLearning rate: {}; Number of epochs: {}; Batch Si
 print("Loss criterion: ", criterion)
 print("Applied Augmentation Transforms: ", transform)
 print("Normalized by Imagenet_Values: ", norm_ImageNet)
-print("Model {} saved at: {}".format(config["model"], str(model_save_path / train_name) ))
+print("Model {} saved at: {}".format(config["model"], str(model_save_path / train_name)))
 print("----------------------------")
 
 
@@ -176,15 +176,15 @@ def save_figure(values, what=""):
     plt.plot(values)
     plt.xlabel("Epoch")
     plt.ylabel(what)
-    plt.savefig(str(model_save_path/ train_name ) + "_" + what + ".jpg")
+    plt.savefig(str(model_save_path / train_name) + "_" + what + ".jpg")
     plt.close()
     pass
 
 
-def save_checkpoint(state, filename=str(model_save_path/ train_name ) + ".pth.tar"):
+def save_checkpoint(state, filename=str(model_save_path / train_name) + ".pth.tar"):
     print("=> Saving checkpoint at epoch {}".format(state["epoch"][-1]))
-    checkpoint["state_dict"].append(net.state_dict())
-    checkpoint["optimizer_state_dict"].append(optimizer.state_dict())
+    checkpoint["state_dict"] = net.state_dict()
+    checkpoint["optimizer_state_dict"]=optimizer.state_dict()
     checkpoint["epoch"].append(epoch)
     for param_group in optimizer.param_groups:
         checkpoint["lr"].append(param_group['lr'])
@@ -194,11 +194,12 @@ def save_checkpoint(state, filename=str(model_save_path/ train_name ) + ".pth.ta
     checkpoint["scheduler"] = scheduler.state_dict()
     torch.save(state, Path(filename))
 
+
 time_tmp = []
 start_train_time = time.time()
-avrg_epoch_time = 60
-restart_time =  60*60*4  
-max_time = 60*60 * 24
+avrg_epoch_time = 60 * 60 * 0.1
+restart_time = 60 * 60 * 1.2
+max_time = 60 * 60 * 24
 
 print(">>>Start of Training<<<")
 
@@ -206,20 +207,22 @@ print(">>>Start of Training<<<")
 def restart_script():
     from subprocess import call
     VRAM = "3.4G"
-    if "Deep_Res" in config["model"]:
-        VRAM = "5G"
-    recallParameter = 'qsub -N '+ "log_" + config["model"] +"_ep" + str(epoch) +' -l nv_mem_free='+VRAM+ ' -v CFG=' + str(model_save_path / "train_config.json") + ' train_mixed.sge'
+    if "Res50" in config["model"]:
+        VRAM = "4.5G"
+    recallParameter = 'qsub -N ' + "ep" + str(epoch) + config["model"] + ' -l nv_mem_free=' + VRAM + ' -v CFG=' + str(
+        model_save_path / "train_config.json") + ' train_mixed.sge'
     call(recallParameter, shell=True)
     pass
-
 
 
 for epoch in tqdm(range(start_epoch, config["num_epochs"])):
     epoch_start = time.time()
     if epoch_start - start_time > max_time:
-        sys.stderr.write("Stopping because programm was running to long ({} seconds > {})".format(epoch_start - start_time, max_time))
+        sys.stderr.write(
+            "Stopping because programm was running to long ({} seconds > {})".format(epoch_start - start_time,
+                                                                                     max_time))
         break
-    if epoch_start -start_time > restart_time - avrg_epoch_time:
+    if epoch_start - start_time > restart_time - avrg_epoch_time:
         sys.stderr.write("Stopping at epoch {} because wall time would be reached".format(epoch))
         restart_script()
         break
@@ -245,7 +248,6 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
     epoch_end = time.time() - epoch_start
     time_tmp.append(epoch_end)
     avrg_epoch_time = np.array(time_tmp).mean()
-
 
 print(">>>End of Training<<<")
 # save model after training

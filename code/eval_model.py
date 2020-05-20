@@ -1,7 +1,6 @@
 import json
 import torch
 import torchvision.transforms as T
-import matplotlib.pyplot as plt
 import numpy as np
 import time
 
@@ -44,6 +43,10 @@ elif model == "Deep_Res50":
     net = Deeplab_Res50()
     norm_ImageNet = False
     net.train()
+elif model == "FCN_Res50":
+    net = FCN_Res50()
+    norm_ImageNet = False
+    net.train()
 elif model == "ConvSame_3":
     net = ConvSame_3_net()  # <--- SET MODEL
     net.train()
@@ -56,7 +59,7 @@ else:
     net = None
     print("Model unknown")
 
-model_save_path = Path("code/models/trained_models/Examples_Green/multiples/session02") / model_name
+model_save_path = Path("code/models/trained_models/Examples_Green/multiples/session04") / model_name
 
 print("Loading: " + str(model_save_path / model_name) + ".pth.tar")
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -65,7 +68,7 @@ batch_size = 2
 try:
     checkpoint = torch.load(str(model_save_path / model_name) + ".pth.tar", map_location=torch.device(device))
     print("=> Loading checkpoint at epoch {}".format(checkpoint["epoch"][LOAD_POSITION]))
-    net.load_state_dict(checkpoint["state_dict"][LOAD_POSITION])
+    net.load_state_dict(checkpoint["state_dict"])
     batch_size = checkpoint["batchsize"][LOAD_POSITION]
     print("Model was loaded.")
 except IOError:
@@ -80,10 +83,11 @@ net.to(device)
 transform = [T.RandomPerspective(distortion_scale=0.1), T.ColorJitter(0.5, 0.5, 0.5),
              T.RandomAffine(degrees=10, scale=(1, 2)), T.RandomGrayscale(p=0.1), T.RandomGrayscale(p=0.1),
              T.RandomHorizontalFlip(p=0.7)]
-dataset = NY_mixed(transforms=transform)
+# dataset = NY_mixed(transforms=transform)
+dataset = NY_mixed()
 train_loader = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=True)
 dataset_HD = NY_mixed_HD()
-train_loader_HD = DataLoader(dataset=dataset_HD, batch_size=batch_size, shuffle=True)
+train_loader_HD = DataLoader(dataset=dataset_HD, batch_size=1, shuffle=True)
 
 for mode in ["Compressed", "HD"]:
     loader = train_loader if mode == "Compressed" else train_loader_HD
