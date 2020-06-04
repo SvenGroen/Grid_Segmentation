@@ -101,10 +101,10 @@ scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=config["sch
 runtime = time.time() - start_time
 
 # Dataset used (Greenscreen frames 512x270 (2048x1080 /4)
-# transform = [T.RandomPerspective(distortion_scale=0.1), T.ColorJitter(0.2, 0.2, 0.2),
-#              T.RandomAffine(degrees=10, scale=(1, 1.1)), T.RandomGrayscale(p=0.1),
-#              T.RandomHorizontalFlip(p=0.7)]
-dataset = Youtube_Greenscreen()  # <--- SET DATASET
+transform = [T.RandomPerspective(distortion_scale=0.1), T.ColorJitter(0.2, 0.2, 0.2),
+             T.RandomAffine(degrees=10, scale=(1, 1.1)), T.RandomGrayscale(p=0.1),
+             T.RandomHorizontalFlip(p=0.7)]
+dataset = NY_mixed(transforms=transform)  # <--- SET DATASET
 train_loader = DataLoader(dataset=dataset, batch_size=config["batch_size"])
 
 # saving the models
@@ -172,7 +172,7 @@ print("Device: {}; Model: {};\nLearning rate: {}; Number of epochs: {}; Batch Si
                                                                                                str(config[
                                                                                                        "batch_size"])))
 print("Loss criterion: ", criterion)
-# print("Applied Augmentation Transforms: ", transform)
+print("Applied Augmentation Transforms: ", transform)
 print("Normalized by Imagenet_Values: ", norm_ImageNet)
 print("Model {} saved at: {}".format(config["model"], str(model_save_path / train_name)))
 print("----------------------------")

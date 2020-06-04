@@ -15,6 +15,7 @@ from models.DeepLabV3PlusPytorch.network import *
 from models.custom.simple_models.simple_models import ConvSame_3_net
 from models.ICNet.models import ICNet
 from models.ICNet.utils import ICNetLoss, IterationPolyLR, SegmentationMetric, SetupLogger
+from DataLoader.Datasets.Youtube.Youtube_Greenscreen import *
 from DataLoader.Datasets.Examples_Green.NY.NY_mixed import *
 from DataLoader.Datasets.Examples_Green.NY.NY_mixed_HD import *
 from PIL import Image
@@ -49,6 +50,12 @@ elif model == "FCN_Res50":
     net.train()
 elif model == "ConvSame_3":
     net = ConvSame_3_net()  # <--- SET MODEL
+    net.train()
+elif model == "Deep_mobile_lstmV2":
+    net = Deep_mobile_lstmV2()
+    net.train()
+elif model == "Deep_mobile_lstm":
+    net = Deep_mobile_lstm()
     net.train()
 elif model == "ICNet":
     net = ICNet(nclass=2, backbone='resnet50', pretrained_base=False)  # https://github.com/liminn/ICNet-pytorch
