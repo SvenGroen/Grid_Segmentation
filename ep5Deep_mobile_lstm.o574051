@@ -1,0 +1,17 @@
+ Start of SGE job 
+
+
+Hostname
+shadow.cv.uni-osnabrueck.de
+Job-ID:
+574051
+user:
+sgroen
+
+Start
+
+PWD: 
+/net/projects/scratch/summer/valid_until_31_January_2021/sgroen/Git_Repos/Grid_Segmentation
+RUNNING:  code/train_mixed.py
+Current Environemt:  torch
+CONFIG FOR RUNNING:  /net/projects/scratch/summer/valid_until_31_January_2021/sgroen/Git_Repos/Grid_Segmentation/code/models/trained_models/Examples_Green/multiples/session05/Deep_mobile_lstm_bs2_startLR1e-02Sched_Step_20ID0/train_config.json
