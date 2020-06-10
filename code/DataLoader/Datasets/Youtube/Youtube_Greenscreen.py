@@ -15,16 +15,17 @@ from torch.utils import data
 
 
 class Youtube_Greenscreen(data.Dataset):
-    with open("data/Images/Greenscreen_Video_frames/out_log.json", "r") as json_file:
-        data = json.load(json_file)
 
-    def __init__(self, transforms: list = None, norm_ImageNet=False):
+
+    def __init__(self, transforms: list = None, norm_ImageNet=False, train = True):
         # set data
-        self.data = Youtube_Greenscreen.data
+
         self.transform, self.transform_out = self.preprocess_transforms(norm_ImageNet=norm_ImageNet,
                                                                         transforms=transforms)
-
-
+        self.train = train
+        self.mode = "train" if train else "test"
+        with open("data/Images/Greenscreen_Video_frames_4sec/" + self.mode + "/out_log.json", "r") as json_file:
+            self.data = json.load(json_file)
 
     def __len__(self):
         return len(self.data["Inputs"])
@@ -32,12 +33,12 @@ class Youtube_Greenscreen(data.Dataset):
     def __getitem__(self, idx):
 
         img = Image.open(str(Path.cwd() / Path(self.data["Inputs"][idx])))
-        lbl = Image.open(str(Path.cwd() / Path(self.data["labels"][idx])))
+        lbl = Image.open(str(Path.cwd() / Path(self.data["labels"][idx]))).convert("L")
         state = random.getstate()  # makes sure the transformations are applied equally
         inp = self.transform_out(self.transform(img))
         random.setstate(state)
         lbl = self.transform(lbl).squeeze(0)
-
+        lbl = lbl.squeeze(0)
         if torch.cuda.is_available():
             return inp.cuda(), lbl.cuda()
         else:
@@ -63,8 +64,8 @@ class Youtube_Greenscreen(data.Dataset):
         result.show()
 
     def preprocess_transforms(self, norm_ImageNet, transforms):
-        transform = []
-        transform_out = [T.ToPILImage()]
+        transform = [] # label transforms
+        transform_out = [T.ToPILImage()] # input transforms
 
         if isinstance(transforms, list) and transforms is not None:
             transform = transform + transforms
@@ -127,6 +128,7 @@ if __name__ == "__main__":
     loader = DataLoader(dataset=dataset, batch_size=4)
     to_pil = T.ToPILImage()
     inp, label = next(iter(loader))
+    print(label.shape)
     print(inp.shape)
     # for img in inp[0,:,:,:,:]:
     #     img=to_pil(img)

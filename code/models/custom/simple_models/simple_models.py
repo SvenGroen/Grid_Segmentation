@@ -16,7 +16,7 @@ class ConvSame_3_net(nn.Module):
         self.conv2 = nn.Conv2d(8, 8, 3, padding=1, stride=1)
         self.conv3 = nn.Conv2d(8, 2, 3, padding=1, stride=1)
 
-    def forward(self, x):
+    def forward(self, x, *args):
         x = self.conv1(x)
         x = self.conv2(x)
         x = self.conv3(x)
@@ -32,7 +32,7 @@ class Deeplab_Res101(nn.Module):
         self.base.classifier = DeepLabHead(2048, 2)
         # self.base.classifier[4] = nn.Conv2d(in_channels=256, out_channels=2, kernel_size=1, stride=1)
 
-    def forward(self, x):
+    def forward(self, x, *args):
         x = self.base(x)
         return x["out"]
 
@@ -45,7 +45,7 @@ class Deeplab_Res101V2(nn.Module):
         self.base.classifier = DeepLabHead(2048, 2)
         # self.base.classifier[4] = nn.Conv2d(in_channels=256, out_channels=2, kernel_size=1, stride=1)
 
-    def forward(self, x):
+    def forward(self, x, *args):
         x = self.base(x)
         return x["out"]
 
@@ -57,7 +57,7 @@ class Deeplab_Res50(nn.Module):
         self.backbone = self.base.backbone
         self.classifier = self.base.classifier
 
-    def forward(self, x):
+    def forward(self, x, *args):
         x = self.base(x)
         # x = self.backbone(x)["out"]
         # x= self.classifier(x)
@@ -69,7 +69,7 @@ class FCN_Res50(nn.Module):
         super().__init__()
         self.base = torchvision.models.segmentation.fcn_resnet50(pretrained=False, num_classes=2)
 
-    def forward(self, x):
+    def forward(self, x, *args):
         x = self.base(x)
         return x["out"]
 
@@ -85,7 +85,7 @@ class Deep_mobile_lstm(nn.Module):
                              return_all_layers=False)
         self.hidden = None
 
-    def forward(self, x):
+    def forward(self, x, *args):
         input_shape = x.shape[-2:]
         features = self.backbone(x)
         out = self.classifier(features)
@@ -105,13 +105,26 @@ class Deep_mobile_lstmV2(nn.Module):
                              return_all_layers=False)
         self.hidden = None
 
-    def forward(self, x):
+    def forward(self, x, *args):
+        if len(args) != 0:
+            old_pred = args[0]
+            for i in range(len(old_pred)):
+                if old_pred[i] is not None:
+                    old_pred[i] = old_pred[i].unsqueeze(1)
         input_shape = x.shape[-2:]
         features = self.backbone(x)
         out = self.classifier(features)
+        out = F.interpolate(out, size=input_shape, mode='bilinear', align_corners=False)
         out = out.unsqueeze(1)
+        if len(args) != 0:
+            if None in old_pred:
+                for i in range(len(old_pred)):
+                    old_pred[i] = torch.zeros_like(out)
+            out = [out] + old_pred
+            out = torch.cat(out, dim =1)
         out, self.hidden = self.lstm(out)
-        out = F.interpolate(out[-1].squeeze(1), size=input_shape, mode='bilinear', align_corners=False)
+        # out = F.interpolate(out[-1].squeeze(1), size=input_shape, mode='bilinear', align_corners=False)
+        out = out[0][:,0,:,:,:]
         return out
 
 
@@ -124,7 +137,7 @@ class Deep_mobile_GRU(nn.Module):
         self.gru = ConvGRU(input_size=(270, 512), input_dim=2, hidden_dim=[64], kernel_size=(3, 3), num_layers=1,
                             dtype=torch.FloatTensor, batch_first=True, bias= True, return_all_layers=True)
 
-    def forward(self, x):
+    def forward(self, x, *args):
         input_shape = x.shape[-2:]
         features = self.backbone(x)
         x = self.classifier(features)

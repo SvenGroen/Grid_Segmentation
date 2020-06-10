@@ -223,6 +223,7 @@ def restart_script():
 
 
 for epoch in tqdm(range(start_epoch, config["num_epochs"])):
+    old_pred = [None, None]
     epoch_start = time.time()
     if epoch_start - start_time > max_time:
         sys.stderr.write(
@@ -238,12 +239,14 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
     running_loss = 0
     for batch in train_loader:
         images, labels = batch
-        pred = net(images)
+        pred = net(images, old_pred)
         loss = criterion(pred, labels.long())
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
         running_loss += loss.item() * images.size(0)
+        old_pred[1] = old_pred[0]
+        old_pred[0] = pred
     loss_values.append(running_loss / len(dataset))
     scheduler.step()
     save_figure(loss_values, what="loss")

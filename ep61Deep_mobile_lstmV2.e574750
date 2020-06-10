@@ -1,9 +1,0 @@
-  0%|          | 0/39 [00:00<?, ?it/s]  3%|▎         | 1/39 [14:23<9:07:04, 863.81s/it]  5%|▌         | 2/39 [22:58<7:48:02, 758.99s/it]  8%|▊         | 3/39 [30:55<6:44:42, 674.52s/it] 10%|█         | 4/39 [38:53<5:59:01, 615.48s/it] 13%|█▎        | 5/39 [46:51<5:25:22, 574.18s/it] 15%|█▌        | 6/39 [54:48<4:59:49, 545.13s/it] 18%|█▊        | 7/39 [1:02:46<4:40:00, 525.01s/it]Stopping at epoch 68 because wall time would be reached 18%|█▊        | 7/39 [1:02:46<4:46:59, 538.12s/it]
-
-Lavish subscription of memory-resources:
-
-	6144 Mbytes requested,
-	but peak usage was only 3282.8 Mbytes.
-
-------------> Please request grid resources more carefully! <------------
-

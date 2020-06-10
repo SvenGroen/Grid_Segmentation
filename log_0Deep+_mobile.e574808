@@ -1,9 +1,0 @@
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [07:11<00:00, 431.95s/it]100%|██████████| 1/1 [07:11<00:00, 431.95s/it]
-
-Lavish subscription of memory-resources:
-
-	6144 Mbytes requested,
-	but peak usage was only 3356.3 Mbytes.
-
-------------> Please request grid resources more carefully! <------------
-
