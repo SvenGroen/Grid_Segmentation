@@ -13,14 +13,14 @@ from collections import defaultdict
 from pathlib import Path
 
 from sklearn.model_selection import train_test_split
-
+random.seed(12345)
 
 bgpath = Path("data/Images/Backgrounds/coco")
 vid_path = Path(Path.cwd()) / "data/Videos/YT_originals"
 video_names = [vid.stem for vid in vid_path.glob("*")]
 output_size = (int(2048 / 4), int(1080 / 4))
 fps = 29
-lower_green = np.array([0, 1, 0])
+lower_green = np.array([0, 150, 0])
 upper_green = np.array([150, 255, 150])
 MAX_DURATION = 4
 

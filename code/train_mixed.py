@@ -26,7 +26,7 @@ start_time = time.time()
 
 config = {  # DEFAULT CONFIG
 
-    "model": "Deep_mobile_lstm",
+    "model": "Deep+_mobile",
     # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "ICNet", "Deep_mobile_lstm"
     "ID": "01",
     "lr": 1e-02,
@@ -57,8 +57,7 @@ if config["model"] == "UNet":
     net = UNet(in_channels=3, out_channels=2, n_class=2, kernel_size=3, padding=1, stride=1)
     net.train()
 elif config["model"] == "Deep+_mobile":
-    net = modeling.deeplabv3_mobilenet(num_classes=2,
-                                       pretrained_backbone=True)  # https://github.com/VainF/DeepLabV3Plus-Pytorch
+    net = Deeplabv3Plus_mobile()  # https://github.com/VainF/DeepLabV3Plus-Pytorch
     net.train()
 elif config["model"] == "Deep_Res101":
     net = Deeplab_Res101()
@@ -104,7 +103,7 @@ runtime = time.time() - start_time
 # transform = [T.RandomPerspective(distortion_scale=0.1), T.ColorJitter(0.2, 0.2, 0.2),
 #              T.RandomAffine(degrees=10, scale=(1, 1.1)), T.RandomGrayscale(p=0.1),
 #              T.RandomHorizontalFlip(p=0.7)]
-dataset = Youtube_Greenscreen()  # <--- SET DATASET
+dataset = Youtube_Greenscreen(train=True)  # <--- SET DATASET
 train_loader = DataLoader(dataset=dataset, batch_size=config["batch_size"])
 
 # saving the models
@@ -242,11 +241,12 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
         pred = net(images, old_pred)
         loss = criterion(pred, labels.long())
         optimizer.zero_grad()
-        loss.backward()
+        loss.backward(retain_graph=True)
         optimizer.step()
         running_loss += loss.item() * images.size(0)
         old_pred[1] = old_pred[0]
-        old_pred[0] = pred
+        old_pred[0] = pred.unsqueeze(1)
+        print(loss)
     loss_values.append(running_loss / len(dataset))
     scheduler.step()
     save_figure(loss_values, what="loss")

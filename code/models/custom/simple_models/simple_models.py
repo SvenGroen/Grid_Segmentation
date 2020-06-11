@@ -73,6 +73,12 @@ class FCN_Res50(nn.Module):
         x = self.base(x)
         return x["out"]
 
+class Deeplabv3Plus_mobile(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.base = deeplabv3plus_mobilenet(num_classes=2, pretrained_backbone=True)
+    def forward(self, x, *args):
+        return self.base(x)
 
 class Deep_mobile_lstm(nn.Module):
     def __init__(self):
@@ -91,7 +97,7 @@ class Deep_mobile_lstm(nn.Module):
         out = self.classifier(features)
         out = F.interpolate(out, size=input_shape, mode='bilinear', align_corners=False)
         out = out.unsqueeze(1)
-        out, self.hidden = self.lstm(out)
+        out, self.hidden = self.lstm(out, self.hidden)
         return out[-1].squeeze(1)
 
 class Deep_mobile_lstmV2(nn.Module):
@@ -109,7 +115,7 @@ class Deep_mobile_lstmV2(nn.Module):
         if len(args) != 0:
             old_pred = args[0]
             for i in range(len(old_pred)):
-                if old_pred[i] is not None:
+                if old_pred[i] is not None and len(old_pred[i].shape) != len(x.shape) + 1:
                     old_pred[i] = old_pred[i].unsqueeze(1)
         input_shape = x.shape[-2:]
         features = self.backbone(x)
@@ -122,7 +128,7 @@ class Deep_mobile_lstmV2(nn.Module):
                     old_pred[i] = torch.zeros_like(out)
             out = [out] + old_pred
             out = torch.cat(out, dim =1)
-        out, self.hidden = self.lstm(out)
+        out, self.hidden = self.lstm(out, self.hidden)
         # out = F.interpolate(out[-1].squeeze(1), size=input_shape, mode='bilinear', align_corners=False)
         out = out[0][:,0,:,:,:]
         return out

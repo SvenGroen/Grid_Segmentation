@@ -11,4 +11,5 @@
 **/*.tar
 /code/models/trained_models/Examples_Green/multiples/**/*/*.pth.tar
 /data/Images/
+/data/Videos/
 
