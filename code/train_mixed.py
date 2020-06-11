@@ -26,8 +26,8 @@ start_time = time.time()
 
 config = {  # DEFAULT CONFIG
 
-    "model": "Deep+_mobile",
-    # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "ICNet", "Deep_mobile_lstm"
+    "model": "Deep_mobile_lstmV2",
+    # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "ICNet", "Deep_mobile_lstm", "Deep_mobile_lstmV2"
     "ID": "01",
     "lr": 1e-02,
     "batch_size": 2,
@@ -141,7 +141,7 @@ if LOAD_CHECKPOINT:
         print("=> No previous checkpoint found")
         checkpoint = defaultdict(list)
         checkpoint["state_dict"] = net.state_dict()
-        checkpoint["optimizer_state_dict"]=optimizer.state_dict()
+        checkpoint["optimizer_state_dict"] = optimizer.state_dict()
         checkpoint["epoch"].append(start_epoch)
         checkpoint["lr"].append(config["lr"])
         checkpoint["batchsize"].append(config["batch_size"])
@@ -153,7 +153,7 @@ else:
     loss_values = []
     checkpoint = defaultdict(list)
     checkpoint["state_dict"] = net.state_dict()
-    checkpoint["optimizer_state_dict"]=optimizer.state_dict()
+    checkpoint["optimizer_state_dict"] = optimizer.state_dict()
     checkpoint["epoch"].append(start_epoch)
     checkpoint["lr"].append(config["lr"])
     checkpoint["batchsize"].append(config["batch_size"])
@@ -190,7 +190,7 @@ def save_figure(values, what=""):
 def save_checkpoint(state, filename=str(model_save_path / train_name) + ".pth.tar"):
     print("=> Saving checkpoint at epoch {}".format(state["epoch"][-1]))
     checkpoint["state_dict"] = net.state_dict()
-    checkpoint["optimizer_state_dict"]=optimizer.state_dict()
+    checkpoint["optimizer_state_dict"] = optimizer.state_dict()
     checkpoint["epoch"].append(epoch)
     for param_group in optimizer.param_groups:
         checkpoint["lr"].append(param_group['lr'])

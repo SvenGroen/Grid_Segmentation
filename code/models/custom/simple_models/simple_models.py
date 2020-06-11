@@ -130,7 +130,7 @@ class Deep_mobile_lstmV2(nn.Module):
             out = torch.cat(out, dim =1)
         out, self.hidden = self.lstm(out, self.hidden)
         # out = F.interpolate(out[-1].squeeze(1), size=input_shape, mode='bilinear', align_corners=False)
-        out = out[0][:,0,:,:,:]
+        out = out[0][:,-1,:,:,:]
         return out
 
 
