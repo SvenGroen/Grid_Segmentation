@@ -98,6 +98,7 @@ class Deep_mobile_lstm(nn.Module):
         out = F.interpolate(out, size=input_shape, mode='bilinear', align_corners=False)
         out = out.unsqueeze(1)
         out, self.hidden = self.lstm(out, self.hidden)
+        self.hidden = [tuple(state.detach() for state in i) for i in self.hidden]
         return out[-1].squeeze(1)
 
 class Deep_mobile_lstmV2(nn.Module):
