@@ -109,9 +109,10 @@ class Deep_mobile_lstmV2(nn.Module):
         self.lstm = ConvLSTM(input_dim=2, hidden_dim=[2], kernel_size=(3, 3), num_layers=1, batch_first=True,
                              bias=True,
                              return_all_layers=False)
+        self.lstmcell = ConvLSTMCell(input_dim= 2, hidden_dim=2, kernel_size=(3,3), bias=True)
         self.hidden = None
 
-    def forward(self, x, *args):
+    def forward(self, x, hidden_state, *args):
         if len(args) != 0:
             old_pred = args[0]
             for i in range(len(old_pred)):
@@ -128,7 +129,9 @@ class Deep_mobile_lstmV2(nn.Module):
                     old_pred[i] = torch.zeros_like(out)
             out = [out] + old_pred
             out = torch.cat(out, dim =1)
+
         out, self.hidden = self.lstm(out, self.hidden)
+        self.hidden = [tuple(state.detach() for state in i) for i in self.hidden]
         # out = F.interpolate(out[-1].squeeze(1), size=input_shape, mode='bilinear', align_corners=False)
         out = out[0][:,-1,:,:,:]
         return out

@@ -105,6 +105,7 @@ class ConvLSTM(nn.Module):
         self.batch_first = batch_first
         self.bias = bias
         self.return_all_layers = return_all_layers
+        self.hidden_state = None
 
         cell_list = []
         for i in range(0, self.num_layers):
@@ -139,6 +140,7 @@ class ConvLSTM(nn.Module):
 
         # Implement stateful ConvLSTM
         if hidden_state is not None:
+            # hidden_state = self.hidden_state
             hidden_state = hidden_state
             # raise NotImplementedError()
         else:
@@ -159,6 +161,7 @@ class ConvLSTM(nn.Module):
             for t in range(seq_len):
                 h, c = self.cell_list[layer_idx](input_tensor=cur_layer_input[:, t, :, :, :],
                                                  cur_state=[h, c])
+
                 output_inner.append(h)
 
             layer_output = torch.stack(output_inner, dim=1)

@@ -26,7 +26,7 @@ start_time = time.time()
 
 config = {  # DEFAULT CONFIG
 
-    "model": "Deep_mobile_lstmV2",
+    "model": "Deep_mobile_lstm",
     # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "ICNet", "Deep_mobile_lstm", "Deep_mobile_lstmV2"
     "ID": "01",
     "lr": 1e-02,
@@ -241,11 +241,11 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
         pred = net(images, old_pred)
         loss = criterion(pred, labels.long())
         optimizer.zero_grad()
-        loss.backward(retain_graph=True)
+        loss.backward(retain_graph=False)
         optimizer.step()
         running_loss += loss.item() * images.size(0)
         old_pred[1] = old_pred[0]
-        old_pred[0] = pred.unsqueeze(1)
+        old_pred[0] = pred.unsqueeze(1).detach()
         print(loss)
     loss_values.append(running_loss / len(dataset))
     scheduler.step()
