@@ -203,8 +203,8 @@ def save_checkpoint(state, filename=str(model_save_path / train_name) + ".pth.ta
 
 time_tmp = []
 start_train_time = time.time()
-avrg_epoch_time = 60 * 60 * 0.1
-restart_time = 60 * 60 * 1.2
+avrg_epoch_time = 60 * 60 * 0.5
+restart_time = 60 * 60 * 2.5
 max_time = 60 * 60 * 24
 
 print(">>>Start of Training<<<")
@@ -229,7 +229,7 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
             "Stopping because programm was running to long ({} seconds > {})".format(epoch_start - start_time,
                                                                                      max_time))
         break
-    if epoch_start - start_time > restart_time - avrg_epoch_time:
+    if epoch_start - start_time +avrg_epoch_time > restart_time:
         sys.stderr.write("Stopping at epoch {} because wall time would be reached".format(epoch))
         restart_script()
         break
