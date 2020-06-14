@@ -120,6 +120,8 @@ LOAD_CHECKPOINT = True
 LOAD_POSITION = -1
 # Load previous model state if needed
 lrs = []
+batch_index = None
+found_restart = False
 
 if LOAD_CHECKPOINT:
     print("Trying to load previous Checkpoint ...")
@@ -136,6 +138,7 @@ if LOAD_CHECKPOINT:
             param_group['lr'] = lrs[LOAD_POSITION]
         config["batch_size"] = checkpoint["batchsize"][LOAD_POSITION]
         runtime = checkpoint["runtime"]
+        batch_index = checkpoint["batch_index"]
     except IOError:
         loss_values = []
         print("=> No previous checkpoint found")
@@ -148,6 +151,7 @@ if LOAD_CHECKPOINT:
         checkpoint["loss_values"] = loss_values
         checkpoint["runtime"] = time.time() - start_time
         checkpoint["scheduler"] = scheduler.state_dict()
+        checkpoint["batch_index"] = batch_index
 else:
     print("Previous checkpoints may exists but are not loaded")
     loss_values = []
@@ -160,6 +164,7 @@ else:
     checkpoint["loss_values"] = loss_values
     checkpoint["runtime"] = time.time() - start_time
     checkpoint["scheduler"] = scheduler.state_dict()
+    checkpoint["batch_index"] = batch_index
 
 # Start training
 
@@ -187,8 +192,8 @@ def save_figure(values, what=""):
     pass
 
 
-def save_checkpoint(state, filename=str(model_save_path / train_name) + ".pth.tar"):
-    print("=> Saving checkpoint at epoch {}".format(state["epoch"][-1]))
+def save_checkpoint(checkpoint, filename=str(model_save_path / train_name) + ".pth.tar"):
+    print("=> Saving checkpoint at epoch {}".format(checkpoint["epoch"][-1]))
     checkpoint["state_dict"] = net.state_dict()
     checkpoint["optimizer_state_dict"] = optimizer.state_dict()
     checkpoint["epoch"].append(epoch)
@@ -198,14 +203,9 @@ def save_checkpoint(state, filename=str(model_save_path / train_name) + ".pth.ta
     checkpoint["loss_values"] = loss_values
     checkpoint["runtime"] = time.time() - start_time
     checkpoint["scheduler"] = scheduler.state_dict()
-    torch.save(state, Path(filename))
+    checkpoint["batch_index"] = batch_index
+    torch.save(checkpoint, Path(filename))
 
-
-time_tmp = []
-start_train_time = time.time()
-avrg_epoch_time = 60 * 60 * 0.5
-restart_time = 60 * 60 * 2.5
-max_time = 60 * 60 * 24
 
 print(">>>Start of Training<<<")
 
@@ -221,32 +221,49 @@ def restart_script():
     pass
 
 
+# delete-----
+# batch_index = torch.Tensor([100, 101])
+# delete-----
+
+
+time_tmp = []
+avrg_batch_time = 60
+restart_time = 60*60*0.9
+
 for epoch in tqdm(range(start_epoch, config["num_epochs"])):
     old_pred = [None, None]
-    epoch_start = time.time()
-    if epoch_start - start_time > max_time:
-        sys.stderr.write(
-            "Stopping because programm was running to long ({} seconds > {})".format(epoch_start - start_time,
-                                                                                     max_time))
-        break
-    if epoch_start - start_time +avrg_epoch_time > restart_time:
-        sys.stderr.write("Stopping at epoch {} because wall time would be reached".format(epoch))
-        restart_script()
-        break
     for param_group in optimizer.param_groups:
         lrs.append(param_group['lr'])
     running_loss = 0
     for batch in train_loader:
-        images, labels = batch
+        batch_start_time = time.time()
+        if batch_start_time + avrg_batch_time - start_time > restart_time:
+            sys.stderr.write("Stopping at epoch {} and batch_idx {} because wall time would be reached".format(epoch, str(batch_index)))
+            save_checkpoint(checkpoint)
+            restart_script()
+            restart = True
+            break
+        # no restart, continue training
+        idx, (images, labels) = batch
+        # load batches in case of restart
+        if (not torch.all(torch.eq(idx, batch_index))) and not found_restart:  # skip until point of restart is found
+            continue
+        # start training if last idx position was found
+        found_restart = True
         pred = net(images, old_pred)
         loss = criterion(pred, labels.long())
         optimizer.zero_grad()
-        loss.backward(retain_graph=False)
+        loss.backward()
         optimizer.step()
         running_loss += loss.item() * images.size(0)
         old_pred[1] = old_pred[0]
         old_pred[0] = pred.unsqueeze(1).detach()
         print(loss)
+        batch_index=idx
+        time_tmp.append(time.time() - batch_start_time)
+        avrg_batch_time = np.array(time_tmp).mean()
+    if restart:
+        break
     loss_values.append(running_loss / len(dataset))
     scheduler.step()
     save_figure(loss_values, what="loss")
@@ -255,11 +272,10 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
     #     save_checkpoint(checkpoint)
     #     print("\nepoch: {},\t loss: {}".format(epoch, running_loss))
 
-    epoch_end = time.time() - epoch_start
-    time_tmp.append(epoch_end)
-    avrg_epoch_time = np.array(time_tmp).mean()
+
 
 print(">>>End of Training<<<")
 # save model after training
-save_checkpoint(checkpoint)
+if not restart:
+    save_checkpoint(checkpoint)
 print("End of Python Script")

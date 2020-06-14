@@ -1,1 +1,0 @@
-{"lr": 0.01, "model": "Deep+_mobile", "ID": "0", "batch_size": 2, "num_epochs": 100, "scheduler_step_size": 10, "save_freq": 1, "save_path": "code/models/trained_models/Examples_Green/multiples"}

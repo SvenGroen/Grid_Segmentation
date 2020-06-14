@@ -28,36 +28,38 @@ net = FCN_Res50()
 # # net = modeling.deeplabv3_mobilenet(num_classes=2, pretrained_backbone=True)
 # # net = deeplabv3plus_mobilenet(num_classes=2, pretrained_backbone=True)
 # net = Deep_mobile_lstmV2()
-print(net)
+# print(net)
 
-# # criterion = ICNetLoss().to(device)
-criterion = F.cross_entropy
+# # # criterion = ICNetLoss().to(device)
+# criterion = F.cross_entropy
+#
+# batch_size = 4  # <--- SET BATCHSIZE
+# lr = 1e-03  # <--- SET LEARNINGRATE
+# num_epochs = 1  # <--- SET NUMBER OF EPOCHS
+#
+# train_loader = DataLoader(dataset=dataset, batch_size=batch_size)
+# optimizer = optim.Adam(net.parameters(), lr=lr)
+# loss_values=[]
+# for epoch in tqdm(range(num_epochs)):
+#     old_pred = [None, None]
+#     running_loss = 0
+#     batch_count = 0
+#     for batch in train_loader:
+#         images, labels = batch
+#         pred = net(images, old_pred)
+#         loss = criterion(pred, labels.long())
+#         # loss = loss_criterion(pred, labels.long())
+#         optimizer.zero_grad()
+#         loss.backward()
+#         optimizer.step()
+#         batch_count += 1
+#         running_loss += loss.item() * images.size(0)
+#         running_loss += 2 * batch_count
+#         print(loss)
+#     loss_values.append(running_loss / len(dataset))
 
-batch_size = 4  # <--- SET BATCHSIZE
-lr = 1e-03  # <--- SET LEARNINGRATE
-num_epochs = 1  # <--- SET NUMBER OF EPOCHS
-
-train_loader = DataLoader(dataset=dataset, batch_size=batch_size)
-optimizer = optim.Adam(net.parameters(), lr=lr)
-loss_values=[]
-for epoch in tqdm(range(num_epochs)):
-    old_pred = [None, None]
-    running_loss = 0
-    batch_count = 0
-    for batch in train_loader:
-        images, labels = batch
-        pred = net(images, old_pred)
-        loss = criterion(pred, labels.long())
-        # loss = loss_criterion(pred, labels.long())
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-        batch_count += 1
-        running_loss += loss.item() * images.size(0)
-        running_loss += 2 * batch_count
-        print(loss)
-    loss_values.append(running_loss / len(dataset))
-
+a=torch.tensor([0,1])
+print(str(a))
 # import time
 # # max_time = 30
 # # avrg_time = 5

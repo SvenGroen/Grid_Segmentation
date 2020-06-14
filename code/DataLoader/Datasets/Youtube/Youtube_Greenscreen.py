@@ -40,9 +40,9 @@ class Youtube_Greenscreen(data.Dataset):
         lbl = self.transform(lbl).squeeze(0)
         lbl = lbl.squeeze(0)
         if torch.cuda.is_available():
-            return inp.cuda(), lbl.cuda()
+            return idx, (inp.cuda(), lbl.cuda())
         else:
-            return inp, lbl
+            return idx, (inp, lbl)
 
     def show(self, num_images, start_idx: int = 0, random_images=True):
 

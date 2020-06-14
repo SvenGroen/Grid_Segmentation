@@ -14,6 +14,16 @@ from pathlib import Path
 
 from sklearn.model_selection import train_test_split
 random.seed(12345)
+def add_noise(image):
+    row, col, ch = image.shape
+    mean = 0
+    # var = 0.1
+    # sigma = var**0.5
+    gauss = np.random.normal(mean, 1.5, (row, col, ch))
+    gauss = gauss.reshape(row, col, ch)
+    noisy = image + gauss
+    return noisy
+
 
 bgpath = Path("data/Images/Backgrounds/coco")
 vid_path = Path(Path.cwd()) / "data/Videos/YT_originals"
@@ -32,7 +42,7 @@ random.shuffle(test)
 fourcc = cv2.VideoWriter_fourcc(*"mp4v")
 for split in ["train", "test"]:
     video_names = train if split == "train" else test
-    out_path = Path("data/Videos/Greenscreen_Video_frames_4sec") / split
+    out_path = Path("data/Videos/Greenscreen_Video_frames_4sec_noise") / split
     label_out_path = out_path / "labels"
     input_out_path = out_path / "Input"
     label_out_path.mkdir(parents=True, exist_ok=True)
@@ -89,7 +99,7 @@ for split in ["train", "test"]:
                 mask = cv2.inRange(frame, lower_green, upper_green)  # create a mask for the label and the background swap
                 mask = np.expand_dims(mask, axis=-1)
                 label = np.where(mask, (0,0,0), (255,255,255))
-                out_img = np.where(mask, bgimg, frame)
+                out_img = np.where(mask, add_noise(bgimg), frame)
                 out_input.write(np.uint8(out_img))
                 out_label.write(np.uint8(label))
                 frame_counter += 1
@@ -101,3 +111,4 @@ for split in ["train", "test"]:
         cap.release()
         out_label.release()
         out_input.release()
+
