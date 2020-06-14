@@ -8,6 +8,7 @@
 /code/models/trained_models/Examples_Green/*/*.pth.tar
 /code/models/trained_models/Examples_Green/multiples/**/*.pth.tar
 /code/models/trained_models/Examples_Green/multiples/*/*.pth.tar
+/code/models/trained_models/**/*.pth.tar
 **/*.tar
 /code/models/trained_models/Examples_Green/multiples/**/*/*.pth.tar
 /data/Images/
