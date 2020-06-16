@@ -26,8 +26,8 @@ print("---Start of Python File---")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device: ", device)
 
-model = "Deep+_mobile"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile" <--CHANGE
-model_name = Path("Deep+_mobile_bs2_startLR1e-02Sched_Step_20ID0")  # <--CHANGE
+model = "Deep_mobile_lstmV2"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "Deep_mobile_lstm" <--CHANGE
+model_name = Path("Deep_mobile_lstmV2_bs2_startLR1e-02Sched_Step_20ID0")  # <--CHANGE
 
 # norm_ImageNet = False
 if model == "UNet":
@@ -93,13 +93,13 @@ transform = [T.RandomPerspective(distortion_scale=0.1), T.ColorJitter(0.5, 0.5, 
 # dataset = NY_mixed(transforms=transform)
 dataset = Youtube_Greenscreen(train=False)
 train_loader = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=True)
-dataset_HD = NY_mixed_HD()
-train_loader_HD = DataLoader(dataset=dataset_HD, batch_size=1, shuffle=True)
 
-for mode in ["Compressed", "HD"]:
-    loader = train_loader if mode == "Compressed" else train_loader_HD
 
-    to_PIL = transforms.ToPILImage()
+
+for mode in ["Compressed"]:
+    loader = train_loader
+
+    to_PIL = T.ToPILImage()
     tmp_img, tmp_lbl, tmp_pred = [], [], []
     metrics = defaultdict(list)
     logger = defaultdict(list)
@@ -109,7 +109,7 @@ for mode in ["Compressed", "HD"]:
         end = torch.cuda.Event(enable_timing=True)
 
     for batch in loader:
-        images, labels = batch
+        idx, (images, labels) = batch
         images.to(device)
         labels.to(device)
         if torch.cuda.is_available():

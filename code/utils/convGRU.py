@@ -140,7 +140,8 @@ class ConvGRU(nn.Module):
 
         # Implement stateful ConvLSTM
         if hidden_state is not None:
-            raise NotImplementedError()
+            hidden_state = hidden_state
+            # raise NotImplementedError()
         else:
             hidden_state = self._init_hidden(batch_size=input_tensor.size(0))
 

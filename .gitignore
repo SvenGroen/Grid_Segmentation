@@ -9,8 +9,10 @@
 /code/models/trained_models/Examples_Green/multiples/**/*.pth.tar
 /code/models/trained_models/Examples_Green/multiples/*/*.pth.tar
 /code/models/trained_models/**/*.pth.tar
-**/*.tar
+/code/models/trained_models/LSTMs/*/*.pth.tar
+/code/models/trained_models/LSTMs/**/*.pth.tar
 /code/models/trained_models/Examples_Green/multiples/**/*/*.pth.tar
+**/*.tar
 /data/Images/
 /data/Videos/
 

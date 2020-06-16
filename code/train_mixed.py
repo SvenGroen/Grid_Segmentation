@@ -26,12 +26,12 @@ start_time = time.time()
 
 config = {  # DEFAULT CONFIG
 
-    "model": "Deep_mobile_lstm",
+    "model": "Deep_mobile_gruV2",
     # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "ICNet", "Deep_mobile_lstm", "Deep_mobile_lstmV2"
     "ID": "01",
     "lr": 1e-02,
     "batch_size": 2,
-    "num_epochs": 1,
+    "num_epochs": 3,
     "scheduler_step_size": 15,
     "save freq": 1,
     "save_path": "code/models/trained_models/Examples_Green/multiples/session05"
@@ -85,6 +85,12 @@ elif config["model"] == "Deep_mobile_lstmV2":
 elif config["model"] == "Deep_mobile_lstm":
     net = Deep_mobile_lstm()
     net.train()
+elif config["model"] == "Deep_mobile_gru":
+    net = Deep_mobile_gru()
+    net.train()
+elif config["model"] == "Deep_mobile_gruV2":
+    net = Deep_mobile_gruV2()
+    net.train()
 else:
     net = None
     print("Model unknown")
@@ -95,6 +101,7 @@ if config["model"] != "ICNet":
     criterion = F.cross_entropy
 norm_ImageNet = False
 start_epoch = 0
+
 optimizer = optim.Adam(net.parameters(), lr=config["lr"])
 scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=config["scheduler_step_size"], gamma=0.1)
 runtime = time.time() - start_time
@@ -122,7 +129,7 @@ LOAD_POSITION = -1
 lrs = []
 
 found_restart = False
-batch_index = torch.zeros(config["batch_size"])
+batch_index = torch.tensor(range(config["batch_size"]))
 if LOAD_CHECKPOINT:
     print("Trying to load previous Checkpoint ...")
     try:
@@ -146,7 +153,7 @@ if LOAD_CHECKPOINT:
         checkpoint["state_dict"] = net.state_dict()
         checkpoint["optimizer_state_dict"] = optimizer.state_dict()
         checkpoint["epoch"].append(start_epoch)
-        checkpoint["lr"].append(config["lr"])
+        checkpoint["lr"] = lrs
         checkpoint["batchsize"].append(config["batch_size"])
         checkpoint["loss_values"] = loss_values
         checkpoint["runtime"] = time.time() - start_time
@@ -159,7 +166,7 @@ else:
     checkpoint["state_dict"] = net.state_dict()
     checkpoint["optimizer_state_dict"] = optimizer.state_dict()
     checkpoint["epoch"].append(start_epoch)
-    checkpoint["lr"].append(config["lr"])
+    checkpoint["lr"] = lrs
     checkpoint["batchsize"].append(config["batch_size"])
     checkpoint["loss_values"] = loss_values
     checkpoint["runtime"] = time.time() - start_time
@@ -197,8 +204,7 @@ def save_checkpoint(checkpoint, filename=str(model_save_path / train_name) + ".p
     checkpoint["state_dict"] = net.state_dict()
     checkpoint["optimizer_state_dict"] = optimizer.state_dict()
     checkpoint["epoch"].append(epoch)
-    for param_group in optimizer.param_groups:
-        checkpoint["lr"].append(param_group['lr'])
+    checkpoint["lr"] = lrs
     checkpoint["batchsize"].append(config["batch_size"])
     checkpoint["loss_values"] = loss_values
     checkpoint["runtime"] = time.time() - start_time
@@ -228,8 +234,9 @@ def restart_script():
 
 time_tmp = []
 avrg_batch_time = 60
-restart_time = 60 * 60 * 0.7
+restart_time = 60 * 60 * 0.75
 restart = False
+
 for epoch in tqdm(range(start_epoch, config["num_epochs"])):
     old_pred = [None, None]
     for param_group in optimizer.param_groups:
@@ -248,26 +255,26 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
         # no restart, continue training
         idx, (images, labels) = batch
         # load batches in case of restart
-        if (
-        not torch.all(torch.eq(idx, batch_index.cpu()))) and not found_restart:  # skip until point of restart is found
+        if (not torch.all(torch.eq(idx, batch_index.cpu()))) and not found_restart:  # skip until point of restart is found
             continue
         # start training if last idx position was found
         found_restart = True
         pred = net(images, old_pred)
         loss = criterion(pred, labels.long())
+        print(loss)
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
         running_loss += loss.item() * images.size(0)
         old_pred[1] = old_pred[0]
         old_pred[0] = pred.unsqueeze(1).detach()
-        print(loss)
         batch_index = idx
         time_tmp.append(time.time() - batch_start_time)
         avrg_batch_time = np.array(time_tmp).mean()
     if restart:
         break
     loss_values.append(running_loss / len(dataset))
+
     scheduler.step()
     save_figure(loss_values, what="loss")
     save_figure(lrs, what="LR")

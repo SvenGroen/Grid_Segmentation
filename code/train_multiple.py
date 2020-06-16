@@ -2,11 +2,11 @@ import json
 from pathlib import Path
 
 models = ["Deep+_mobile", "Deep_mobile_lstm",
-          "Deep_mobile_lstmV2"]  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "ICNet", "FCN_Res50", "Deep_mobile_lstm", "Deep_mobile_lstmV2"
-start_lrs = [1e-02, 1e-02]
-step_sizes = [20, 20]
-num_epochs = [100, 100]
-batch_sizes = [2, 6]
+          "Deep_mobile_lstmV2","Deep_mobile_gru","Deep_mobile_gruV2"]  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "ICNet", "FCN_Res50", "Deep_mobile_lstm", "Deep_mobile_lstmV2"
+start_lrs = [1e-02]
+step_sizes = [20]
+num_epochs = [100]
+batch_sizes = [2]
 config = {}
 config_paths = []
 models_name = []

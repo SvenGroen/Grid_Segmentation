@@ -24,7 +24,12 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 # dataset = Youtube_Greenscreen()
 dataset = Youtube_Greenscreen(train=True)
 # # net = ICNet(nclass = 2, backbone='resnet50', pretrained_base=False).to(device)
-net = FCN_Res50()
+# net = FCN_Res50()
+model_name = Path("Deep_mobile_lstm_bs2_startLR1e-02Sched_Step_20ID0")
+model_save_path = Path("code/models/trained_models/LSTMs") / model_name
+checkpoint = torch.load(str(model_save_path / model_name) + ".pth.tar", map_location=torch.device(device))
+print(checkpoint)
+
 # # net = modeling.deeplabv3_mobilenet(num_classes=2, pretrained_backbone=True)
 # # net = deeplabv3plus_mobilenet(num_classes=2, pretrained_backbone=True)
 # net = Deep_mobile_lstmV2()

@@ -113,7 +113,7 @@ class Deep_mobile_lstmV2(nn.Module):
         self.lstmcell = ConvLSTMCell(input_dim= 2, hidden_dim=2, kernel_size=(3,3), bias=True)
         self.hidden = None
 
-    def forward(self, x, hidden_state, *args):
+    def forward(self, x, *args):
         if len(args) != 0:
             old_pred = args[0]
             for i in range(len(old_pred)):
@@ -135,26 +135,64 @@ class Deep_mobile_lstmV2(nn.Module):
         self.hidden = [tuple(state.detach() for state in i) for i in self.hidden]
         # out = F.interpolate(out[-1].squeeze(1), size=input_shape, mode='bilinear', align_corners=False)
         out = out[0][:,-1,:,:,:]
+        self.hidden = [tuple(state.detach() for state in i) for i in self.hidden]
         return out
 
 
-class Deep_mobile_GRU(nn.Module):
+class Deep_mobile_gru(nn.Module):
     def __init__(self):
         super().__init__()
         self.base = deeplabv3plus_mobilenet(num_classes=2, pretrained_backbone=True)
-        self.backbone = self.base.backbone
-        self.classifier = self.base.classifier
-        self.gru = ConvGRU(input_size=(270, 512), input_dim=2, hidden_dim=[64], kernel_size=(3, 3), num_layers=1,
-                            dtype=torch.FloatTensor, batch_first=True, bias= True, return_all_layers=True)
+        # self.backbone = self.base.backbone
+        # self.classifier = self.base.classifier
+        self.gru = ConvGRU(input_size=(270, 512), input_dim=2, hidden_dim=[2], kernel_size=(3, 3), num_layers=1,
+                            dtype=torch.FloatTensor, batch_first=True, bias=True, return_all_layers=True)
+        self.hidden = [None]
 
     def forward(self, x, *args):
-        input_shape = x.shape[-2:]
-        features = self.backbone(x)
-        x = self.classifier(features)
-        x = F.interpolate(x, size=input_shape, mode='bilinear', align_corners=False)
+        x = self.base(x)
+        # input_shape = x.shape[-2:]
+        # features = self.backbone(x)
+        # x = self.classifier(features)
+        # x = F.interpolate(x, size=input_shape, mode='bilinear', align_corners=False)
         x = x.unsqueeze(1)
-        x = self.gru(x)
-        return x[-1]
+        out, self.hidden = self.gru(x, self.hidden[-1])
+        self.hidden = [tuple(state.detach() for state in i) for i in self.hidden]
+        out = out[0][:, -1, :, :, :]
+        return out
+
+class Deep_mobile_gruV2(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.base = deeplabv3plus_mobilenet(num_classes=2, pretrained_backbone=True)
+        # self.backbone = self.base.backbone
+        # self.classifier = self.base.classifier
+        self.gru = ConvGRU(input_size=(270, 512), input_dim=2, hidden_dim=[2], kernel_size=(3, 3), num_layers=1,
+                            dtype=torch.FloatTensor, batch_first=True, bias=True, return_all_layers=True)
+        self.hidden = [None]
+
+    def forward(self, x, *args):
+        if len(args) != 0:
+            old_pred = args[0]
+            for i in range(len(old_pred)):
+                if old_pred[i] is not None and len(old_pred[i].shape) != len(x.shape) + 1:
+                    old_pred[i] = old_pred[i].unsqueeze(1)
+        out = self.base(x)
+        # input_shape = x.shape[-2:]
+        # features = self.backbone(x)
+        # x = self.classifier(features)
+        # x = F.interpolate(x, size=input_shape, mode='bilinear', align_corners=False)
+        out = out.unsqueeze(1)
+        if len(args) != 0:
+            if None in old_pred:
+                for i in range(len(old_pred)):
+                    old_pred[i] = torch.zeros_like(out)
+            out = [out] + old_pred
+            out = torch.cat(out, dim =1)
+        out, self.hidden = self.gru(out, self.hidden[-1])
+        self.hidden = [tuple(state.detach() for state in i) for i in self.hidden]
+        out = out[0][:, -1, :, :, :]
+        return out
 
 
 '''
