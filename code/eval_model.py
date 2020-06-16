@@ -1,8 +1,11 @@
 import json
+
+import cv2
 import torch
 import torchvision.transforms as T
 import numpy as np
 import time
+import matplotlib.pyplot as plt
 
 from utils.stack import *
 from models.custom.simple_models.simple_models import *
@@ -22,107 +25,91 @@ from PIL import Image
 from pathlib import Path
 
 print("---Start of Python File---")
-
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device: ", device)
+output_size = (int(2048 / 4), int(1080 / 4))
+model_path = Path("code/models/trained_models/LSTMs")
 
-model = "Deep_mobile_lstmV2"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "Deep_mobile_lstm" <--CHANGE
-model_name = Path("Deep_mobile_lstmV2_bs2_startLR1e-02Sched_Step_20ID0")  # <--CHANGE
 
-# norm_ImageNet = False
-if model == "UNet":
-    net = UNet(in_channels=3, out_channels=2, n_class=2, kernel_size=3, padding=1, stride=1)
-    net.train()
-elif model == "Deep+_mobile":
-    net = Deeplabv3Plus_mobile()  # https://github.com/VainF/DeepLabV3Plus-Pytorch
-    net.train()
-elif model == "Deep_Res101":
-    net = Deeplab_Res101()
-    norm_ImageNet = False
-    net.train()
-elif model == "Deep_Res50":
-    net = Deeplab_Res50()
-    norm_ImageNet = False
-    net.train()
-elif model == "FCN_Res50":
-    net = FCN_Res50()
-    norm_ImageNet = False
-    net.train()
-elif model == "ConvSame_3":
-    net = ConvSame_3_net()  # <--- SET MODEL
-    net.train()
-elif model == "Deep_mobile_lstmV2":
-    net = Deep_mobile_lstmV2()
-    net.train()
-elif model == "Deep_mobile_lstm":
-    net = Deep_mobile_lstm()
-    net.train()
-elif model == "ICNet":
-    net = ICNet(nclass=2, backbone='resnet50', pretrained_base=False)  # https://github.com/liminn/ICNet-pytorch
-    criterion = ICNetLoss()
-    criterion.to(device)
-    net.train()
-else:
-    net = None
-    print("Model unknown")
-
-model_save_path = Path("code/models/trained_models/LSTMs") / model_name
-
-print("Loading: " + str(model_save_path / model_name) + ".pth.tar")
-device = "cuda" if torch.cuda.is_available() else "cpu"
-LOAD_POSITION = -1
-batch_size = 2
-try:
-    checkpoint = torch.load(str(model_save_path / model_name) + ".pth.tar", map_location=torch.device(device))
-    print("=> Loading checkpoint at epoch {}".format(checkpoint["epoch"][LOAD_POSITION]))
-    net.load_state_dict(checkpoint["state_dict"])
-    batch_size = checkpoint["batchsize"][LOAD_POSITION]
-    print("Model was loaded.")
-except IOError:
-    print("model was not found")
+def save_figure(values, path, what=""):
+    plt.plot(values)
+    plt.xlabel("Epoch")
+    plt.ylabel(what)
+    plt.savefig(str(path / (what + ".jpg")))
+    plt.close()
     pass
 
-# evaluation mode:
-net.eval()
-net.to(device)
 
-# Load test data
-transform = [T.RandomPerspective(distortion_scale=0.1), T.ColorJitter(0.5, 0.5, 0.5),
-             T.RandomAffine(degrees=10, scale=(1, 2)), T.RandomGrayscale(p=0.1), T.RandomGrayscale(p=0.1),
-             T.RandomHorizontalFlip(p=0.7)]
-# dataset = NY_mixed(transforms=transform)
-dataset = Youtube_Greenscreen(train=False)
-train_loader = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=True)
+for model_name in model_path.glob("*"):
+    model_name = str(model_name)
+    if "UNet" in model_name:
+        net = UNet(in_channels=3, out_channels=2, n_class=2, kernel_size=3, padding=1, stride=1)
+    elif "Deep_mobile_gruV2" in model_name:
+        net = Deep_mobile_gruV2()
+    elif "Deep_mobile_lstmV2" in model_name:
+        net = Deep_mobile_lstmV2()
+    elif "Deep_mobile_lstm" in model_name:
+        net = Deep_mobile_lstm()
+    elif "Deep_mobile_gru" in model_name:
+        net = Deep_mobile_gru()
+    elif "Deep+_mobile" in model_name:
+        net = Deeplabv3Plus_mobile()  # https://github.com/VainF/DeepLabV3Plus-Pytorch
+    elif "Deep_Res101" in model_name:
+        net = Deeplab_Res101()
+    elif "Deep_Res50" in model_name:
+        net = Deeplab_Res50()
+    elif "FCN_Res50" in model_name:
+        net = FCN_Res50()
+    elif "ConvSame_3" in model_name:
+        net = ConvSame_3_net()  # <--- SET MODEL
+    elif "ICNet" in model_name:
+        net = ICNet(nclass=2, backbone='resnet50', pretrained_base=False)  # https://github.com/liminn/ICNet-pytorch
+    else:
+        net = None
+        print("Model unknown")
+    model_name = Path(model_name)
+    full_path = model_path / model_name.stem
+    eval_results_path = full_path / "evaluation_results"
+    eval_results_path.mkdir(parents=True, exist_ok=True)
+    print("Loading: " + str(full_path / model_name.stem) + ".pth.tar")
+    LOAD_POSITION = -1
+    try:
+        checkpoint = torch.load(str(full_path / model_name.stem) + ".pth.tar", map_location=torch.device(device))
+        print("=> Loading checkpoint at epoch {}".format(checkpoint["epoch"][LOAD_POSITION]))
+        net.load_state_dict(checkpoint["state_dict"])
+        print("Model was loaded.")
+    except IOError:
+        break
+        print("model was not found")
+        pass
 
+    # evaluation mode:
+    net.eval()
+    net.to(device)
 
-
-for mode in ["Compressed"]:
-    loader = train_loader
+    # Load test data
+    dataset = Youtube_Greenscreen(train=False)
+    test_loader = DataLoader(dataset=dataset, batch_size=1, shuffle=False)
 
     to_PIL = T.ToPILImage()
     tmp_img, tmp_lbl, tmp_pred = [], [], []
     metrics = defaultdict(list)
     logger = defaultdict(list)
-
+    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+    out_vid = cv2.VideoWriter(str(eval_results_path) + "/example_video.mp4", fourcc, 29, output_size)
     if torch.cuda.is_available():
         start = torch.cuda.Event(enable_timing=True)
         end = torch.cuda.Event(enable_timing=True)
 
-    for batch in loader:
+    for batch in test_loader:
         idx, (images, labels) = batch
-        images.to(device)
-        labels.to(device)
+        if idx.item() % 25 == 0:
+            print("Processed {} from {} images".format(idx.item(), len(dataset)))
         if torch.cuda.is_available():
             start.record()
         start_time = time.time()
-        with torch.autograd.profiler.profile(use_cuda=torch.cuda.is_available()) as prof:
-            outputs = net(images)
-            if model == "ICNet":
-                outputs = outputs[0]
-                if mode == "Compressed":
-                    outputs = outputs[:, :, :-2, :]
-            outputs = torch.argmax(outputs, dim=1).float()
-        logger["profiler_averages"].append(prof.total_average())
+        outputs = net(images)
+        outputs = torch.argmax(outputs, dim=1).float()
         if torch.cuda.is_available():
             end.record()
             torch.cuda.synchronize(device=device)
@@ -130,18 +117,20 @@ for mode in ["Compressed"]:
         time_taken = time.time() - start_time
         metrics["time.time()"].append(time_taken)
         metrics["IoU"].append(get_IoU(outputs, labels).tolist())
-
+        # write video
+        tmp = cv2.cvtColor(outputs.squeeze(0).numpy(), cv2.COLOR_GRAY2BGR)
+        out_vid.write(np.uint8(tmp * 255.))
         # save example outputs
         if len(tmp_pred) < 5:
+            out_vid.write(np.uint8(tmp))
             img = to_PIL(images[0].to("cpu"))
             lbl = to_PIL(labels[0].to("cpu"))
             pred_img = to_PIL(outputs[0].to("cpu"))
             tmp_img.append(img)
             tmp_lbl.append(lbl)
             tmp_pred.append(pred_img)
-        else:
-            break
 
+    out_vid.release()
     metrics["Mean-IoU"] = [np.array(metrics["IoU"]).mean()]
 
     # Save image file
@@ -149,14 +138,15 @@ for mode in ["Compressed"]:
     for i in range(len(tmp_img)):
         out.append(hstack([tmp_img[i], tmp_lbl[i], tmp_pred[i]]))
     result = vstack(out)
-    # out_folder = (model_state_path / model_name /"evaluation").mkdir(parents=True, exist_ok=True)
+
+    save_figure(metrics["IoU"], path=eval_results_path, what="IoU")
 
     # save results
-    result.save(model_save_path / Path(model + mode + "_example_output.jpg"), "JPEG")
-    with open(model_save_path / Path(model + "_metrics.json"), "w") as js:
+    result.save(str(eval_results_path / "example_output.jpg"), "JPEG")
+    with open(eval_results_path / "metrics.json", "w") as js:
         json.dump(dict(metrics), js)
 
-    with open(str(model_save_path / "eval_results.txt"), "w") as txt_file:
+    with open(str(eval_results_path / "eval_results.txt"), "w") as txt_file:
         txt_file.write("Model: {}\n".format(model_name))
         txt_file.write("Torch cudnn version: {}\n".format(torch.backends.cudnn.version()))
         txt_file.write("Torch cudnn enabled: {}\n".format(torch.backends.cudnn.enabled))
@@ -167,9 +157,5 @@ for mode in ["Compressed"]:
         txt_file.write("Mean-IoU: {}; Mean_time.time() (in Secounds): {}\n".format(metrics["Mean-IoU"][0],
                                                                                    np.array(
                                                                                        metrics["time.time()"]).mean()))
-        txt_file.write("---Profiler Information---")
-        txt_file.write("total average(): {}\n".format(logger["profiler_averages"][-1]))
-        txt_file.write(prof.table(sort_by="self_cpu_time_total"))
-        txt_file.write("\n--------------------------------------\n")
 
 print("---Python file Completed---")

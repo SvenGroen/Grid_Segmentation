@@ -210,6 +210,8 @@ def save_checkpoint(checkpoint, filename=str(model_save_path / train_name) + ".p
     checkpoint["runtime"] = time.time() - start_time
     checkpoint["scheduler"] = scheduler.state_dict()
     checkpoint["batch_index"] = batch_index
+    checkpoint["running_loss"] = running_loss
+    checkpoint["old_pred"] = old_pred
     torch.save(checkpoint, Path(filename))
 
 
@@ -256,12 +258,13 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
         idx, (images, labels) = batch
         # load batches in case of restart
         if (not torch.all(torch.eq(idx, batch_index.cpu()))) and not found_restart:  # skip until point of restart is found
+            running_loss = checkpoint["running_loss"]
+            old_pred = checkpoint["old_pred"]
             continue
         # start training if last idx position was found
         found_restart = True
         pred = net(images, old_pred)
         loss = criterion(pred, labels.long())
-        print(loss)
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
