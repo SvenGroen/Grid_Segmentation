@@ -1,11 +1,12 @@
 import json
 from pathlib import Path
 
-models = ["Deep+_mobile", "Deep_mobile_lstm","Deep_mobile_lstmV2"]  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "ICNet", "FCN_Res50", "Deep_mobile_lstm", "Deep_mobile_lstmV2"
-start_lrs = [1e-02]
-step_sizes = [20]
-num_epochs = [100]
-batch_sizes = [2]
+models = ["Deep+_mobile", "Deep_mobile_lstm",
+          "Deep_mobile_lstmV2"]  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "ICNet", "FCN_Res50", "Deep_mobile_lstm", "Deep_mobile_lstmV2"
+start_lrs = [1e-02, 1e-02]
+step_sizes = [20, 20]
+num_epochs = [100, 100]
+batch_sizes = [2, 6]
 config = {}
 config_paths = []
 models_name = []
@@ -18,7 +19,7 @@ for model in models:
         config["num_epochs"] = num_epochs[i]
         config["scheduler_step_size"] = step_sizes[i]
         config["save_freq"] = 1
-        config["save_path"] = "code/models/trained_models/Examples_Green/LSTMs"
+        config["save_path"] = "code/models/trained_models/LSTMs"
         # save the config
         train_name = config["model"] + "_bs" + str(config["batch_size"]) + "_startLR" + format(config["lr"],
                                                                                                ".0e") + "Sched_Step_" + str(
@@ -34,7 +35,8 @@ for i, cfg in enumerate(config_paths):
     from subprocess import call
 
     if "Deep" in models_name[i]:
-        recallParameter = 'qsub -N ' + "log_" + str(i) + models_name[i] + ' -l nv_mem_free=3.4G -v CFG=' + cfg + ' train_mixed.sge'
+        recallParameter = 'qsub -N ' + "log_" + str(i) + models_name[
+            i] + ' -l nv_mem_free=4.5G -v CFG=' + cfg + ' train_mixed.sge'
     else:
         recallParameter = 'qsub -N ' + "log_" + str(i) + models_name[
             i] + ' -l nv_mem_free=3.4G -v CFG=' + cfg + ' train_mixed.sge'

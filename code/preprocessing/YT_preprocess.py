@@ -14,6 +14,7 @@ from pathlib import Path
 
 from sklearn.model_selection import train_test_split
 random.seed(12345)
+np.random.seed(12345)
 def add_noise(image):
     row, col, ch = image.shape
     mean = 0
@@ -42,7 +43,7 @@ random.shuffle(test)
 fourcc = cv2.VideoWriter_fourcc(*"mp4v")
 for split in ["train", "test"]:
     video_names = train if split == "train" else test
-    out_path = Path("data/Videos/Greenscreen_Video_frames_4sec_noise") / split
+    out_path = Path("data/Videos/Greenscreen_Video_frames_4sec") / split
     label_out_path = out_path / "labels"
     input_out_path = out_path / "Input"
     label_out_path.mkdir(parents=True, exist_ok=True)

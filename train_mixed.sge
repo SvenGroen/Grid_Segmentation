@@ -7,7 +7,9 @@
 #$ -l hostname=!*cippy12* 
 #$ -l hostname=!*cippy21*
 #$ -l hostname=!*cippy25*
-#$ -l h_rt=04:00:00 
+#$ -l hostname=!*grid03*
+#$ -l hostname=!*grid02*
+#$ -l h_rt=00:45:00
 #$ -m n
 
 echo " Start of SGE job " 

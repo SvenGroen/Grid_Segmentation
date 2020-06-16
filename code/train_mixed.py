@@ -120,9 +120,9 @@ LOAD_CHECKPOINT = True
 LOAD_POSITION = -1
 # Load previous model state if needed
 lrs = []
-batch_index = None
-found_restart = False
 
+found_restart = False
+batch_index = torch.zeros(config["batch_size"])
 if LOAD_CHECKPOINT:
     print("Trying to load previous Checkpoint ...")
     try:
@@ -212,7 +212,7 @@ print(">>>Start of Training<<<")
 
 def restart_script():
     from subprocess import call
-    VRAM = "3.4G"
+    VRAM = "4.5G"
     if "Res50" in config["model"]:
         VRAM = "4.5G"
     recallParameter = 'qsub -N ' + "ep" + str(epoch) + config["model"] + ' -l nv_mem_free=' + VRAM + ' -v CFG=' + str(
@@ -228,8 +228,8 @@ def restart_script():
 
 time_tmp = []
 avrg_batch_time = 60
-restart_time = 60*60*0.9
-
+restart_time = 60 * 60 * 0.7
+restart = False
 for epoch in tqdm(range(start_epoch, config["num_epochs"])):
     old_pred = [None, None]
     for param_group in optimizer.param_groups:
@@ -238,7 +238,9 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
     for batch in train_loader:
         batch_start_time = time.time()
         if batch_start_time + avrg_batch_time - start_time > restart_time:
-            sys.stderr.write("Stopping at epoch {} and batch_idx {} because wall time would be reached".format(epoch, str(batch_index)))
+            sys.stderr.write("Stopping at epoch {} and batch_idx {} because wall time would be reached".format(epoch,
+                                                                                                               str(
+                                                                                                                   batch_index)))
             save_checkpoint(checkpoint)
             restart_script()
             restart = True
@@ -246,7 +248,8 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
         # no restart, continue training
         idx, (images, labels) = batch
         # load batches in case of restart
-        if (not torch.all(torch.eq(idx, batch_index))) and not found_restart:  # skip until point of restart is found
+        if (
+        not torch.all(torch.eq(idx, batch_index.cpu()))) and not found_restart:  # skip until point of restart is found
             continue
         # start training if last idx position was found
         found_restart = True
@@ -259,7 +262,7 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
         old_pred[1] = old_pred[0]
         old_pred[0] = pred.unsqueeze(1).detach()
         print(loss)
-        batch_index=idx
+        batch_index = idx
         time_tmp.append(time.time() - batch_start_time)
         avrg_batch_time = np.array(time_tmp).mean()
     if restart:
@@ -271,8 +274,6 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
     # if epoch % config["save_freq"] == 0:
     #     save_checkpoint(checkpoint)
     #     print("\nepoch: {},\t loss: {}".format(epoch, running_loss))
-
-
 
 print(">>>End of Training<<<")
 # save model after training

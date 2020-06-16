@@ -27,14 +27,14 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device: ", device)
 
 model = "Deep+_mobile"  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile" <--CHANGE
-model_name = Path("Deep+_mobile_bs2_startLR1e-02Sched_Step_20ID1")  # <--CHANGE
+model_name = Path("Deep+_mobile_bs2_startLR1e-02Sched_Step_20ID0")  # <--CHANGE
 
 # norm_ImageNet = False
 if model == "UNet":
     net = UNet(in_channels=3, out_channels=2, n_class=2, kernel_size=3, padding=1, stride=1)
     net.train()
 elif model == "Deep+_mobile":
-    net = modeling.deeplabv3_mobilenet(num_classes=2, pretrained_backbone=True)
+    net = Deeplabv3Plus_mobile()  # https://github.com/VainF/DeepLabV3Plus-Pytorch
     net.train()
 elif model == "Deep_Res101":
     net = Deeplab_Res101()
@@ -66,7 +66,7 @@ else:
     net = None
     print("Model unknown")
 
-model_save_path = Path("code/models/trained_models/Examples_Green/multiples/session02") / model_name
+model_save_path = Path("code/models/trained_models/LSTMs") / model_name
 
 print("Loading: " + str(model_save_path / model_name) + ".pth.tar")
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -91,7 +91,7 @@ transform = [T.RandomPerspective(distortion_scale=0.1), T.ColorJitter(0.5, 0.5, 
              T.RandomAffine(degrees=10, scale=(1, 2)), T.RandomGrayscale(p=0.1), T.RandomGrayscale(p=0.1),
              T.RandomHorizontalFlip(p=0.7)]
 # dataset = NY_mixed(transforms=transform)
-dataset = NY_mixed()
+dataset = Youtube_Greenscreen(train=False)
 train_loader = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=True)
 dataset_HD = NY_mixed_HD()
 train_loader_HD = DataLoader(dataset=dataset_HD, batch_size=1, shuffle=True)
