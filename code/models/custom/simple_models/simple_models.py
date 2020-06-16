@@ -7,7 +7,7 @@ from torchvision.models.segmentation.deeplabv3 import DeepLabHead
 from models.DeepLabV3PlusPytorch.network import *
 from utils.convGRU import *
 from utils.convlstm import *
-
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 class ConvSame_3_net(nn.Module):
     def __init__(self):

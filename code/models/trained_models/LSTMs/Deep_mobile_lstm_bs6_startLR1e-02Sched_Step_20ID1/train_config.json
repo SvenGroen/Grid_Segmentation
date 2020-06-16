@@ -1,1 +1,0 @@
-{"lr": 0.01, "model": "Deep_mobile_lstm", "ID": "1", "batch_size": 6, "num_epochs": 100, "scheduler_step_size": 20, "save_freq": 1, "save_path": "code/models/trained_models/LSTMs"}

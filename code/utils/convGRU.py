@@ -2,7 +2,7 @@ import os
 import torch
 from torch import nn
 from torch.autograd import Variable
-
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 class ConvGRUCell(nn.Module):
     def __init__(self, input_size, input_dim, hidden_dim, kernel_size, bias, dtype):
@@ -54,6 +54,7 @@ class ConvGRUCell(nn.Module):
         :return: h_next,
             next hidden state
         """
+        h_cur = h_cur.to(device)
         combined = torch.cat([input_tensor, h_cur], dim=1)
         combined_conv = self.conv_gates(combined)
 
