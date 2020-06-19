@@ -39,10 +39,11 @@ class Youtube_Greenscreen(data.Dataset):
         random.setstate(state)
         lbl = self.transform(lbl).squeeze(0)
         lbl = lbl.squeeze(0)
+
         if torch.cuda.is_available():
-            return idx, (inp.cuda(), lbl.cuda())
+            return idx, (inp.cuda(), lbl.round().cuda())
         else:
-            return idx, (inp, lbl)
+            return idx, (inp, lbl.round())
 
     def show(self, num_images, start_idx: int = 0, random_images=True):
 
@@ -54,7 +55,7 @@ class Youtube_Greenscreen(data.Dataset):
             else:
                 indx = 0
             img = Image.open(self.data["Inputs"][indx])
-            lbl = Image.open(self.data["labels"][indx])
+            lbl = Image.open(self.data["labels"][indx]).convert("L")
             state = random.getstate()
             img = self.transform_out(self.transform(img))
             random.setstate(state)
@@ -125,13 +126,15 @@ if __name__ == "__main__":
                  T.RandomHorizontalFlip(p=0.7)]
 
     dataset = Youtube_Greenscreen()
-    loader = DataLoader(dataset=dataset, batch_size=4)
+    loader = DataLoader(dataset=dataset, batch_size=1, shuffle=True)
     to_pil = T.ToPILImage()
-    inp, label = next(iter(loader))
+    idx, (inp, label) = next(iter(loader))
     print(label.shape)
     print(inp.shape)
     # for img in inp[0,:,:,:,:]:
     #     img=to_pil(img)
     #     img.show()
+    # lbl = to_pil(label[0,:,:])
+    # lbl.show()
 
-    dataset.show(10, random_images=False)
+    dataset.show(10, random_images=True)
