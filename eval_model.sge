@@ -2,13 +2,11 @@
 #$ -l mem=8G
 #$ -cwd
 #$ -l cuda=1
-#$ -l nv_mem_free=3.8G
 #$ -pe default 2
-#$ -l h_rt=1:30:00
+#$ -l h_rt=05:00:00
 #$ -l hostname=!*cippy19*
 #$ -l hostname=!*cippy12*
 #$ -l hostname=!*cippy21*
-#$ -N ann_eval
 #$ -l cuda=1
 #$ -m n
 
@@ -40,5 +38,5 @@ echo "RUNNING: " $setup_file
 echo "Current Environemt: " $env_name
 
 
-python $setup_file
+python $setup_file -mdl $MDL -pth $PTH
 

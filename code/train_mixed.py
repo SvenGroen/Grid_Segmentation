@@ -31,7 +31,7 @@ config = {  # DEFAULT CONFIG
     "ID": "01",
     "lr": 1e-02,
     "batch_size": 2,
-    "num_epochs": 3,
+    "num_epochs": 1,
     "scheduler_step_size": 15,
     "save freq": 1,
     "save_path": "code/models/trained_models/Examples_Green/multiples/session05"
@@ -111,7 +111,7 @@ runtime = time.time() - start_time
 #              T.RandomAffine(degrees=10, scale=(1, 1.1)), T.RandomGrayscale(p=0.1),
 #              T.RandomHorizontalFlip(p=0.7)]
 dataset = Youtube_Greenscreen(train=True)  # <--- SET DATASET
-train_loader = DataLoader(dataset=dataset, batch_size=config["batch_size"])
+train_loader = DataLoader(dataset=dataset, batch_size=config["batch_size"],shuffle=False)
 
 # saving the models
 train_name = config["model"] + "_bs" + str(config["batch_size"]) + "_startLR" + format(config["lr"],
@@ -244,6 +244,7 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
     for param_group in optimizer.param_groups:
         lrs.append(param_group['lr'])
     running_loss = 0
+
     for batch in train_loader:
         batch_start_time = time.time()
         if batch_start_time + avrg_batch_time - start_time > restart_time:
@@ -260,6 +261,7 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
         if (not torch.all(torch.eq(idx, batch_index.cpu()))) and not found_restart:  # skip until point of restart is found
             running_loss = checkpoint["running_loss"]
             old_pred = checkpoint["old_pred"]
+            print(idx)
             continue
         # start training if last idx position was found
         found_restart = True
@@ -274,6 +276,7 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
         batch_index = idx
         time_tmp.append(time.time() - batch_start_time)
         avrg_batch_time = np.array(time_tmp).mean()
+
     if restart:
         break
     loss_values.append(running_loss / len(dataset))
@@ -289,4 +292,5 @@ print(">>>End of Training<<<")
 # save model after training
 if not restart:
     save_checkpoint(checkpoint)
+
 print("End of Python Script")
