@@ -236,7 +236,7 @@ def restart_script():
 
 time_tmp = []
 avrg_batch_time = 60
-restart_time = 60 * 60 * 0.75
+restart_time = 60 * 60 * 0.70
 restart = False
 
 for epoch in tqdm(range(start_epoch, config["num_epochs"])):
