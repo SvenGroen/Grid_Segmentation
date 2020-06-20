@@ -39,7 +39,7 @@ print("---Start of Python File---")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device: ", device)
 output_size = (int(2048 / 4), int(1080 / 4))
-
+FRAME_STOP_NUMBER = 29 * 12 #fps * dauer in sekunden
 
 def save_figure(values, path, what=""):
     plt.plot(values)
@@ -95,8 +95,8 @@ net.eval()
 net.to(device)
 
 # Load test data
-dataset = Youtube_Greenscreen(train=True)
-test_loader = DataLoader(dataset=dataset, batch_size=1, shuffle=True, num_workers=0)
+dataset = Youtube_Greenscreen(train=False)
+test_loader = DataLoader(dataset=dataset, batch_size=1, shuffle=False, num_workers=0)
 
 metrics = defaultdict(AverageMeter)
 metrics["Jaccard"] = AverageMeter()
@@ -116,7 +116,7 @@ if torch.cuda.is_available():
     start = torch.cuda.Event(enable_timing=True)
     end = torch.cuda.Event(enable_timing=True)
 
-for batch in test_loader:
+for i,batch in enumerate(test_loader):
     idx, (images, labels) = batch
     if idx.item() % 10 == 0:
         print("Processed {} from {} images".format(idx.item(), len(dataset)))
@@ -128,24 +128,23 @@ for batch in test_loader:
     if torch.cuda.is_available():
         end.record()
         torch.cuda.synchronize(device=device)
-        metrics["cuda_time"].update(start.elapsed_time(end))
+        metrics["cuda_time"].append(start.elapsed_time(end))
     time_taken = time.time() - start_time
     metrics["time_taken"].update(time_taken)
     # hist = fast_hist(outputs,labels,2)
     labels = labels.type(torch.uint8)
     outputs = outputs.type(torch.uint8)
-    overall_acc, avg_per_class_acc, avg_jacc, avg_dice = eval_metrics(outputs, labels, num_classes=2)
+    overall_acc, avg_per_class_acc, avg_jacc, avg_dice = eval_metrics(outputs.to("cpu"), labels.to("cpu"), num_classes=2)
     metrics["IoU"].append(avg_jacc)
     metrics["Jaccard"].update(avg_jacc)
     metrics["Overall_acc"].update(overall_acc)
     metrics["per_class_acc"].update(avg_per_class_acc)
     metrics["dice"].update(avg_dice)
     # write video
-    tmp = cv2.cvtColor(outputs.squeeze(0).numpy(), cv2.COLOR_GRAY2BGR)
+    tmp = cv2.cvtColor(outputs.squeeze(0).cpu().numpy(), cv2.COLOR_GRAY2BGR)
     out_vid.write(np.uint8(tmp * 255.))
     # save example outputs
     if len(tmp_pred) < 5:
-        out_vid.write(np.uint8(tmp))
         img = to_PIL(images[0].to("cpu"))
         lbl = labels[0].to("cpu").float()
         lbl = to_PIL(lbl)
@@ -154,8 +153,9 @@ for batch in test_loader:
         tmp_img.append(img)
         tmp_lbl.append(lbl)
         tmp_pred.append(pred_img)
-    else:
+    if i == FRAME_STOP_NUMBER:
         break
+
 
 out_vid.release()
 
@@ -177,12 +177,13 @@ with open(eval_results_path / "metrics.json", "w") as js:
 
 with open(str(eval_results_path / "eval_results.txt"), "w") as txt_file:
     txt_file.write("Model: {}\n".format(model_name))
+    txt_file.write("Cuda available: {}\n".format(torch.cuda.is_available()))
     txt_file.write("Torch cudnn version: {}\n".format(torch.backends.cudnn.version()))
     txt_file.write("Torch cudnn enabled: {}\n".format(torch.backends.cudnn.enabled))
     txt_file.write("Cudnn benchmark: {}\n".format(torch.backends.cudnn.benchmark))
     txt_file.write("Cudnn deterministic: {}\n".format(torch.backends.cudnn.deterministic))
     if torch.cuda.is_available():
-        txt_file.write("Mean cuda_time: {}\n".format(np.array(metrics["cuda_time"]).mean()))
+        txt_file.write("Mean cuda_time: {}\n".format(metrics["cuda_time"].avg))
     txt_file.write("Mean Time taken: {}\n".format(metrics["time_taken"].avg))
     txt_file.write("Mean IoU: {}\n".format(metrics["Jaccard"].avg))
     txt_file.write("Mean Overall accuracy: {}\n".format(metrics["Overall_acc"].avg))

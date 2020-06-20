@@ -1,10 +1,12 @@
 Model: Deep+_mobile_bs2_startLR1e-02Sched_Step_20ID0
-Torch cudnn version: None
+Cuda available: True
+Torch cudnn version: 7603
 Torch cudnn enabled: True
 Cudnn benchmark: False
 Cudnn deterministic: False
-Mean Time taken: 1.7372476657231648
-Mean IoU: 0.4104503095149994
-Mean Overall accuracy: 0.8207995891571045
-Mean per class accuracy: 0.6603977084159851
-Mean dice: 0.4498880207538605
+Mean cuda_time: 0
+Mean Time taken: 0.021730442101770962
+Mean IoU: 0.6371781826019287
+Mean Overall accuracy: 0.7964653372764587
+Mean per class accuracy: 0.7502591013908386
+Mean dice: 0.7568033337593079

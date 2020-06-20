@@ -11,6 +11,7 @@
 /code/models/trained_models/**/*.pth.tar
 /code/models/trained_models/LSTMs/*/*.pth.tar
 /code/models/trained_models/LSTMs/**/*.pth.tar
+/code/models/trained_models/
 /code/models/trained_models/Examples_Green/multiples/**/*/*.pth.tar
 **/*.tar
 /data/Images/

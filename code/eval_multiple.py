@@ -7,6 +7,6 @@ for i,model_name in enumerate(model_path.glob("*")):
 
     from subprocess import call
 
-    recallParameter = 'qsub -N ' + "eval_" + str(i) + model[0:20] +' -l nv_mem_free=4.5G -v MDL=' + model + ' PTH=' +str(model_path)+' eval_model.sge'
-    print(recallParameter)
-    # call(recallParameter, shell=True)
+    recallParameter = 'qsub -N ' + "_eval_" + str(i) + model[0:20] +' -l nv_mem_free=3.4G -v MDL=' + model + ' -v MPTH=' +str(model_path)+' eval_model.sge'
+    # print(recallParameter)
+    call(recallParameter, shell=True)
