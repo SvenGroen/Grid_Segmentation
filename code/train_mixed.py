@@ -16,6 +16,7 @@ from models.DeepLabV3PlusPytorch.network import *
 from models.ICNet.models import ICNet
 from models.ICNet.utils import ICNetLoss, IterationPolyLR, SegmentationMetric, SetupLogger
 from DataLoader.Datasets.Youtube.Youtube_Greenscreen import *
+from DataLoader.Datasets.Youtube.Youtube_Greenscreen_mini import *
 from pathlib import Path
 import matplotlib.pyplot as plt
 from collections import defaultdict
@@ -34,7 +35,7 @@ config = {  # DEFAULT CONFIG
     "num_epochs": 1,
     "scheduler_step_size": 15,
     "save freq": 1,
-    "save_path": "code/models/trained_models/Examples_Green/multiples/session05"
+    "save_path": "code/models/trained_models/mini"
 }
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 parser = argparse.ArgumentParser()
@@ -110,9 +111,10 @@ runtime = time.time() - start_time
 # transform = [T.RandomPerspective(distortion_scale=0.1), T.ColorJitter(0.2, 0.2, 0.2),
 #              T.RandomAffine(degrees=10, scale=(1, 1.1)), T.RandomGrayscale(p=0.1),
 #              T.RandomHorizontalFlip(p=0.7)]
-dataset = Youtube_Greenscreen(train=True)  # <--- SET DATASET
-train_loader = DataLoader(dataset=dataset, batch_size=config["batch_size"],shuffle=False)
-
+# ----------------------------------------------------------------------------------------------------
+dataset = Youtube_Greenscreen_mini()  # <--- SET DATASET
+train_loader = DataLoader(dataset=dataset, batch_size=config["batch_size"], shuffle=False)
+# ----------------------------------------------------------------------------------------------------
 # saving the models
 train_name = config["model"] + "_bs" + str(config["batch_size"]) + "_startLR" + format(config["lr"],
                                                                                        ".0e") + "Sched_Step_" + str(
@@ -258,7 +260,8 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
         # no restart, continue training
         idx, (images, labels) = batch
         # load batches in case of restart
-        if (not torch.all(torch.eq(idx, batch_index.cpu()))) and not found_restart:  # skip until point of restart is found
+        if (
+        not torch.all(torch.eq(idx, batch_index.cpu()))) and not found_restart:  # skip until point of restart is found
             running_loss = checkpoint["running_loss"]
             old_pred = checkpoint["old_pred"]
             print(idx)
