@@ -26,6 +26,8 @@ from DataLoader.Datasets.Examples_Green.NY.NY_mixed_HD import *
 from PIL import Image
 from pathlib import Path
 
+from DataLoader.Datasets.Youtube.Youtube_Greenscreen_mini import *
+
 parser = argparse.ArgumentParser()
 parser.add_argument("-mdl", "--model",
                     help="The name of the model.", type=str)
@@ -39,7 +41,8 @@ print("---Start of Python File---")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device: ", device)
 output_size = (int(2048 / 4), int(1080 / 4))
-FRAME_STOP_NUMBER = 29 * 12 #fps * dauer in sekunden
+FRAME_STOP_NUMBER = 29 * 12  # fps * dauer in sekunden
+
 
 def save_figure(values, path, what=""):
     plt.plot(values)
@@ -95,7 +98,8 @@ net.eval()
 net.to(device)
 
 # Load test data
-dataset = Youtube_Greenscreen(train=False)
+# dataset = Youtube_Greenscreen(train=False)
+dataset = Youtube_Greenscreen_mini()
 test_loader = DataLoader(dataset=dataset, batch_size=1, shuffle=False, num_workers=0)
 
 metrics = defaultdict(AverageMeter)
@@ -106,7 +110,6 @@ metrics["dice"] = AverageMeter()
 metrics["time_taken"] = AverageMeter()
 metrics["cuda_time"] = AverageMeter()
 
-
 to_PIL = T.ToPILImage()
 tmp_img, tmp_lbl, tmp_pred = [], [], []
 
@@ -116,62 +119,81 @@ if torch.cuda.is_available():
     start = torch.cuda.Event(enable_timing=True)
     end = torch.cuda.Event(enable_timing=True)
 
-for i,batch in enumerate(test_loader):
+old_pred = [None, None]
+
+for i, batch in enumerate(test_loader):
     idx, (images, labels) = batch
     if idx.item() % 10 == 0:
         print("Processed {} from {} images".format(idx.item(), len(dataset)))
     if torch.cuda.is_available():
         start.record()
     start_time = time.time()
-    outputs = net(images)
-    outputs = torch.argmax(outputs, dim=1).float()
+    pred = net(images, old_pred)
+
+    outputs = torch.argmax(pred, dim=1).float()
     if torch.cuda.is_available():
         end.record()
         torch.cuda.synchronize(device=device)
         metrics["cuda_time"].append(start.elapsed_time(end))
     time_taken = time.time() - start_time
     metrics["time_taken"].update(time_taken)
+    old_pred[1] = old_pred[0]
+    old_pred[0] = pred.unsqueeze(1).detach()
     # hist = fast_hist(outputs,labels,2)
     labels = labels.type(torch.uint8)
     outputs = outputs.type(torch.uint8)
-    overall_acc, avg_per_class_acc, avg_jacc, avg_dice = eval_metrics(outputs.to("cpu"), labels.to("cpu"), num_classes=2)
+    overall_acc, avg_per_class_acc, avg_jacc, avg_dice = eval_metrics(outputs.to("cpu"), labels.to("cpu"),
+                                                                      num_classes=2)
     metrics["IoU"].append(avg_jacc)
     metrics["Jaccard"].update(avg_jacc)
     metrics["Overall_acc"].update(overall_acc)
     metrics["per_class_acc"].update(avg_per_class_acc)
     metrics["dice"].update(avg_dice)
     # write video
-    tmp = cv2.cvtColor(outputs.squeeze(0).cpu().numpy(), cv2.COLOR_GRAY2BGR)
-    out_vid.write(np.uint8(tmp * 255.))
-    # save example outputs
-    if len(tmp_pred) < 5:
-        img = to_PIL(images[0].to("cpu"))
-        lbl = labels[0].to("cpu").float()
-        lbl = to_PIL(lbl)
-        pred_img = outputs[0].to("cpu").float()
-        pred_img = to_PIL(pred_img)
-        tmp_img.append(img)
-        tmp_lbl.append(lbl)
-        tmp_pred.append(pred_img)
-    if i == FRAME_STOP_NUMBER:
-        break
+    tmp_prd = cv2.cvtColor(outputs.squeeze(0).cpu().numpy(), cv2.COLOR_GRAY2BGR)
+    tmp_lbl = cv2.cvtColor(labels.squeeze(0).cpu().numpy(), cv2.COLOR_GRAY2BGR)
+    # ---
+    print(tmp_lbl.shape, images.shape, tmp_prd.shape)
+    print(tmp_lbl.max(), tmp_prd.max())
+    tmp_prd = Image.fromarray(tmp_prd)
+    tmp_inp = to_PIL(images.squeeze(0).cpu())
+    tmp_lbl = Image.fromarray(tmp_lbl)
 
+    # out_vid.write(np.asarray(hstack([tmp_inp, tmp_lbl, tmp_prd])))
+    # out_vid.write(cv2.cvtColor(np.asarray(tmp_inp), cv2.COLOR_RGB2BGR))
+    out_vid.write(np.asarray(tmp_lbl))
+    # ---
+    # out_vid.write(np.uint8(tmp_lbl * 255.))
+
+    # save example outputs
+    # if len(tmp_pred) < 5:
+    #     img = to_PIL(images[0].to("cpu"))
+    #     lbl = labels[0].to("cpu").float()
+    #     lbl = to_PIL(lbl)
+    #     pred_img = outputs[0].to("cpu").float()
+    #     pred_img = to_PIL(pred_img)
+    #     tmp_img.append(img)
+    #     tmp_lbl.append(lbl)
+    #     tmp_pred.append(pred_img)
+    # if i == FRAME_STOP_NUMBER:
+    #     break
 
 out_vid.release()
 
 # Save image file
 out = []
-for i in range(len(tmp_img)):
-    out.append(hstack([tmp_img[i], tmp_lbl[i], tmp_pred[i]]))
-result = vstack(out)
+# for i in range(len(tmp_img)):
+#     out.append(hstack([tmp_img[i], tmp_lbl[i], tmp_pred[i]]))
+# result = vstack(out)
+# result.save(str(eval_results_path / "example_output.jpg"), "JPEG")
 
 save_figure(metrics["IoU"].history, path=eval_results_path, what="IoU")
 
 # save results
-result.save(str(eval_results_path / "example_output.jpg"), "JPEG")
+
 with open(eval_results_path / "metrics.json", "w") as js:
     tmp = {}
-    for k,v in metrics.items():
+    for k, v in metrics.items():
         tmp[k] = v.avg.item() if torch.is_tensor(v.avg) else v.avg
     json.dump(dict(tmp), js)
 

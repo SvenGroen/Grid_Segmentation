@@ -5,8 +5,8 @@ Torch cudnn enabled: True
 Cudnn benchmark: False
 Cudnn deterministic: False
 Mean cuda_time: 0
-Mean Time taken: 0.021730442101770962
-Mean IoU: 0.6371781826019287
-Mean Overall accuracy: 0.7964653372764587
-Mean per class accuracy: 0.7502591013908386
-Mean dice: 0.7568033337593079
+Mean Time taken: 0.08955275909948486
+Mean IoU: 0.7461915016174316
+Mean Overall accuracy: 0.8854394555091858
+Mean per class accuracy: 0.8677856922149658
+Mean dice: 0.8436073660850525

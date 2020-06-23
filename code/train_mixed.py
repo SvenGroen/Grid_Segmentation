@@ -244,7 +244,8 @@ restart = False
 for epoch in tqdm(range(start_epoch, config["num_epochs"])):
     old_pred = [None, None]
     for param_group in optimizer.param_groups:
-        lrs.append(param_group['lr'])
+        lr=param_group['lr']
+    lrs.append(lr)
     running_loss = 0
 
     for batch in train_loader:
