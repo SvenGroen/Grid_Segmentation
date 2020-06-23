@@ -40,8 +40,8 @@ model_path = Path(args.path)
 print("---Start of Python File---")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device: ", device)
-output_size = (int(2048 / 4), int(1080 / 4))
-FRAME_STOP_NUMBER = 29 * 12  # fps * dauer in sekunden
+output_size = (int(2048 / 4), int(1080 / 4) * 2)
+FRAME_STOP_NUMBER = 29*1 # fps * dauer in sekunden
 
 
 def save_figure(values, path, what=""):
@@ -114,7 +114,7 @@ to_PIL = T.ToPILImage()
 tmp_img, tmp_lbl, tmp_pred = [], [], []
 
 fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-out_vid = cv2.VideoWriter(str(eval_results_path) + "/example_video.mp4", fourcc, 29, output_size)
+out_vid = cv2.VideoWriter(str(eval_results_path) + "/example_video.mp4", fourcc, 29, (1536, 270))
 if torch.cuda.is_available():
     start = torch.cuda.Event(enable_timing=True)
     end = torch.cuda.Event(enable_timing=True)
@@ -149,21 +149,13 @@ for i, batch in enumerate(test_loader):
     metrics["Overall_acc"].update(overall_acc)
     metrics["per_class_acc"].update(avg_per_class_acc)
     metrics["dice"].update(avg_dice)
-    # write video
-    tmp_prd = cv2.cvtColor(outputs.squeeze(0).cpu().numpy(), cv2.COLOR_GRAY2BGR)
-    tmp_lbl = cv2.cvtColor(labels.squeeze(0).cpu().numpy(), cv2.COLOR_GRAY2BGR)
-    # ---
-    print(tmp_lbl.shape, images.shape, tmp_prd.shape)
-    print(tmp_lbl.max(), tmp_prd.max())
-    tmp_prd = Image.fromarray(tmp_prd)
-    tmp_inp = to_PIL(images.squeeze(0).cpu())
-    tmp_lbl = Image.fromarray(tmp_lbl)
 
-    # out_vid.write(np.asarray(hstack([tmp_inp, tmp_lbl, tmp_prd])))
-    # out_vid.write(cv2.cvtColor(np.asarray(tmp_inp), cv2.COLOR_RGB2BGR))
-    out_vid.write(np.asarray(tmp_lbl))
-    # ---
-    # out_vid.write(np.uint8(tmp_lbl * 255.))
+    # write video
+    tmp_prd = to_PIL(outputs[0].cpu().float())
+    tmp_inp = to_PIL(images.squeeze(0).cpu())
+    tmp_inp = Image.fromarray(cv2.cvtColor(np.asarray(tmp_inp), cv2.COLOR_RGB2BGR))
+    tmp_lbl = to_PIL(labels.float())
+    out_vid.write(np.array(hstack([tmp_inp, tmp_lbl, tmp_prd])))
 
     # save example outputs
     # if len(tmp_pred) < 5:
