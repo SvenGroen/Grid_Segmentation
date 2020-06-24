@@ -202,6 +202,7 @@ def save_figure(values, what=""):
 
 
 def save_checkpoint(checkpoint, filename=str(model_save_path / train_name) + ".pth.tar"):
+    sys.stderr.write("=> Saving checkpoint at epoch {}".format(checkpoint["epoch"][-1]))
     print("=> Saving checkpoint at epoch {}".format(checkpoint["epoch"][-1]))
     checkpoint["state_dict"] = net.state_dict()
     checkpoint["optimizer_state_dict"] = optimizer.state_dict()
@@ -238,7 +239,7 @@ def restart_script():
 
 time_tmp = []
 avrg_batch_time = 60
-restart_time = 60 * 60 * 0.68
+restart_time = 60 * 60 * 0.67
 restart = False
 
 for epoch in tqdm(range(start_epoch, config["num_epochs"])):

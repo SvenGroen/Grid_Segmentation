@@ -50,8 +50,7 @@ for split in splits:
     input_out_path.mkdir(parents=True, exist_ok=True)
     i = 0
     video_counter = 0
-    bgimg = cv2.imread(str(np.random.choice([img for img in bgpath.glob("*")])))
-    bgimg = cv2.resize(bgimg, output_size)
+
 
     for vid in video_names:
         print("--------------------------------")
@@ -62,7 +61,8 @@ for split in splits:
         cap.set(cv2.CAP_PROP_FPS, fps)
         print("old frame rate: {}; new frame rate: {}".format(frame_rate, fps))
         print("max frames: ", total_frames)
-
+        bgimg = cv2.imread(str(np.random.choice([img for img in bgpath.glob("*")])))
+        bgimg = cv2.resize(bgimg, output_size)
 
 
         start = True
