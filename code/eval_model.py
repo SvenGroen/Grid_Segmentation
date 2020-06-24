@@ -154,7 +154,7 @@ for i, batch in enumerate(test_loader):
     tmp_prd = to_PIL(outputs[0].cpu().float())
     tmp_inp = to_PIL(images.squeeze(0).cpu())
     tmp_inp = Image.fromarray(cv2.cvtColor(np.asarray(tmp_inp), cv2.COLOR_RGB2BGR))
-    tmp_lbl = to_PIL(labels.float())
+    tmp_lbl = to_PIL(labels.cpu().float())
     out_vid.write(np.array(hstack([tmp_inp, tmp_lbl, tmp_prd])))
 
     # save example outputs
