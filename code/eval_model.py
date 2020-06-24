@@ -156,7 +156,9 @@ for i, batch in enumerate(test_loader):
     tmp_inp = Image.fromarray(cv2.cvtColor(np.asarray(tmp_inp), cv2.COLOR_RGB2BGR))
     tmp_lbl = to_PIL(labels.cpu().float())
     out_vid.write(np.array(hstack([tmp_inp, tmp_lbl, tmp_prd])))
-
+    a = hstack([tmp_inp, tmp_lbl, tmp_prd])
+    if i == 27:
+        a.save(str(eval_results_path / "example_output.jpg"), "JPEG")
     # save example outputs
     # if len(tmp_pred) < 5:
     #     img = to_PIL(images[0].to("cpu"))
