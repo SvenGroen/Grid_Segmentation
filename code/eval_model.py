@@ -41,7 +41,7 @@ print("---Start of Python File---")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device: ", device)
 output_size = (int(2048 / 4), int(1080 / 4) * 2)
-FRAME_STOP_NUMBER = 29*1 # fps * dauer in sekunden
+FRAME_STOP_NUMBER = 29*20 # fps * dauer in sekunden
 
 
 def save_figure(values, path, what=""):
@@ -98,8 +98,8 @@ net.eval()
 net.to(device)
 
 # Load test data
-# dataset = Youtube_Greenscreen(train=False)
-dataset = Youtube_Greenscreen_mini()
+dataset = Youtube_Greenscreen(train=False)
+# dataset = Youtube_Greenscreen_mini()
 test_loader = DataLoader(dataset=dataset, batch_size=1, shuffle=False, num_workers=0)
 
 metrics = defaultdict(AverageMeter)
@@ -169,8 +169,8 @@ for i, batch in enumerate(test_loader):
     #     tmp_img.append(img)
     #     tmp_lbl.append(lbl)
     #     tmp_pred.append(pred_img)
-    # if i == FRAME_STOP_NUMBER:
-    #     break
+    if i == FRAME_STOP_NUMBER:
+        break
 
 out_vid.release()
 
