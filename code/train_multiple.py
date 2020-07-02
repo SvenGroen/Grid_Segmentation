@@ -1,14 +1,15 @@
 import json
 from pathlib import Path
+
 #
 # models = ["Deep+_mobile", "Deep_mobile_lstm", "Deep_mobile_lstmV2", "Deep_mobile_gru",
 #           "Deep_mobile_gruV2"]  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "ICNet", "FCN_Res50", "Deep_mobile_lstm", "Deep_mobile_lstmV2"
 
-models = ["Deep+_mobile", "Deep_mobile_lstm", "Deep_mobile_lstmV2", "Deep_mobile_gru","Deep_mobile_gruV2"]
-start_lrs = [1e-02]
-step_sizes = [20]
-num_epochs = [100]
-batch_sizes = [2]
+models = ["Deep+_mobile", "Deep_mobile_lstm", "Deep_mobile_lstmV2", "Deep_mobile_gru", "Deep_mobile_gruV2"]
+start_lrs = [1e-02, 1e-3]
+step_sizes = [20,20]
+num_epochs = [100,50]
+batch_sizes = [2,4]
 config = {}
 config_paths = []
 models_name = []
@@ -21,7 +22,7 @@ for model in models:
         config["num_epochs"] = num_epochs[i]
         config["scheduler_step_size"] = step_sizes[i]
         config["save_freq"] = 1
-        config["save_path"] = "code/models/trained_models/minis"
+        config["save_path"] = "code/models/trained_models/minisV2"
         # save the config
         train_name = config["model"] + "_bs" + str(config["batch_size"]) + "_startLR" + format(config["lr"],
                                                                                                ".0e") + "Sched_Step_" + str(

@@ -2,15 +2,14 @@
 #$ -l mem=6G
 #$ -cwd
 #$ -l cuda=1
-#$ -pe default 1
 #$ -l hostname=!*cippy19*
 #$ -l hostname=!*cippy12* 
 #$ -l hostname=!*cippy21*
 #$ -l hostname=!*cippy25*
-#$ -l hostname=!*grid03*
-#$ -l hostname=!*grid02*
-#$ -l h_rt=00:45:00
+#$ -l h_rt=00:50:00
+#$ -o /dev/null"
 #$ -m n
+#$ -pe default 1
 
 echo " Start of SGE job " 
 echo "$date"

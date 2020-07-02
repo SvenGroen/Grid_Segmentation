@@ -35,9 +35,13 @@ config = {  # DEFAULT CONFIG
     "num_epochs": 1,
     "scheduler_step_size": 15,
     "save freq": 1,
-    "save_path": "code/models/trained_models/mini"
+    "save_path": "code/models/trained_models/minisV2"
 }
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+sys.stderr.write("Cuda is available: {},\nCuda device name: {},\nCuda device: {}\n".format(torch.cuda.is_available(),
+                                                                                           torch.cuda.get_device_name(
+                                                                                               0), device))
 parser = argparse.ArgumentParser()
 parser.add_argument("-cfg", "--config",
                     help="The Path to the configuration json for the model.\nShould include: model, ID, lr, batchsize,"
@@ -112,8 +116,12 @@ runtime = time.time() - start_time
 #              T.RandomAffine(degrees=10, scale=(1, 1.1)), T.RandomGrayscale(p=0.1),
 #              T.RandomHorizontalFlip(p=0.7)]
 # ----------------------------------------------------------------------------------------------------
-dataset = Youtube_Greenscreen_mini()  # <--- SET DATASET
+# dataset = Youtube_Greenscreen_mini()  # <--- SET DATASET
+dataset = Youtube_Greenscreen(train=True)
+
 train_loader = DataLoader(dataset=dataset, batch_size=config["batch_size"], shuffle=False)
+
+
 # ----------------------------------------------------------------------------------------------------
 # saving the models
 train_name = config["model"] + "_bs" + str(config["batch_size"]) + "_startLR" + format(config["lr"],
@@ -238,14 +246,14 @@ def restart_script():
 
 
 time_tmp = []
-avrg_batch_time = 60
-restart_time = 60 * 60 * 0.67
+avrg_batch_time = 60 * 5
+restart_time = 60 * 60 * 0.62
 restart = False
 
 for epoch in tqdm(range(start_epoch, config["num_epochs"])):
     old_pred = [None, None]
     for param_group in optimizer.param_groups:
-        lr=param_group['lr']
+        lr = param_group['lr']
     lrs.append(lr)
     running_loss = 0
 
@@ -263,7 +271,8 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
         idx, (images, labels) = batch
         # load batches in case of restart
         if (
-        not torch.all(torch.eq(idx, batch_index.cpu()))) and not found_restart:  # skip until point of restart is found
+                not torch.all(
+                    torch.eq(idx, batch_index.cpu()))) and not found_restart:  # skip until point of restart is found
             running_loss = checkpoint["running_loss"]
             old_pred = checkpoint["old_pred"]
             print(idx)
@@ -292,7 +301,8 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
     # if epoch % config["save_freq"] == 0:
     #     save_checkpoint(checkpoint)
     #     print("\nepoch: {},\t loss: {}".format(epoch, running_loss))
-
+    sys.stderr.write("End of Epoch: {}\n".format(epoch))
+sys.stderr.write("End of Training\n")
 print(">>>End of Training<<<")
 # save model after training
 if not restart:
