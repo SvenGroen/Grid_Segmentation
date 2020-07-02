@@ -39,9 +39,10 @@ config = {  # DEFAULT CONFIG
 }
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-sys.stderr.write("Cuda is available: {},\nCuda device name: {},\nCuda device: {}\n".format(torch.cuda.is_available(),
-                                                                                           torch.cuda.get_device_name(
-                                                                                               0), device))
+if torch.cuda.is_available():
+    sys.stderr.write("Cuda is available: {},\nCuda device name: {},\nCuda device: {}\n".format(torch.cuda.is_available(),
+                                                                                               torch.cuda.get_device_name(
+                                                                                                   0), device))
 parser = argparse.ArgumentParser()
 parser.add_argument("-cfg", "--config",
                     help="The Path to the configuration json for the model.\nShould include: model, ID, lr, batchsize,"
@@ -117,10 +118,15 @@ runtime = time.time() - start_time
 #              T.RandomHorizontalFlip(p=0.7)]
 # ----------------------------------------------------------------------------------------------------
 # dataset = Youtube_Greenscreen_mini()  # <--- SET DATASET
-dataset = Youtube_Greenscreen(train=True)
+# delete-----
+# batch_index = torch.Tensor([100, 101])
+# delete-----
+
+batch_index = torch.tensor(range(config["batch_size"]))
+dataset = Youtube_Greenscreen(train=True, start_index=batch_index)
+
 
 train_loader = DataLoader(dataset=dataset, batch_size=config["batch_size"], shuffle=False)
-
 
 # ----------------------------------------------------------------------------------------------------
 # saving the models
@@ -139,7 +145,7 @@ LOAD_POSITION = -1
 lrs = []
 
 found_restart = False
-batch_index = torch.tensor(range(config["batch_size"]))
+
 if LOAD_CHECKPOINT:
     print("Trying to load previous Checkpoint ...")
     try:
@@ -240,15 +246,11 @@ def restart_script():
     pass
 
 
-# delete-----
-# batch_index = torch.Tensor([100, 101])
-# delete-----
-
-
 time_tmp = []
 avrg_batch_time = 60 * 5
 restart_time = 60 * 60 * 0.62
 restart = False
+
 
 for epoch in tqdm(range(start_epoch, config["num_epochs"])):
     old_pred = [None, None]
@@ -269,6 +271,7 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
             break
         # no restart, continue training
         idx, (images, labels) = batch
+
         # load batches in case of restart
         if (
                 not torch.all(

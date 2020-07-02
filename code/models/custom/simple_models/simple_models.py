@@ -143,18 +143,13 @@ class Deep_mobile_gru(nn.Module):
     def __init__(self):
         super().__init__()
         self.base = deeplabv3plus_mobilenet(num_classes=2, pretrained_backbone=True)
-        # self.backbone = self.base.backbone
-        # self.classifier = self.base.classifier
+
         self.gru = ConvGRU(input_size=(270, 512), input_dim=2, hidden_dim=[2], kernel_size=(3, 3), num_layers=1,
                             dtype=torch.FloatTensor, batch_first=True, bias=True, return_all_layers=True)
         self.hidden = [None]
 
     def forward(self, x, *args):
         x = self.base(x)
-        # input_shape = x.shape[-2:]
-        # features = self.backbone(x)
-        # x = self.classifier(features)
-        # x = F.interpolate(x, size=input_shape, mode='bilinear', align_corners=False)
         x = x.unsqueeze(1)
         out, self.hidden = self.gru(x, self.hidden[-1])
         self.hidden = [tuple(state.detach() for state in i) for i in self.hidden]
@@ -195,6 +190,10 @@ class Deep_mobile_gruV2(nn.Module):
         return out
 
 
+# input_shape = x.shape[-2:]
+        # features = self.backbone(x)
+        # x = self.classifier(features)
+        # x = F.interpolate(x, size=input_shape, mode='bilinear', align_corners=False)
 '''
 class Deeplab_Mobile(nn.Module):
     def __init__(self):

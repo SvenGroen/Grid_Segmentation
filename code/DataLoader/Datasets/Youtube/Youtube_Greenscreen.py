@@ -16,8 +16,7 @@ from torch.utils import data
 
 class Youtube_Greenscreen(data.Dataset):
 
-
-    def __init__(self, transforms: list = None, norm_ImageNet=False, train = True):
+    def __init__(self, transforms: list = None, norm_ImageNet=False, train=True, start_index=torch.tensor([0])):
         # set data
 
         self.transform, self.transform_out = self.preprocess_transforms(norm_ImageNet=norm_ImageNet,
@@ -26,12 +25,16 @@ class Youtube_Greenscreen(data.Dataset):
         self.mode = "train" if train else "test"
         with open("data/Images/Greenscreen_Video_frames_4sec/" + self.mode + "/out_log.json", "r") as json_file:
             self.data = json.load(json_file)
+        self.start_index = start_index[0].item()
+        self.found_restart=False
 
     def __len__(self):
         return len(self.data["Inputs"])
 
     def __getitem__(self, idx):
-
+        if not idx == self.start_index and not self.found_restart:
+            return idx, (0, 0)
+        self.found_restart = True
         img = Image.open(str(Path.cwd() / Path(self.data["Inputs"][idx])))
         lbl = Image.open(str(Path.cwd() / Path(self.data["labels"][idx]))).convert("L")
         state = random.getstate()  # makes sure the transformations are applied equally
@@ -65,8 +68,8 @@ class Youtube_Greenscreen(data.Dataset):
         result.show()
 
     def preprocess_transforms(self, norm_ImageNet, transforms):
-        transform = [] # label transforms
-        transform_out = [T.ToPILImage()] # input transforms
+        transform = []  # label transforms
+        transform_out = [T.ToPILImage()]  # input transforms
 
         if isinstance(transforms, list) and transforms is not None:
             transform = transform + transforms

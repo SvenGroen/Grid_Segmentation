@@ -36,7 +36,7 @@ upper_green = np.array([150, 255, 150])
 MAX_DURATION = 4
 
 splits = ["train", "test"]
-train, test = train_test_split(video_names, random_state=12345, test_size=0.2)
+train, test = train_test_split(video_names, random_state=12345, test_size=0.3)
 random.shuffle(train)
 random.shuffle(test)
 
