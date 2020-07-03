@@ -24,6 +24,7 @@ import time
 import sys
 
 start_time = time.time()
+sys.stderr.write("Starting at: {}".format(time.ctime(start_time)))
 
 config = {  # DEFAULT CONFIG
 
@@ -40,9 +41,10 @@ config = {  # DEFAULT CONFIG
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 if torch.cuda.is_available():
-    sys.stderr.write("Cuda is available: {},\nCuda device name: {},\nCuda device: {}\n".format(torch.cuda.is_available(),
-                                                                                               torch.cuda.get_device_name(
-                                                                                                   0), device))
+    sys.stderr.write(
+        "Cuda is available: {},\nCuda device name: {},\nCuda device: {}\n".format(torch.cuda.is_available(),
+                                                                                  torch.cuda.get_device_name(
+                                                                                      0), device))
 parser = argparse.ArgumentParser()
 parser.add_argument("-cfg", "--config",
                     help="The Path to the configuration json for the model.\nShould include: model, ID, lr, batchsize,"
@@ -124,7 +126,6 @@ runtime = time.time() - start_time
 
 batch_index = torch.tensor(range(config["batch_size"]))
 dataset = Youtube_Greenscreen(train=True, start_index=batch_index)
-
 
 train_loader = DataLoader(dataset=dataset, batch_size=config["batch_size"], shuffle=False)
 
@@ -237,7 +238,7 @@ print(">>>Start of Training<<<")
 
 def restart_script():
     from subprocess import call
-    VRAM = "4.5G"
+    VRAM = "3.89"
     if "Res50" in config["model"]:
         VRAM = "4.5G"
     recallParameter = 'qsub -N ' + "ep" + str(epoch) + config["model"] + ' -l nv_mem_free=' + VRAM + ' -v CFG=' + str(
@@ -248,10 +249,10 @@ def restart_script():
 
 time_tmp = []
 avrg_batch_time = 60 * 5
-restart_time = 60 * 60 * 0.62
+restart_time = 60 * 60 * 1.3
 restart = False
-
-
+epoch_start = time.time()
+sys.stderr.write("\nEpoch starting at: {}".format(time.ctime(epoch_start)))
 for epoch in tqdm(range(start_epoch, config["num_epochs"])):
     old_pred = [None, None]
     for param_group in optimizer.param_groups:
@@ -262,9 +263,9 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
     for batch in train_loader:
         batch_start_time = time.time()
         if batch_start_time + avrg_batch_time - start_time > restart_time:
-            sys.stderr.write("Stopping at epoch {} and batch_idx {} because wall time would be reached".format(epoch,
-                                                                                                               str(
-                                                                                                                   batch_index)))
+            sys.stderr.write("\nStopping at epoch {} and batch_idx {} because wall time would be reached".format(epoch,
+                                                                                                                 str(
+                                                                                                                     batch_index)))
             save_checkpoint(checkpoint)
             restart_script()
             restart = True
@@ -280,8 +281,13 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
             old_pred = checkpoint["old_pred"]
             print(idx)
             continue
+        if not found_restart:
+            sys.stderr.write(
+                "\nold index {} found after: {}\n".format(str(batch_index), str(time.time() - epoch_start)))
+            batch_start_time = time.time()
         # start training if last idx position was found
         found_restart = True
+        sys.stderr.write("\ncurrent Index: {}\n".format(str(batch_index)))
         pred = net(images, old_pred)
         loss = criterion(pred, labels.long())
         optimizer.zero_grad()

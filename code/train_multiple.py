@@ -38,10 +38,10 @@ for i, cfg in enumerate(config_paths):
     from subprocess import call
 
     if "Deep" in models_name[i]:
-        recallParameter = 'qsub -N ' + "log_" + str(i) + models_name[
-            i] + ' -l nv_mem_free=4.5G -v CFG=' + cfg + ' train_mixed.sge'
+        vRam="3.89G"
     else:
-        recallParameter = 'qsub -N ' + "log_" + str(i) + models_name[
-            i] + ' -l nv_mem_free=3.4G -v CFG=' + cfg + ' train_mixed.sge'
+        vRam="3.2G"
 
+    recallParameter = 'qsub -N ' + "log_" + str(i) + models_name[
+        i] + ' -l nv_mem_free='+vRam+' -v CFG=' + cfg + ' train_mixed.sge'
     call(recallParameter, shell=True)
