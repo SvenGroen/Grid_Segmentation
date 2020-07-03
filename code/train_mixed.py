@@ -145,8 +145,6 @@ LOAD_POSITION = -1
 # Load previous model state if needed
 lrs = []
 
-found_restart = False
-
 if LOAD_CHECKPOINT:
     print("Trying to load previous Checkpoint ...")
     try:
@@ -251,6 +249,7 @@ time_tmp = []
 avrg_batch_time = 60 * 5
 restart_time = 60 * 60 * 1.3
 restart = False
+dataset.set_start_index(checkpoint["batch_index"])
 epoch_start = time.time()
 sys.stderr.write("\nEpoch starting at: {}".format(time.ctime(epoch_start)))
 for epoch in tqdm(range(start_epoch, config["num_epochs"])):
@@ -274,19 +273,11 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
         idx, (images, labels) = batch
 
         # load batches in case of restart
-        if (
-                not torch.all(
-                    torch.eq(idx, batch_index.cpu()))) and not found_restart:  # skip until point of restart is found
-            running_loss = checkpoint["running_loss"]
-            old_pred = checkpoint["old_pred"]
-            print(idx)
-            continue
-        if not found_restart:
-            sys.stderr.write(
-                "\nold index {} found after: {}\n".format(str(batch_index), str(time.time() - epoch_start)))
-            batch_start_time = time.time()
+        if torch.all(idx == torch.zeros(config["batch_size"])):
+            sys.stderr.write("\nEnd reached of batch")
+            dataset.start_index = 0
+            break
         # start training if last idx position was found
-        found_restart = True
         sys.stderr.write("\ncurrent Index: {}\n".format(str(batch_index)))
         pred = net(images, old_pred)
         loss = criterion(pred, labels.long())
