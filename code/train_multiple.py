@@ -38,7 +38,7 @@ for i, cfg in enumerate(config_paths):
     from subprocess import call
 
     if "Deep" in models_name[i]:
-        vRam="3.89G"
+        vRam="4.5G"
     else:
         vRam="3.2G"
 

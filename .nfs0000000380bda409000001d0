@@ -1,0 +1,2957 @@
+Starting at: Fri Jul  3 14:55:16 2020Cuda is available: True,
+Cuda device name: GeForce GTX 1050 Ti,
+Cuda device: cuda
+
+Epoch starting at: Fri Jul  3 14:55:42 2020  0%|          | 0/50 [00:00<?, ?it/s]
+old index tensor([53876, 53877, 53878, 53879], device='cuda:0') found after: 2590.150890350342
+
+current Index: tensor([53876, 53877, 53878, 53879], device='cuda:0')
+
+current Index: tensor([53876, 53877, 53878, 53879])
+
+current Index: tensor([53880, 53881, 53882, 53883])
+
+current Index: tensor([53884, 53885, 53886, 53887])
+
+current Index: tensor([53888, 53889, 53890, 53891])
+
+current Index: tensor([53892, 53893, 53894, 53895])
+
+current Index: tensor([53896, 53897, 53898, 53899])
+
+current Index: tensor([53900, 53901, 53902, 53903])
+
+current Index: tensor([53904, 53905, 53906, 53907])
+
+current Index: tensor([53908, 53909, 53910, 53911])
+
+current Index: tensor([53912, 53913, 53914, 53915])
+
+current Index: tensor([53916, 53917, 53918, 53919])
+
+current Index: tensor([53920, 53921, 53922, 53923])
+
+current Index: tensor([53924, 53925, 53926, 53927])
+
+current Index: tensor([53928, 53929, 53930, 53931])
+
+current Index: tensor([53932, 53933, 53934, 53935])
+
+current Index: tensor([53936, 53937, 53938, 53939])
+
+current Index: tensor([53940, 53941, 53942, 53943])
+
+current Index: tensor([53944, 53945, 53946, 53947])
+
+current Index: tensor([53948, 53949, 53950, 53951])
+
+current Index: tensor([53952, 53953, 53954, 53955])
+
+current Index: tensor([53956, 53957, 53958, 53959])
+
+current Index: tensor([53960, 53961, 53962, 53963])
+
+current Index: tensor([53964, 53965, 53966, 53967])
+
+current Index: tensor([53968, 53969, 53970, 53971])
+
+current Index: tensor([53972, 53973, 53974, 53975])
+
+current Index: tensor([53976, 53977, 53978, 53979])
+
+current Index: tensor([53980, 53981, 53982, 53983])
+
+current Index: tensor([53984, 53985, 53986, 53987])
+
+current Index: tensor([53988, 53989, 53990, 53991])
+
+current Index: tensor([53992, 53993, 53994, 53995])
+
+current Index: tensor([53996, 53997, 53998, 53999])
+
+current Index: tensor([54000, 54001, 54002, 54003])
+
+current Index: tensor([54004, 54005, 54006, 54007])
+
+current Index: tensor([54008, 54009, 54010, 54011])
+
+current Index: tensor([54012, 54013, 54014, 54015])
+
+current Index: tensor([54016, 54017, 54018, 54019])
+
+current Index: tensor([54020, 54021, 54022, 54023])
+
+current Index: tensor([54024, 54025, 54026, 54027])
+
+current Index: tensor([54028, 54029, 54030, 54031])
+
+current Index: tensor([54032, 54033, 54034, 54035])
+
+current Index: tensor([54036, 54037, 54038, 54039])
+
+current Index: tensor([54040, 54041, 54042, 54043])
+
+current Index: tensor([54044, 54045, 54046, 54047])
+
+current Index: tensor([54048, 54049, 54050, 54051])
+
+current Index: tensor([54052, 54053, 54054, 54055])
+
+current Index: tensor([54056, 54057, 54058, 54059])
+
+current Index: tensor([54060, 54061, 54062, 54063])
+
+current Index: tensor([54064, 54065, 54066, 54067])
+
+current Index: tensor([54068, 54069, 54070, 54071])
+
+current Index: tensor([54072, 54073, 54074, 54075])
+
+current Index: tensor([54076, 54077, 54078, 54079])
+
+current Index: tensor([54080, 54081, 54082, 54083])
+
+current Index: tensor([54084, 54085, 54086, 54087])
+
+current Index: tensor([54088, 54089, 54090, 54091])
+
+current Index: tensor([54092, 54093, 54094, 54095])
+
+current Index: tensor([54096, 54097, 54098, 54099])
+
+current Index: tensor([54100, 54101, 54102, 54103])
+
+current Index: tensor([54104, 54105, 54106, 54107])
+
+current Index: tensor([54108, 54109, 54110, 54111])
+
+current Index: tensor([54112, 54113, 54114, 54115])
+
+current Index: tensor([54116, 54117, 54118, 54119])
+
+current Index: tensor([54120, 54121, 54122, 54123])
+
+current Index: tensor([54124, 54125, 54126, 54127])
+
+current Index: tensor([54128, 54129, 54130, 54131])
+
+current Index: tensor([54132, 54133, 54134, 54135])
+
+current Index: tensor([54136, 54137, 54138, 54139])
+
+current Index: tensor([54140, 54141, 54142, 54143])
+
+current Index: tensor([54144, 54145, 54146, 54147])
+
+current Index: tensor([54148, 54149, 54150, 54151])
+
+current Index: tensor([54152, 54153, 54154, 54155])
+
+current Index: tensor([54156, 54157, 54158, 54159])
+
+current Index: tensor([54160, 54161, 54162, 54163])
+
+current Index: tensor([54164, 54165, 54166, 54167])
+
+current Index: tensor([54168, 54169, 54170, 54171])
+
+current Index: tensor([54172, 54173, 54174, 54175])
+
+current Index: tensor([54176, 54177, 54178, 54179])
+
+current Index: tensor([54180, 54181, 54182, 54183])
+
+current Index: tensor([54184, 54185, 54186, 54187])
+
+current Index: tensor([54188, 54189, 54190, 54191])
+
+current Index: tensor([54192, 54193, 54194, 54195])
+
+current Index: tensor([54196, 54197, 54198, 54199])
+
+current Index: tensor([54200, 54201, 54202, 54203])
+
+current Index: tensor([54204, 54205, 54206, 54207])
+
+current Index: tensor([54208, 54209, 54210, 54211])
+
+current Index: tensor([54212, 54213, 54214, 54215])
+
+current Index: tensor([54216, 54217, 54218, 54219])
+
+current Index: tensor([54220, 54221, 54222, 54223])
+
+current Index: tensor([54224, 54225, 54226, 54227])
+
+current Index: tensor([54228, 54229, 54230, 54231])
+
+current Index: tensor([54232, 54233, 54234, 54235])
+
+current Index: tensor([54236, 54237, 54238, 54239])
+
+current Index: tensor([54240, 54241, 54242, 54243])
+
+current Index: tensor([54244, 54245, 54246, 54247])
+
+current Index: tensor([54248, 54249, 54250, 54251])
+
+current Index: tensor([54252, 54253, 54254, 54255])
+
+current Index: tensor([54256, 54257, 54258, 54259])
+
+current Index: tensor([54260, 54261, 54262, 54263])
+
+current Index: tensor([54264, 54265, 54266, 54267])
+
+current Index: tensor([54268, 54269, 54270, 54271])
+
+current Index: tensor([54272, 54273, 54274, 54275])
+
+current Index: tensor([54276, 54277, 54278, 54279])
+
+current Index: tensor([54280, 54281, 54282, 54283])
+
+current Index: tensor([54284, 54285, 54286, 54287])
+
+current Index: tensor([54288, 54289, 54290, 54291])
+
+current Index: tensor([54292, 54293, 54294, 54295])
+
+current Index: tensor([54296, 54297, 54298, 54299])
+
+current Index: tensor([54300, 54301, 54302, 54303])
+
+current Index: tensor([54304, 54305, 54306, 54307])
+
+current Index: tensor([54308, 54309, 54310, 54311])
+
+current Index: tensor([54312, 54313, 54314, 54315])
+
+current Index: tensor([54316, 54317, 54318, 54319])
+
+current Index: tensor([54320, 54321, 54322, 54323])
+
+current Index: tensor([54324, 54325, 54326, 54327])
+
+current Index: tensor([54328, 54329, 54330, 54331])
+
+current Index: tensor([54332, 54333, 54334, 54335])
+
+current Index: tensor([54336, 54337, 54338, 54339])
+
+current Index: tensor([54340, 54341, 54342, 54343])
+
+current Index: tensor([54344, 54345, 54346, 54347])
+
+current Index: tensor([54348, 54349, 54350, 54351])
+
+current Index: tensor([54352, 54353, 54354, 54355])
+
+current Index: tensor([54356, 54357, 54358, 54359])
+
+current Index: tensor([54360, 54361, 54362, 54363])
+
+current Index: tensor([54364, 54365, 54366, 54367])
+
+current Index: tensor([54368, 54369, 54370, 54371])
+
+current Index: tensor([54372, 54373, 54374, 54375])
+
+current Index: tensor([54376, 54377, 54378, 54379])
+
+current Index: tensor([54380, 54381, 54382, 54383])
+
+current Index: tensor([54384, 54385, 54386, 54387])
+
+current Index: tensor([54388, 54389, 54390, 54391])
+
+current Index: tensor([54392, 54393, 54394, 54395])
+
+current Index: tensor([54396, 54397, 54398, 54399])
+
+current Index: tensor([54400, 54401, 54402, 54403])
+
+current Index: tensor([54404, 54405, 54406, 54407])
+
+current Index: tensor([54408, 54409, 54410, 54411])
+
+current Index: tensor([54412, 54413, 54414, 54415])
+
+current Index: tensor([54416, 54417, 54418, 54419])
+
+current Index: tensor([54420, 54421, 54422, 54423])
+
+current Index: tensor([54424, 54425, 54426, 54427])
+
+current Index: tensor([54428, 54429, 54430, 54431])
+
+current Index: tensor([54432, 54433, 54434, 54435])
+
+current Index: tensor([54436, 54437, 54438, 54439])
+
+current Index: tensor([54440, 54441, 54442, 54443])
+
+current Index: tensor([54444, 54445, 54446, 54447])
+
+current Index: tensor([54448, 54449, 54450, 54451])
+
+current Index: tensor([54452, 54453, 54454, 54455])
+
+current Index: tensor([54456, 54457, 54458, 54459])
+
+current Index: tensor([54460, 54461, 54462, 54463])
+
+current Index: tensor([54464, 54465, 54466, 54467])
+
+current Index: tensor([54468, 54469, 54470, 54471])
+
+current Index: tensor([54472, 54473, 54474, 54475])
+
+current Index: tensor([54476, 54477, 54478, 54479])
+
+current Index: tensor([54480, 54481, 54482, 54483])
+
+current Index: tensor([54484, 54485, 54486, 54487])
+
+current Index: tensor([54488, 54489, 54490, 54491])
+
+current Index: tensor([54492, 54493, 54494, 54495])
+
+current Index: tensor([54496, 54497, 54498, 54499])
+
+current Index: tensor([54500, 54501, 54502, 54503])
+
+current Index: tensor([54504, 54505, 54506, 54507])
+
+current Index: tensor([54508, 54509, 54510, 54511])
+
+current Index: tensor([54512, 54513, 54514, 54515])
+
+current Index: tensor([54516, 54517, 54518, 54519])
+
+current Index: tensor([54520, 54521, 54522, 54523])
+
+current Index: tensor([54524, 54525, 54526, 54527])
+
+current Index: tensor([54528, 54529, 54530, 54531])
+
+current Index: tensor([54532, 54533, 54534, 54535])
+
+current Index: tensor([54536, 54537, 54538, 54539])
+
+current Index: tensor([54540, 54541, 54542, 54543])
+
+current Index: tensor([54544, 54545, 54546, 54547])
+
+current Index: tensor([54548, 54549, 54550, 54551])
+
+current Index: tensor([54552, 54553, 54554, 54555])
+
+current Index: tensor([54556, 54557, 54558, 54559])
+
+current Index: tensor([54560, 54561, 54562, 54563])
+
+current Index: tensor([54564, 54565, 54566, 54567])
+
+current Index: tensor([54568, 54569, 54570, 54571])
+
+current Index: tensor([54572, 54573, 54574, 54575])
+
+current Index: tensor([54576, 54577, 54578, 54579])
+
+current Index: tensor([54580, 54581, 54582, 54583])
+
+current Index: tensor([54584, 54585, 54586, 54587])
+
+current Index: tensor([54588, 54589, 54590, 54591])
+
+current Index: tensor([54592, 54593, 54594, 54595])
+
+current Index: tensor([54596, 54597, 54598, 54599])
+
+current Index: tensor([54600, 54601, 54602, 54603])
+
+current Index: tensor([54604, 54605, 54606, 54607])
+
+current Index: tensor([54608, 54609, 54610, 54611])
+
+current Index: tensor([54612, 54613, 54614, 54615])
+
+current Index: tensor([54616, 54617, 54618, 54619])
+
+current Index: tensor([54620, 54621, 54622, 54623])
+
+current Index: tensor([54624, 54625, 54626, 54627])
+
+current Index: tensor([54628, 54629, 54630, 54631])
+
+current Index: tensor([54632, 54633, 54634, 54635])
+
+current Index: tensor([54636, 54637, 54638, 54639])
+
+current Index: tensor([54640, 54641, 54642, 54643])
+
+current Index: tensor([54644, 54645, 54646, 54647])
+
+current Index: tensor([54648, 54649, 54650, 54651])
+
+current Index: tensor([54652, 54653, 54654, 54655])
+
+current Index: tensor([54656, 54657, 54658, 54659])
+
+current Index: tensor([54660, 54661, 54662, 54663])
+
+current Index: tensor([54664, 54665, 54666, 54667])
+
+current Index: tensor([54668, 54669, 54670, 54671])
+
+current Index: tensor([54672, 54673, 54674, 54675])
+
+current Index: tensor([54676, 54677, 54678, 54679])
+
+current Index: tensor([54680, 54681, 54682, 54683])
+
+current Index: tensor([54684, 54685, 54686, 54687])
+
+current Index: tensor([54688, 54689, 54690, 54691])
+
+current Index: tensor([54692, 54693, 54694, 54695])
+
+current Index: tensor([54696, 54697, 54698, 54699])
+
+current Index: tensor([54700, 54701, 54702, 54703])
+
+current Index: tensor([54704, 54705, 54706, 54707])
+
+current Index: tensor([54708, 54709, 54710, 54711])
+
+current Index: tensor([54712, 54713, 54714, 54715])
+
+current Index: tensor([54716, 54717, 54718, 54719])
+
+current Index: tensor([54720, 54721, 54722, 54723])
+
+current Index: tensor([54724, 54725, 54726, 54727])
+
+current Index: tensor([54728, 54729, 54730, 54731])
+
+current Index: tensor([54732, 54733, 54734, 54735])
+
+current Index: tensor([54736, 54737, 54738, 54739])
+
+current Index: tensor([54740, 54741, 54742, 54743])
+
+current Index: tensor([54744, 54745, 54746, 54747])
+
+current Index: tensor([54748, 54749, 54750, 54751])
+
+current Index: tensor([54752, 54753, 54754, 54755])
+
+current Index: tensor([54756, 54757, 54758, 54759])
+
+current Index: tensor([54760, 54761, 54762, 54763])
+
+current Index: tensor([54764, 54765, 54766, 54767])
+
+current Index: tensor([54768, 54769, 54770, 54771])
+
+current Index: tensor([54772, 54773, 54774, 54775])
+
+current Index: tensor([54776, 54777, 54778, 54779])
+
+current Index: tensor([54780, 54781, 54782, 54783])
+
+current Index: tensor([54784, 54785, 54786, 54787])
+
+current Index: tensor([54788, 54789, 54790, 54791])
+
+current Index: tensor([54792, 54793, 54794, 54795])
+
+current Index: tensor([54796, 54797, 54798, 54799])
+
+current Index: tensor([54800, 54801, 54802, 54803])
+
+current Index: tensor([54804, 54805, 54806, 54807])
+
+current Index: tensor([54808, 54809, 54810, 54811])
+
+current Index: tensor([54812, 54813, 54814, 54815])
+
+current Index: tensor([54816, 54817, 54818, 54819])
+
+current Index: tensor([54820, 54821, 54822, 54823])
+
+current Index: tensor([54824, 54825, 54826, 54827])
+
+current Index: tensor([54828, 54829, 54830, 54831])
+
+current Index: tensor([54832, 54833, 54834, 54835])
+
+current Index: tensor([54836, 54837, 54838, 54839])
+
+current Index: tensor([54840, 54841, 54842, 54843])
+
+current Index: tensor([54844, 54845, 54846, 54847])
+
+current Index: tensor([54848, 54849, 54850, 54851])
+
+current Index: tensor([54852, 54853, 54854, 54855])
+
+current Index: tensor([54856, 54857, 54858, 54859])
+
+current Index: tensor([54860, 54861, 54862, 54863])
+
+current Index: tensor([54864, 54865, 54866, 54867])
+
+current Index: tensor([54868, 54869, 54870, 54871])
+
+current Index: tensor([54872, 54873, 54874, 54875])
+
+current Index: tensor([54876, 54877, 54878, 54879])
+
+current Index: tensor([54880, 54881, 54882, 54883])
+
+current Index: tensor([54884, 54885, 54886, 54887])
+
+current Index: tensor([54888, 54889, 54890, 54891])
+
+current Index: tensor([54892, 54893, 54894, 54895])
+
+current Index: tensor([54896, 54897, 54898, 54899])
+
+current Index: tensor([54900, 54901, 54902, 54903])
+
+current Index: tensor([54904, 54905, 54906, 54907])
+
+current Index: tensor([54908, 54909, 54910, 54911])
+
+current Index: tensor([54912, 54913, 54914, 54915])
+
+current Index: tensor([54916, 54917, 54918, 54919])
+
+current Index: tensor([54920, 54921, 54922, 54923])
+
+current Index: tensor([54924, 54925, 54926, 54927])
+
+current Index: tensor([54928, 54929, 54930, 54931])
+
+current Index: tensor([54932, 54933, 54934, 54935])
+
+current Index: tensor([54936, 54937, 54938, 54939])
+
+current Index: tensor([54940, 54941, 54942, 54943])
+
+current Index: tensor([54944, 54945, 54946, 54947])
+
+current Index: tensor([54948, 54949, 54950, 54951])
+
+current Index: tensor([54952, 54953, 54954, 54955])
+
+current Index: tensor([54956, 54957, 54958, 54959])
+
+current Index: tensor([54960, 54961, 54962, 54963])
+
+current Index: tensor([54964, 54965, 54966, 54967])
+
+current Index: tensor([54968, 54969, 54970, 54971])
+
+current Index: tensor([54972, 54973, 54974, 54975])
+
+current Index: tensor([54976, 54977, 54978, 54979])
+
+current Index: tensor([54980, 54981, 54982, 54983])
+
+current Index: tensor([54984, 54985, 54986, 54987])
+
+current Index: tensor([54988, 54989, 54990, 54991])
+
+current Index: tensor([54992, 54993, 54994, 54995])
+
+current Index: tensor([54996, 54997, 54998, 54999])
+
+current Index: tensor([55000, 55001, 55002, 55003])
+
+current Index: tensor([55004, 55005, 55006, 55007])
+
+current Index: tensor([55008, 55009, 55010, 55011])
+
+current Index: tensor([55012, 55013, 55014, 55015])
+
+current Index: tensor([55016, 55017, 55018, 55019])
+
+current Index: tensor([55020, 55021, 55022, 55023])
+
+current Index: tensor([55024, 55025, 55026, 55027])
+
+current Index: tensor([55028, 55029, 55030, 55031])
+
+current Index: tensor([55032, 55033, 55034, 55035])
+
+current Index: tensor([55036, 55037, 55038, 55039])
+
+current Index: tensor([55040, 55041, 55042, 55043])
+
+current Index: tensor([55044, 55045, 55046, 55047])
+
+current Index: tensor([55048, 55049, 55050, 55051])
+
+current Index: tensor([55052, 55053, 55054, 55055])
+
+current Index: tensor([55056, 55057, 55058, 55059])
+
+current Index: tensor([55060, 55061, 55062, 55063])
+
+current Index: tensor([55064, 55065, 55066, 55067])
+
+current Index: tensor([55068, 55069, 55070, 55071])
+
+current Index: tensor([55072, 55073, 55074, 55075])
+
+current Index: tensor([55076, 55077, 55078, 55079])
+
+current Index: tensor([55080, 55081, 55082, 55083])
+
+current Index: tensor([55084, 55085, 55086, 55087])
+
+current Index: tensor([55088, 55089, 55090, 55091])
+
+current Index: tensor([55092, 55093, 55094, 55095])
+
+current Index: tensor([55096, 55097, 55098, 55099])
+
+current Index: tensor([55100, 55101, 55102, 55103])
+
+current Index: tensor([55104, 55105, 55106, 55107])
+
+current Index: tensor([55108, 55109, 55110, 55111])
+
+current Index: tensor([55112, 55113, 55114, 55115])
+
+current Index: tensor([55116, 55117, 55118, 55119])
+
+current Index: tensor([55120, 55121, 55122, 55123])
+
+current Index: tensor([55124, 55125, 55126, 55127])
+
+current Index: tensor([55128, 55129, 55130, 55131])
+
+current Index: tensor([55132, 55133, 55134, 55135])
+
+current Index: tensor([55136, 55137, 55138, 55139])
+
+current Index: tensor([55140, 55141, 55142, 55143])
+
+current Index: tensor([55144, 55145, 55146, 55147])
+
+current Index: tensor([55148, 55149, 55150, 55151])
+
+current Index: tensor([55152, 55153, 55154, 55155])
+
+current Index: tensor([55156, 55157, 55158, 55159])
+
+current Index: tensor([55160, 55161, 55162, 55163])
+
+current Index: tensor([55164, 55165, 55166, 55167])
+
+current Index: tensor([55168, 55169, 55170, 55171])
+
+current Index: tensor([55172, 55173, 55174, 55175])
+
+current Index: tensor([55176, 55177, 55178, 55179])
+
+current Index: tensor([55180, 55181, 55182, 55183])
+
+current Index: tensor([55184, 55185, 55186, 55187])
+
+current Index: tensor([55188, 55189, 55190, 55191])
+
+current Index: tensor([55192, 55193, 55194, 55195])
+
+current Index: tensor([55196, 55197, 55198, 55199])
+
+current Index: tensor([55200, 55201, 55202, 55203])
+
+current Index: tensor([55204, 55205, 55206, 55207])
+
+current Index: tensor([55208, 55209, 55210, 55211])
+
+current Index: tensor([55212, 55213, 55214, 55215])
+
+current Index: tensor([55216, 55217, 55218, 55219])
+
+current Index: tensor([55220, 55221, 55222, 55223])
+
+current Index: tensor([55224, 55225, 55226, 55227])
+
+current Index: tensor([55228, 55229, 55230, 55231])
+
+current Index: tensor([55232, 55233, 55234, 55235])
+
+current Index: tensor([55236, 55237, 55238, 55239])
+
+current Index: tensor([55240, 55241, 55242, 55243])
+
+current Index: tensor([55244, 55245, 55246, 55247])
+
+current Index: tensor([55248, 55249, 55250, 55251])
+
+current Index: tensor([55252, 55253, 55254, 55255])
+
+current Index: tensor([55256, 55257, 55258, 55259])
+
+current Index: tensor([55260, 55261, 55262, 55263])
+
+current Index: tensor([55264, 55265, 55266, 55267])
+
+current Index: tensor([55268, 55269, 55270, 55271])
+
+current Index: tensor([55272, 55273, 55274, 55275])
+
+current Index: tensor([55276, 55277, 55278, 55279])
+
+current Index: tensor([55280, 55281, 55282, 55283])
+
+current Index: tensor([55284, 55285, 55286, 55287])
+
+current Index: tensor([55288, 55289, 55290, 55291])
+
+current Index: tensor([55292, 55293, 55294, 55295])
+
+current Index: tensor([55296, 55297, 55298, 55299])
+
+current Index: tensor([55300, 55301, 55302, 55303])
+
+current Index: tensor([55304, 55305, 55306, 55307])
+
+current Index: tensor([55308, 55309, 55310, 55311])
+
+current Index: tensor([55312, 55313, 55314, 55315])
+
+current Index: tensor([55316, 55317, 55318, 55319])
+
+current Index: tensor([55320, 55321, 55322, 55323])
+
+current Index: tensor([55324, 55325, 55326, 55327])
+
+current Index: tensor([55328, 55329, 55330, 55331])
+
+current Index: tensor([55332, 55333, 55334, 55335])
+
+current Index: tensor([55336, 55337, 55338, 55339])
+
+current Index: tensor([55340, 55341, 55342, 55343])
+
+current Index: tensor([55344, 55345, 55346, 55347])
+
+current Index: tensor([55348, 55349, 55350, 55351])
+
+current Index: tensor([55352, 55353, 55354, 55355])
+
+current Index: tensor([55356, 55357, 55358, 55359])
+
+current Index: tensor([55360, 55361, 55362, 55363])
+
+current Index: tensor([55364, 55365, 55366, 55367])
+
+current Index: tensor([55368, 55369, 55370, 55371])
+
+current Index: tensor([55372, 55373, 55374, 55375])
+
+current Index: tensor([55376, 55377, 55378, 55379])
+
+current Index: tensor([55380, 55381, 55382, 55383])
+
+current Index: tensor([55384, 55385, 55386, 55387])
+
+current Index: tensor([55388, 55389, 55390, 55391])
+
+current Index: tensor([55392, 55393, 55394, 55395])
+
+current Index: tensor([55396, 55397, 55398, 55399])
+
+current Index: tensor([55400, 55401, 55402, 55403])
+
+current Index: tensor([55404, 55405, 55406, 55407])
+
+current Index: tensor([55408, 55409, 55410, 55411])
+
+current Index: tensor([55412, 55413, 55414, 55415])
+
+current Index: tensor([55416, 55417, 55418, 55419])
+
+current Index: tensor([55420, 55421, 55422, 55423])
+
+current Index: tensor([55424, 55425, 55426, 55427])
+
+current Index: tensor([55428, 55429, 55430, 55431])
+
+current Index: tensor([55432, 55433, 55434, 55435])
+
+current Index: tensor([55436, 55437, 55438, 55439])
+
+current Index: tensor([55440, 55441, 55442, 55443])
+
+current Index: tensor([55444, 55445, 55446, 55447])
+
+current Index: tensor([55448, 55449, 55450, 55451])
+
+current Index: tensor([55452, 55453, 55454, 55455])
+
+current Index: tensor([55456, 55457, 55458, 55459])
+
+current Index: tensor([55460, 55461, 55462, 55463])
+
+current Index: tensor([55464, 55465, 55466, 55467])
+
+current Index: tensor([55468, 55469, 55470, 55471])
+
+current Index: tensor([55472, 55473, 55474, 55475])
+
+current Index: tensor([55476, 55477, 55478, 55479])
+
+current Index: tensor([55480, 55481, 55482, 55483])
+
+current Index: tensor([55484, 55485, 55486, 55487])
+
+current Index: tensor([55488, 55489, 55490, 55491])
+
+current Index: tensor([55492, 55493, 55494, 55495])
+
+current Index: tensor([55496, 55497, 55498, 55499])
+
+current Index: tensor([55500, 55501, 55502, 55503])
+
+current Index: tensor([55504, 55505, 55506, 55507])
+
+current Index: tensor([55508, 55509, 55510, 55511])
+
+current Index: tensor([55512, 55513, 55514, 55515])
+
+current Index: tensor([55516, 55517, 55518, 55519])
+
+current Index: tensor([55520, 55521, 55522, 55523])
+
+current Index: tensor([55524, 55525, 55526, 55527])
+
+current Index: tensor([55528, 55529, 55530, 55531])
+
+current Index: tensor([55532, 55533, 55534, 55535])
+
+current Index: tensor([55536, 55537, 55538, 55539])
+
+current Index: tensor([55540, 55541, 55542, 55543])
+
+current Index: tensor([55544, 55545, 55546, 55547])
+
+current Index: tensor([55548, 55549, 55550, 55551])
+
+current Index: tensor([55552, 55553, 55554, 55555])
+
+current Index: tensor([55556, 55557, 55558, 55559])
+
+current Index: tensor([55560, 55561, 55562, 55563])
+
+current Index: tensor([55564, 55565, 55566, 55567])
+
+current Index: tensor([55568, 55569, 55570, 55571])
+
+current Index: tensor([55572, 55573, 55574, 55575])
+
+current Index: tensor([55576, 55577, 55578, 55579])
+
+current Index: tensor([55580, 55581, 55582, 55583])
+
+current Index: tensor([55584, 55585, 55586, 55587])
+
+current Index: tensor([55588, 55589, 55590, 55591])
+
+current Index: tensor([55592, 55593, 55594, 55595])
+
+current Index: tensor([55596, 55597, 55598, 55599])
+
+current Index: tensor([55600, 55601, 55602, 55603])
+
+current Index: tensor([55604, 55605, 55606, 55607])
+
+current Index: tensor([55608, 55609, 55610, 55611])
+
+current Index: tensor([55612, 55613, 55614, 55615])
+
+current Index: tensor([55616, 55617, 55618, 55619])
+
+current Index: tensor([55620, 55621, 55622, 55623])
+
+current Index: tensor([55624, 55625, 55626, 55627])
+
+current Index: tensor([55628, 55629, 55630, 55631])
+
+current Index: tensor([55632, 55633, 55634, 55635])
+
+current Index: tensor([55636, 55637, 55638, 55639])
+
+current Index: tensor([55640, 55641, 55642, 55643])
+
+current Index: tensor([55644, 55645, 55646, 55647])
+
+current Index: tensor([55648, 55649, 55650, 55651])
+
+current Index: tensor([55652, 55653, 55654, 55655])
+
+current Index: tensor([55656, 55657, 55658, 55659])
+
+current Index: tensor([55660, 55661, 55662, 55663])
+
+current Index: tensor([55664, 55665, 55666, 55667])
+
+current Index: tensor([55668, 55669, 55670, 55671])
+
+current Index: tensor([55672, 55673, 55674, 55675])
+
+current Index: tensor([55676, 55677, 55678, 55679])
+
+current Index: tensor([55680, 55681, 55682, 55683])
+
+current Index: tensor([55684, 55685, 55686, 55687])
+
+current Index: tensor([55688, 55689, 55690, 55691])
+
+current Index: tensor([55692, 55693, 55694, 55695])
+
+current Index: tensor([55696, 55697, 55698, 55699])
+
+current Index: tensor([55700, 55701, 55702, 55703])
+
+current Index: tensor([55704, 55705, 55706, 55707])
+
+current Index: tensor([55708, 55709, 55710, 55711])
+
+current Index: tensor([55712, 55713, 55714, 55715])
+
+current Index: tensor([55716, 55717, 55718, 55719])
+
+current Index: tensor([55720, 55721, 55722, 55723])
+
+current Index: tensor([55724, 55725, 55726, 55727])
+
+current Index: tensor([55728, 55729, 55730, 55731])
+
+current Index: tensor([55732, 55733, 55734, 55735])
+
+current Index: tensor([55736, 55737, 55738, 55739])
+
+current Index: tensor([55740, 55741, 55742, 55743])
+
+current Index: tensor([55744, 55745, 55746, 55747])
+
+current Index: tensor([55748, 55749, 55750, 55751])
+
+current Index: tensor([55752, 55753, 55754, 55755])
+
+current Index: tensor([55756, 55757, 55758, 55759])
+
+current Index: tensor([55760, 55761, 55762, 55763])
+
+current Index: tensor([55764, 55765, 55766, 55767])
+
+current Index: tensor([55768, 55769, 55770, 55771])
+
+current Index: tensor([55772, 55773, 55774, 55775])
+
+current Index: tensor([55776, 55777, 55778, 55779])
+
+current Index: tensor([55780, 55781, 55782, 55783])
+
+current Index: tensor([55784, 55785, 55786, 55787])
+
+current Index: tensor([55788, 55789, 55790, 55791])
+
+current Index: tensor([55792, 55793, 55794, 55795])
+
+current Index: tensor([55796, 55797, 55798, 55799])
+
+current Index: tensor([55800, 55801, 55802, 55803])
+
+current Index: tensor([55804, 55805, 55806, 55807])
+
+current Index: tensor([55808, 55809, 55810, 55811])
+
+current Index: tensor([55812, 55813, 55814, 55815])
+
+current Index: tensor([55816, 55817, 55818, 55819])
+
+current Index: tensor([55820, 55821, 55822, 55823])
+
+current Index: tensor([55824, 55825, 55826, 55827])
+
+current Index: tensor([55828, 55829, 55830, 55831])
+
+current Index: tensor([55832, 55833, 55834, 55835])
+
+current Index: tensor([55836, 55837, 55838, 55839])
+
+current Index: tensor([55840, 55841, 55842, 55843])
+
+current Index: tensor([55844, 55845, 55846, 55847])
+
+current Index: tensor([55848, 55849, 55850, 55851])
+
+current Index: tensor([55852, 55853, 55854, 55855])
+
+current Index: tensor([55856, 55857, 55858, 55859])
+
+current Index: tensor([55860, 55861, 55862, 55863])
+
+current Index: tensor([55864, 55865, 55866, 55867])
+
+current Index: tensor([55868, 55869, 55870, 55871])
+
+current Index: tensor([55872, 55873, 55874, 55875])
+
+current Index: tensor([55876, 55877, 55878, 55879])
+
+current Index: tensor([55880, 55881, 55882, 55883])
+
+current Index: tensor([55884, 55885, 55886, 55887])
+
+current Index: tensor([55888, 55889, 55890, 55891])
+
+current Index: tensor([55892, 55893, 55894, 55895])
+
+current Index: tensor([55896, 55897, 55898, 55899])
+
+current Index: tensor([55900, 55901, 55902, 55903])
+
+current Index: tensor([55904, 55905, 55906, 55907])
+
+current Index: tensor([55908, 55909, 55910, 55911])
+
+current Index: tensor([55912, 55913, 55914, 55915])
+
+current Index: tensor([55916, 55917, 55918, 55919])
+
+current Index: tensor([55920, 55921, 55922, 55923])
+
+current Index: tensor([55924, 55925, 55926, 55927])
+
+current Index: tensor([55928, 55929, 55930, 55931])
+
+current Index: tensor([55932, 55933, 55934, 55935])
+
+current Index: tensor([55936, 55937, 55938, 55939])
+
+current Index: tensor([55940, 55941, 55942, 55943])
+
+current Index: tensor([55944, 55945, 55946, 55947])
+
+current Index: tensor([55948, 55949, 55950, 55951])
+
+current Index: tensor([55952, 55953, 55954, 55955])
+
+current Index: tensor([55956, 55957, 55958, 55959])
+
+current Index: tensor([55960, 55961, 55962, 55963])
+
+current Index: tensor([55964, 55965, 55966, 55967])
+
+current Index: tensor([55968, 55969, 55970, 55971])
+
+current Index: tensor([55972, 55973, 55974, 55975])
+
+current Index: tensor([55976, 55977, 55978, 55979])
+
+current Index: tensor([55980, 55981, 55982, 55983])
+
+current Index: tensor([55984, 55985, 55986, 55987])
+
+current Index: tensor([55988, 55989, 55990, 55991])
+
+current Index: tensor([55992, 55993, 55994, 55995])
+
+current Index: tensor([55996, 55997, 55998, 55999])
+
+current Index: tensor([56000, 56001, 56002, 56003])
+
+current Index: tensor([56004, 56005, 56006, 56007])
+
+current Index: tensor([56008, 56009, 56010, 56011])
+
+current Index: tensor([56012, 56013, 56014, 56015])
+
+current Index: tensor([56016, 56017, 56018, 56019])
+
+current Index: tensor([56020, 56021, 56022, 56023])
+
+current Index: tensor([56024, 56025, 56026, 56027])
+
+current Index: tensor([56028, 56029, 56030, 56031])
+
+current Index: tensor([56032, 56033, 56034, 56035])
+
+current Index: tensor([56036, 56037, 56038, 56039])
+
+current Index: tensor([56040, 56041, 56042, 56043])
+
+current Index: tensor([56044, 56045, 56046, 56047])
+
+current Index: tensor([56048, 56049, 56050, 56051])
+
+current Index: tensor([56052, 56053, 56054, 56055])
+
+current Index: tensor([56056, 56057, 56058, 56059])
+
+current Index: tensor([56060, 56061, 56062, 56063])
+
+current Index: tensor([56064, 56065, 56066, 56067])
+
+current Index: tensor([56068, 56069, 56070, 56071])
+
+current Index: tensor([56072, 56073, 56074, 56075])
+
+current Index: tensor([56076, 56077, 56078, 56079])
+
+current Index: tensor([56080, 56081, 56082, 56083])
+
+current Index: tensor([56084, 56085, 56086, 56087])
+
+current Index: tensor([56088, 56089, 56090, 56091])
+
+current Index: tensor([56092, 56093, 56094, 56095])
+
+current Index: tensor([56096, 56097, 56098, 56099])
+
+current Index: tensor([56100, 56101, 56102, 56103])
+
+current Index: tensor([56104, 56105, 56106, 56107])
+
+current Index: tensor([56108, 56109, 56110, 56111])
+
+current Index: tensor([56112, 56113, 56114, 56115])
+
+current Index: tensor([56116, 56117, 56118, 56119])
+
+current Index: tensor([56120, 56121, 56122, 56123])
+
+current Index: tensor([56124, 56125, 56126, 56127])
+
+current Index: tensor([56128, 56129, 56130, 56131])
+
+current Index: tensor([56132, 56133, 56134, 56135])
+
+current Index: tensor([56136, 56137, 56138, 56139])
+
+current Index: tensor([56140, 56141, 56142, 56143])
+
+current Index: tensor([56144, 56145, 56146, 56147])
+
+current Index: tensor([56148, 56149, 56150, 56151])
+
+current Index: tensor([56152, 56153, 56154, 56155])
+
+current Index: tensor([56156, 56157, 56158, 56159])
+
+current Index: tensor([56160, 56161, 56162, 56163])
+
+current Index: tensor([56164, 56165, 56166, 56167])
+
+current Index: tensor([56168, 56169, 56170, 56171])
+
+current Index: tensor([56172, 56173, 56174, 56175])
+
+current Index: tensor([56176, 56177, 56178, 56179])
+
+current Index: tensor([56180, 56181, 56182, 56183])
+
+current Index: tensor([56184, 56185, 56186, 56187])
+
+current Index: tensor([56188, 56189, 56190, 56191])
+
+current Index: tensor([56192, 56193, 56194, 56195])
+
+current Index: tensor([56196, 56197, 56198, 56199])
+
+current Index: tensor([56200, 56201, 56202, 56203])
+
+current Index: tensor([56204, 56205, 56206, 56207])
+
+current Index: tensor([56208, 56209, 56210, 56211])
+
+current Index: tensor([56212, 56213, 56214, 56215])
+
+current Index: tensor([56216, 56217, 56218, 56219])
+
+current Index: tensor([56220, 56221, 56222, 56223])
+
+current Index: tensor([56224, 56225, 56226, 56227])
+
+current Index: tensor([56228, 56229, 56230, 56231])
+
+current Index: tensor([56232, 56233, 56234, 56235])
+
+current Index: tensor([56236, 56237, 56238, 56239])
+
+current Index: tensor([56240, 56241, 56242, 56243])
+
+current Index: tensor([56244, 56245, 56246, 56247])
+
+current Index: tensor([56248, 56249, 56250, 56251])
+
+current Index: tensor([56252, 56253, 56254, 56255])
+
+current Index: tensor([56256, 56257, 56258, 56259])
+
+current Index: tensor([56260, 56261, 56262, 56263])
+
+current Index: tensor([56264, 56265, 56266, 56267])
+
+current Index: tensor([56268, 56269, 56270, 56271])
+
+current Index: tensor([56272, 56273, 56274, 56275])
+
+current Index: tensor([56276, 56277, 56278, 56279])
+
+current Index: tensor([56280, 56281, 56282, 56283])
+
+current Index: tensor([56284, 56285, 56286, 56287])
+
+current Index: tensor([56288, 56289, 56290, 56291])
+
+current Index: tensor([56292, 56293, 56294, 56295])
+
+current Index: tensor([56296, 56297, 56298, 56299])
+
+current Index: tensor([56300, 56301, 56302, 56303])
+
+current Index: tensor([56304, 56305, 56306, 56307])
+
+current Index: tensor([56308, 56309, 56310, 56311])
+
+current Index: tensor([56312, 56313, 56314, 56315])
+
+current Index: tensor([56316, 56317, 56318, 56319])
+
+current Index: tensor([56320, 56321, 56322, 56323])
+
+current Index: tensor([56324, 56325, 56326, 56327])
+
+current Index: tensor([56328, 56329, 56330, 56331])
+
+current Index: tensor([56332, 56333, 56334, 56335])
+
+current Index: tensor([56336, 56337, 56338, 56339])
+
+current Index: tensor([56340, 56341, 56342, 56343])
+
+current Index: tensor([56344, 56345, 56346, 56347])
+
+current Index: tensor([56348, 56349, 56350, 56351])
+
+current Index: tensor([56352, 56353, 56354, 56355])
+
+current Index: tensor([56356, 56357, 56358, 56359])
+
+current Index: tensor([56360, 56361, 56362, 56363])
+
+current Index: tensor([56364, 56365, 56366, 56367])
+
+current Index: tensor([56368, 56369, 56370, 56371])
+
+current Index: tensor([56372, 56373, 56374, 56375])
+
+current Index: tensor([56376, 56377, 56378, 56379])
+
+current Index: tensor([56380, 56381, 56382, 56383])
+
+current Index: tensor([56384, 56385, 56386, 56387])
+
+current Index: tensor([56388, 56389, 56390, 56391])
+
+current Index: tensor([56392, 56393, 56394, 56395])
+
+current Index: tensor([56396, 56397, 56398, 56399])
+
+current Index: tensor([56400, 56401, 56402, 56403])
+
+current Index: tensor([56404, 56405, 56406, 56407])
+
+current Index: tensor([56408, 56409, 56410, 56411])
+
+current Index: tensor([56412, 56413, 56414, 56415])
+
+current Index: tensor([56416, 56417, 56418, 56419])
+
+current Index: tensor([56420, 56421, 56422, 56423])
+
+current Index: tensor([56424, 56425, 56426, 56427])
+
+current Index: tensor([56428, 56429, 56430, 56431])
+
+current Index: tensor([56432, 56433, 56434, 56435])
+
+current Index: tensor([56436, 56437, 56438, 56439])
+
+current Index: tensor([56440, 56441, 56442, 56443])
+
+current Index: tensor([56444, 56445, 56446, 56447])
+
+current Index: tensor([56448, 56449, 56450, 56451])
+
+current Index: tensor([56452, 56453, 56454, 56455])
+
+current Index: tensor([56456, 56457, 56458, 56459])
+
+current Index: tensor([56460, 56461, 56462, 56463])
+
+current Index: tensor([56464, 56465, 56466, 56467])
+
+current Index: tensor([56468, 56469, 56470, 56471])
+
+current Index: tensor([56472, 56473, 56474, 56475])
+
+current Index: tensor([56476, 56477, 56478, 56479])
+
+current Index: tensor([56480, 56481, 56482, 56483])
+
+current Index: tensor([56484, 56485, 56486, 56487])
+
+current Index: tensor([56488, 56489, 56490, 56491])
+
+current Index: tensor([56492, 56493, 56494, 56495])
+
+current Index: tensor([56496, 56497, 56498, 56499])
+
+current Index: tensor([56500, 56501, 56502, 56503])
+
+current Index: tensor([56504, 56505, 56506, 56507])
+
+current Index: tensor([56508, 56509, 56510, 56511])
+
+current Index: tensor([56512, 56513, 56514, 56515])
+
+current Index: tensor([56516, 56517, 56518, 56519])
+
+current Index: tensor([56520, 56521, 56522, 56523])
+
+current Index: tensor([56524, 56525, 56526, 56527])
+
+current Index: tensor([56528, 56529, 56530, 56531])
+
+current Index: tensor([56532, 56533, 56534, 56535])
+
+current Index: tensor([56536, 56537, 56538, 56539])
+
+current Index: tensor([56540, 56541, 56542, 56543])
+
+current Index: tensor([56544, 56545, 56546, 56547])
+
+current Index: tensor([56548, 56549, 56550, 56551])
+
+current Index: tensor([56552, 56553, 56554, 56555])
+
+current Index: tensor([56556, 56557, 56558, 56559])
+
+current Index: tensor([56560, 56561, 56562, 56563])
+
+current Index: tensor([56564, 56565, 56566, 56567])
+
+current Index: tensor([56568, 56569, 56570, 56571])
+
+current Index: tensor([56572, 56573, 56574, 56575])
+
+current Index: tensor([56576, 56577, 56578, 56579])
+
+current Index: tensor([56580, 56581, 56582, 56583])
+
+current Index: tensor([56584, 56585, 56586, 56587])
+
+current Index: tensor([56588, 56589, 56590, 56591])
+
+current Index: tensor([56592, 56593, 56594, 56595])
+
+current Index: tensor([56596, 56597, 56598, 56599])
+
+current Index: tensor([56600, 56601, 56602, 56603])
+
+current Index: tensor([56604, 56605, 56606, 56607])
+
+current Index: tensor([56608, 56609, 56610, 56611])
+
+current Index: tensor([56612, 56613, 56614, 56615])
+
+current Index: tensor([56616, 56617, 56618, 56619])
+
+current Index: tensor([56620, 56621, 56622, 56623])
+
+current Index: tensor([56624, 56625, 56626, 56627])
+
+current Index: tensor([56628, 56629, 56630, 56631])
+
+current Index: tensor([56632, 56633, 56634, 56635])
+
+current Index: tensor([56636, 56637, 56638, 56639])
+
+current Index: tensor([56640, 56641, 56642, 56643])
+
+current Index: tensor([56644, 56645, 56646, 56647])
+
+current Index: tensor([56648, 56649, 56650, 56651])
+
+current Index: tensor([56652, 56653, 56654, 56655])
+
+current Index: tensor([56656, 56657, 56658, 56659])
+
+current Index: tensor([56660, 56661, 56662, 56663])
+
+current Index: tensor([56664, 56665, 56666, 56667])
+
+current Index: tensor([56668, 56669, 56670, 56671])
+
+current Index: tensor([56672, 56673, 56674, 56675])
+
+current Index: tensor([56676, 56677, 56678, 56679])
+
+current Index: tensor([56680, 56681, 56682, 56683])
+
+current Index: tensor([56684, 56685, 56686, 56687])
+
+current Index: tensor([56688, 56689, 56690, 56691])
+
+current Index: tensor([56692, 56693, 56694, 56695])
+
+current Index: tensor([56696, 56697, 56698, 56699])
+
+current Index: tensor([56700, 56701, 56702, 56703])
+
+current Index: tensor([56704, 56705, 56706, 56707])
+
+current Index: tensor([56708, 56709, 56710, 56711])
+
+current Index: tensor([56712, 56713, 56714, 56715])
+
+current Index: tensor([56716, 56717, 56718, 56719])
+
+current Index: tensor([56720, 56721, 56722, 56723])
+
+current Index: tensor([56724, 56725, 56726, 56727])
+
+current Index: tensor([56728, 56729, 56730, 56731])
+
+current Index: tensor([56732, 56733, 56734, 56735])
+
+current Index: tensor([56736, 56737, 56738, 56739])
+
+current Index: tensor([56740, 56741, 56742, 56743])
+
+current Index: tensor([56744, 56745, 56746, 56747])
+
+current Index: tensor([56748, 56749, 56750, 56751])
+
+current Index: tensor([56752, 56753, 56754, 56755])
+
+current Index: tensor([56756, 56757, 56758, 56759])
+
+current Index: tensor([56760, 56761, 56762, 56763])
+
+current Index: tensor([56764, 56765, 56766, 56767])
+
+current Index: tensor([56768, 56769, 56770, 56771])
+
+current Index: tensor([56772, 56773, 56774, 56775])
+
+current Index: tensor([56776, 56777, 56778, 56779])
+
+current Index: tensor([56780, 56781, 56782, 56783])
+
+current Index: tensor([56784, 56785, 56786, 56787])
+
+current Index: tensor([56788, 56789, 56790, 56791])
+
+current Index: tensor([56792, 56793, 56794, 56795])
+
+current Index: tensor([56796, 56797, 56798, 56799])
+
+current Index: tensor([56800, 56801, 56802, 56803])
+
+current Index: tensor([56804, 56805, 56806, 56807])
+
+current Index: tensor([56808, 56809, 56810, 56811])
+
+current Index: tensor([56812, 56813, 56814, 56815])
+
+current Index: tensor([56816, 56817, 56818, 56819])
+
+current Index: tensor([56820, 56821, 56822, 56823])
+
+current Index: tensor([56824, 56825, 56826, 56827])
+
+current Index: tensor([56828, 56829, 56830, 56831])
+
+current Index: tensor([56832, 56833, 56834, 56835])
+
+current Index: tensor([56836, 56837, 56838, 56839])
+
+current Index: tensor([56840, 56841, 56842, 56843])
+
+current Index: tensor([56844, 56845, 56846, 56847])
+
+current Index: tensor([56848, 56849, 56850, 56851])
+
+current Index: tensor([56852, 56853, 56854, 56855])
+
+current Index: tensor([56856, 56857, 56858, 56859])
+
+current Index: tensor([56860, 56861, 56862, 56863])
+
+current Index: tensor([56864, 56865, 56866, 56867])
+
+current Index: tensor([56868, 56869, 56870, 56871])
+
+current Index: tensor([56872, 56873, 56874, 56875])
+
+current Index: tensor([56876, 56877, 56878, 56879])
+
+current Index: tensor([56880, 56881, 56882, 56883])
+
+current Index: tensor([56884, 56885, 56886, 56887])
+
+current Index: tensor([56888, 56889, 56890, 56891])
+
+current Index: tensor([56892, 56893, 56894, 56895])
+
+current Index: tensor([56896, 56897, 56898, 56899])
+
+current Index: tensor([56900, 56901, 56902, 56903])
+
+current Index: tensor([56904, 56905, 56906, 56907])
+
+current Index: tensor([56908, 56909, 56910, 56911])
+
+current Index: tensor([56912, 56913, 56914, 56915])
+
+current Index: tensor([56916, 56917, 56918, 56919])
+
+current Index: tensor([56920, 56921, 56922, 56923])
+
+current Index: tensor([56924, 56925, 56926, 56927])
+
+current Index: tensor([56928, 56929, 56930, 56931])
+
+current Index: tensor([56932, 56933, 56934, 56935])
+
+current Index: tensor([56936, 56937, 56938, 56939])
+
+current Index: tensor([56940, 56941, 56942, 56943])
+
+current Index: tensor([56944, 56945, 56946, 56947])
+
+current Index: tensor([56948, 56949, 56950, 56951])
+
+current Index: tensor([56952, 56953, 56954, 56955])
+
+current Index: tensor([56956, 56957, 56958, 56959])
+
+current Index: tensor([56960, 56961, 56962, 56963])
+
+current Index: tensor([56964, 56965, 56966, 56967])
+
+current Index: tensor([56968, 56969, 56970, 56971])
+
+current Index: tensor([56972, 56973, 56974, 56975])
+
+current Index: tensor([56976, 56977, 56978, 56979])
+
+current Index: tensor([56980, 56981, 56982, 56983])
+
+current Index: tensor([56984, 56985, 56986, 56987])
+
+current Index: tensor([56988, 56989, 56990, 56991])
+
+current Index: tensor([56992, 56993, 56994, 56995])
+
+current Index: tensor([56996, 56997, 56998, 56999])
+
+current Index: tensor([57000, 57001, 57002, 57003])
+
+current Index: tensor([57004, 57005, 57006, 57007])
+
+current Index: tensor([57008, 57009, 57010, 57011])
+
+current Index: tensor([57012, 57013, 57014, 57015])
+
+current Index: tensor([57016, 57017, 57018, 57019])
+
+current Index: tensor([57020, 57021, 57022, 57023])
+
+current Index: tensor([57024, 57025, 57026, 57027])
+
+current Index: tensor([57028, 57029, 57030, 57031])
+
+current Index: tensor([57032, 57033, 57034, 57035])
+
+current Index: tensor([57036, 57037, 57038, 57039])
+
+current Index: tensor([57040, 57041, 57042, 57043])
+
+current Index: tensor([57044, 57045, 57046, 57047])
+
+current Index: tensor([57048, 57049, 57050, 57051])
+
+current Index: tensor([57052, 57053, 57054, 57055])
+
+current Index: tensor([57056, 57057, 57058, 57059])
+
+current Index: tensor([57060, 57061, 57062, 57063])
+
+current Index: tensor([57064, 57065, 57066, 57067])
+
+current Index: tensor([57068, 57069, 57070, 57071])
+
+current Index: tensor([57072, 57073, 57074, 57075])
+
+current Index: tensor([57076, 57077, 57078, 57079])
+
+current Index: tensor([57080, 57081, 57082, 57083])
+
+current Index: tensor([57084, 57085, 57086, 57087])
+
+current Index: tensor([57088, 57089, 57090, 57091])
+
+current Index: tensor([57092, 57093, 57094, 57095])
+
+current Index: tensor([57096, 57097, 57098, 57099])
+
+current Index: tensor([57100, 57101, 57102, 57103])
+
+current Index: tensor([57104, 57105, 57106, 57107])
+
+current Index: tensor([57108, 57109, 57110, 57111])
+
+current Index: tensor([57112, 57113, 57114, 57115])
+
+current Index: tensor([57116, 57117, 57118, 57119])
+
+current Index: tensor([57120, 57121, 57122, 57123])
+
+current Index: tensor([57124, 57125, 57126, 57127])
+
+current Index: tensor([57128, 57129, 57130, 57131])
+
+current Index: tensor([57132, 57133, 57134, 57135])
+
+current Index: tensor([57136, 57137, 57138, 57139])
+
+current Index: tensor([57140, 57141, 57142, 57143])
+
+current Index: tensor([57144, 57145, 57146, 57147])
+
+current Index: tensor([57148, 57149, 57150, 57151])
+
+current Index: tensor([57152, 57153, 57154, 57155])
+
+current Index: tensor([57156, 57157, 57158, 57159])
+
+current Index: tensor([57160, 57161, 57162, 57163])
+
+current Index: tensor([57164, 57165, 57166, 57167])
+
+current Index: tensor([57168, 57169, 57170, 57171])
+
+current Index: tensor([57172, 57173, 57174, 57175])
+
+current Index: tensor([57176, 57177, 57178, 57179])
+
+current Index: tensor([57180, 57181, 57182, 57183])
+
+current Index: tensor([57184, 57185, 57186, 57187])
+
+current Index: tensor([57188, 57189, 57190, 57191])
+
+current Index: tensor([57192, 57193, 57194, 57195])
+
+current Index: tensor([57196, 57197, 57198, 57199])
+
+current Index: tensor([57200, 57201, 57202, 57203])
+
+current Index: tensor([57204, 57205, 57206, 57207])
+
+current Index: tensor([57208, 57209, 57210, 57211])
+
+current Index: tensor([57212, 57213, 57214, 57215])
+
+current Index: tensor([57216, 57217, 57218, 57219])
+
+current Index: tensor([57220, 57221, 57222, 57223])
+
+current Index: tensor([57224, 57225, 57226, 57227])
+
+current Index: tensor([57228, 57229, 57230, 57231])
+
+current Index: tensor([57232, 57233, 57234, 57235])
+
+current Index: tensor([57236, 57237, 57238, 57239])
+
+current Index: tensor([57240, 57241, 57242, 57243])
+
+current Index: tensor([57244, 57245, 57246, 57247])
+
+current Index: tensor([57248, 57249, 57250, 57251])
+
+current Index: tensor([57252, 57253, 57254, 57255])
+
+current Index: tensor([57256, 57257, 57258, 57259])
+
+current Index: tensor([57260, 57261, 57262, 57263])
+
+current Index: tensor([57264, 57265, 57266, 57267])
+
+current Index: tensor([57268, 57269, 57270, 57271])
+
+current Index: tensor([57272, 57273, 57274, 57275])
+
+current Index: tensor([57276, 57277, 57278, 57279])
+
+current Index: tensor([57280, 57281, 57282, 57283])
+
+current Index: tensor([57284, 57285, 57286, 57287])
+
+current Index: tensor([57288, 57289, 57290, 57291])
+
+current Index: tensor([57292, 57293, 57294, 57295])
+
+current Index: tensor([57296, 57297, 57298, 57299])
+
+current Index: tensor([57300, 57301, 57302, 57303])
+
+current Index: tensor([57304, 57305, 57306, 57307])
+
+current Index: tensor([57308, 57309, 57310, 57311])
+
+current Index: tensor([57312, 57313, 57314, 57315])
+
+current Index: tensor([57316, 57317, 57318, 57319])
+
+current Index: tensor([57320, 57321, 57322, 57323])
+
+current Index: tensor([57324, 57325, 57326, 57327])
+
+current Index: tensor([57328, 57329, 57330, 57331])
+
+current Index: tensor([57332, 57333, 57334, 57335])
+
+current Index: tensor([57336, 57337, 57338, 57339])
+
+current Index: tensor([57340, 57341, 57342, 57343])
+
+current Index: tensor([57344, 57345, 57346, 57347])
+
+current Index: tensor([57348, 57349, 57350, 57351])
+
+current Index: tensor([57352, 57353, 57354, 57355])
+
+current Index: tensor([57356, 57357, 57358, 57359])
+
+current Index: tensor([57360, 57361, 57362, 57363])
+
+current Index: tensor([57364, 57365, 57366, 57367])
+
+current Index: tensor([57368, 57369, 57370, 57371])
+
+current Index: tensor([57372, 57373, 57374, 57375])
+
+current Index: tensor([57376, 57377, 57378, 57379])
+
+current Index: tensor([57380, 57381, 57382, 57383])
+
+current Index: tensor([57384, 57385, 57386, 57387])
+
+current Index: tensor([57388, 57389, 57390, 57391])
+
+current Index: tensor([57392, 57393, 57394, 57395])
+
+current Index: tensor([57396, 57397, 57398, 57399])
+
+current Index: tensor([57400, 57401, 57402, 57403])
+
+current Index: tensor([57404, 57405, 57406, 57407])
+
+current Index: tensor([57408, 57409, 57410, 57411])
+
+current Index: tensor([57412, 57413, 57414, 57415])
+
+current Index: tensor([57416, 57417, 57418, 57419])
+
+current Index: tensor([57420, 57421, 57422, 57423])
+
+current Index: tensor([57424, 57425, 57426, 57427])
+
+current Index: tensor([57428, 57429, 57430, 57431])
+
+current Index: tensor([57432, 57433, 57434, 57435])
+
+current Index: tensor([57436, 57437, 57438, 57439])
+
+current Index: tensor([57440, 57441, 57442, 57443])
+
+current Index: tensor([57444, 57445, 57446, 57447])
+
+current Index: tensor([57448, 57449, 57450, 57451])
+
+current Index: tensor([57452, 57453, 57454, 57455])
+
+current Index: tensor([57456, 57457, 57458, 57459])
+
+current Index: tensor([57460, 57461, 57462, 57463])
+
+current Index: tensor([57464, 57465, 57466, 57467])
+
+current Index: tensor([57468, 57469, 57470, 57471])
+
+current Index: tensor([57472, 57473, 57474, 57475])
+
+current Index: tensor([57476, 57477, 57478, 57479])
+
+current Index: tensor([57480, 57481, 57482, 57483])
+
+current Index: tensor([57484, 57485, 57486, 57487])
+
+current Index: tensor([57488, 57489, 57490, 57491])
+
+current Index: tensor([57492, 57493, 57494, 57495])
+
+current Index: tensor([57496, 57497, 57498, 57499])
+
+current Index: tensor([57500, 57501, 57502, 57503])
+
+current Index: tensor([57504, 57505, 57506, 57507])
+
+current Index: tensor([57508, 57509, 57510, 57511])
+
+current Index: tensor([57512, 57513, 57514, 57515])
+
+current Index: tensor([57516, 57517, 57518, 57519])
+
+current Index: tensor([57520, 57521, 57522, 57523])
+
+current Index: tensor([57524, 57525, 57526, 57527])
+
+current Index: tensor([57528, 57529, 57530, 57531])
+
+current Index: tensor([57532, 57533, 57534, 57535])
+
+current Index: tensor([57536, 57537, 57538, 57539])
+
+current Index: tensor([57540, 57541, 57542, 57543])
+
+current Index: tensor([57544, 57545, 57546, 57547])
+
+current Index: tensor([57548, 57549, 57550, 57551])
+
+current Index: tensor([57552, 57553, 57554, 57555])
+
+current Index: tensor([57556, 57557, 57558, 57559])
+
+current Index: tensor([57560, 57561, 57562, 57563])
+
+current Index: tensor([57564, 57565, 57566, 57567])
+
+current Index: tensor([57568, 57569, 57570, 57571])
+
+current Index: tensor([57572, 57573, 57574, 57575])
+
+current Index: tensor([57576, 57577, 57578, 57579])
+
+current Index: tensor([57580, 57581, 57582, 57583])
+
+current Index: tensor([57584, 57585, 57586, 57587])
+
+current Index: tensor([57588, 57589, 57590, 57591])
+
+current Index: tensor([57592, 57593, 57594, 57595])
+
+current Index: tensor([57596, 57597, 57598, 57599])
+
+current Index: tensor([57600, 57601, 57602, 57603])
+
+current Index: tensor([57604, 57605, 57606, 57607])
+
+current Index: tensor([57608, 57609, 57610, 57611])
+
+current Index: tensor([57612, 57613, 57614, 57615])
+
+current Index: tensor([57616, 57617, 57618, 57619])
+
+current Index: tensor([57620, 57621, 57622, 57623])
+
+current Index: tensor([57624, 57625, 57626, 57627])
+
+current Index: tensor([57628, 57629, 57630, 57631])
+
+current Index: tensor([57632, 57633, 57634, 57635])
+
+current Index: tensor([57636, 57637, 57638, 57639])
+
+current Index: tensor([57640, 57641, 57642, 57643])
+
+current Index: tensor([57644, 57645, 57646, 57647])
+
+current Index: tensor([57648, 57649, 57650, 57651])
+
+current Index: tensor([57652, 57653, 57654, 57655])
+
+current Index: tensor([57656, 57657, 57658, 57659])
+
+current Index: tensor([57660, 57661, 57662, 57663])
+
+current Index: tensor([57664, 57665, 57666, 57667])
+
+current Index: tensor([57668, 57669, 57670, 57671])
+
+current Index: tensor([57672, 57673, 57674, 57675])
+
+current Index: tensor([57676, 57677, 57678, 57679])
+
+current Index: tensor([57680, 57681, 57682, 57683])
+
+current Index: tensor([57684, 57685, 57686, 57687])
+
+current Index: tensor([57688, 57689, 57690, 57691])
+
+current Index: tensor([57692, 57693, 57694, 57695])
+
+current Index: tensor([57696, 57697, 57698, 57699])
+
+current Index: tensor([57700, 57701, 57702, 57703])
+
+current Index: tensor([57704, 57705, 57706, 57707])
+
+current Index: tensor([57708, 57709, 57710, 57711])
+
+current Index: tensor([57712, 57713, 57714, 57715])
+
+current Index: tensor([57716, 57717, 57718, 57719])
+
+current Index: tensor([57720, 57721, 57722, 57723])
+
+current Index: tensor([57724, 57725, 57726, 57727])
+
+current Index: tensor([57728, 57729, 57730, 57731])
+
+current Index: tensor([57732, 57733, 57734, 57735])
+
+current Index: tensor([57736, 57737, 57738, 57739])
+
+current Index: tensor([57740, 57741, 57742, 57743])
+
+current Index: tensor([57744, 57745, 57746, 57747])
+
+current Index: tensor([57748, 57749, 57750, 57751])
+
+current Index: tensor([57752, 57753, 57754, 57755])
+
+current Index: tensor([57756, 57757, 57758, 57759])
+
+current Index: tensor([57760, 57761, 57762, 57763])
+
+current Index: tensor([57764, 57765, 57766, 57767])
+
+current Index: tensor([57768, 57769, 57770, 57771])
+
+current Index: tensor([57772, 57773, 57774, 57775])
+
+current Index: tensor([57776, 57777, 57778, 57779])
+
+current Index: tensor([57780, 57781, 57782, 57783])
+
+current Index: tensor([57784, 57785, 57786, 57787])
+
+current Index: tensor([57788, 57789, 57790, 57791])
+
+current Index: tensor([57792, 57793, 57794, 57795])
+
+current Index: tensor([57796, 57797, 57798, 57799])
+
+current Index: tensor([57800, 57801, 57802, 57803])
+
+current Index: tensor([57804, 57805, 57806, 57807])
+
+current Index: tensor([57808, 57809, 57810, 57811])
+
+current Index: tensor([57812, 57813, 57814, 57815])
+
+current Index: tensor([57816, 57817, 57818, 57819])
+
+current Index: tensor([57820, 57821, 57822, 57823])
+
+current Index: tensor([57824, 57825, 57826, 57827])
+
+current Index: tensor([57828, 57829, 57830, 57831])
+
+current Index: tensor([57832, 57833, 57834, 57835])
+
+current Index: tensor([57836, 57837, 57838, 57839])
+
+current Index: tensor([57840, 57841, 57842, 57843])
+
+current Index: tensor([57844, 57845, 57846, 57847])
+
+current Index: tensor([57848, 57849, 57850, 57851])
+
+current Index: tensor([57852, 57853, 57854, 57855])
+
+current Index: tensor([57856, 57857, 57858, 57859])
+
+current Index: tensor([57860, 57861, 57862, 57863])
+
+current Index: tensor([57864, 57865, 57866, 57867])
+
+current Index: tensor([57868, 57869, 57870, 57871])
+
+current Index: tensor([57872, 57873, 57874, 57875])
+
+current Index: tensor([57876, 57877, 57878, 57879])
+
+current Index: tensor([57880, 57881, 57882, 57883])
+
+current Index: tensor([57884, 57885, 57886, 57887])
+
+current Index: tensor([57888, 57889, 57890, 57891])
+
+current Index: tensor([57892, 57893, 57894, 57895])
+
+current Index: tensor([57896, 57897, 57898, 57899])
+
+current Index: tensor([57900, 57901, 57902, 57903])
+
+current Index: tensor([57904, 57905, 57906, 57907])
+
+current Index: tensor([57908, 57909, 57910, 57911])
+
+current Index: tensor([57912, 57913, 57914, 57915])
+
+current Index: tensor([57916, 57917, 57918, 57919])
+
+current Index: tensor([57920, 57921, 57922, 57923])
+
+current Index: tensor([57924, 57925, 57926, 57927])
+
+current Index: tensor([57928, 57929, 57930, 57931])
+
+current Index: tensor([57932, 57933, 57934, 57935])
+
+current Index: tensor([57936, 57937, 57938, 57939])
+
+current Index: tensor([57940, 57941, 57942, 57943])
+
+current Index: tensor([57944, 57945, 57946, 57947])
+
+current Index: tensor([57948, 57949, 57950, 57951])
+
+current Index: tensor([57952, 57953, 57954, 57955])
+
+current Index: tensor([57956, 57957, 57958, 57959])
+
+current Index: tensor([57960, 57961, 57962, 57963])
+
+current Index: tensor([57964, 57965, 57966, 57967])
+
+current Index: tensor([57968, 57969, 57970, 57971])
+
+current Index: tensor([57972, 57973, 57974, 57975])
+
+current Index: tensor([57976, 57977, 57978, 57979])
+
+current Index: tensor([57980, 57981, 57982, 57983])
+
+current Index: tensor([57984, 57985, 57986, 57987])
+
+current Index: tensor([57988, 57989, 57990, 57991])
+
+current Index: tensor([57992, 57993, 57994, 57995])
+
+current Index: tensor([57996, 57997, 57998, 57999])
+
+current Index: tensor([58000, 58001, 58002, 58003])
+
+current Index: tensor([58004, 58005, 58006, 58007])
+
+current Index: tensor([58008, 58009, 58010, 58011])
+
+current Index: tensor([58012, 58013, 58014, 58015])
+
+current Index: tensor([58016, 58017, 58018, 58019])
+
+current Index: tensor([58020, 58021, 58022, 58023])
+
+current Index: tensor([58024, 58025, 58026, 58027])
+
+current Index: tensor([58028, 58029, 58030, 58031])
+
+current Index: tensor([58032, 58033, 58034, 58035])
+
+current Index: tensor([58036, 58037, 58038, 58039])
+
+current Index: tensor([58040, 58041, 58042, 58043])
+
+current Index: tensor([58044, 58045, 58046, 58047])
+
+current Index: tensor([58048, 58049, 58050, 58051])
+
+current Index: tensor([58052, 58053, 58054, 58055])
+
+current Index: tensor([58056, 58057, 58058, 58059])
+
+current Index: tensor([58060, 58061, 58062, 58063])
+
+current Index: tensor([58064, 58065, 58066, 58067])
+
+current Index: tensor([58068, 58069, 58070, 58071])
+
+current Index: tensor([58072, 58073, 58074, 58075])
+
+current Index: tensor([58076, 58077, 58078, 58079])
+
+current Index: tensor([58080, 58081, 58082, 58083])
+
+current Index: tensor([58084, 58085, 58086, 58087])
+
+current Index: tensor([58088, 58089, 58090, 58091])
+
+current Index: tensor([58092, 58093, 58094, 58095])
+
+current Index: tensor([58096, 58097, 58098, 58099])
+
+current Index: tensor([58100, 58101, 58102, 58103])
+
+current Index: tensor([58104, 58105, 58106, 58107])
+
+current Index: tensor([58108, 58109, 58110, 58111])
+
+current Index: tensor([58112, 58113, 58114, 58115])
+
+current Index: tensor([58116, 58117, 58118, 58119])
+
+current Index: tensor([58120, 58121, 58122, 58123])
+
+current Index: tensor([58124, 58125, 58126, 58127])
+
+current Index: tensor([58128, 58129, 58130, 58131])
+
+current Index: tensor([58132, 58133, 58134, 58135])
+
+current Index: tensor([58136, 58137, 58138, 58139])
+
+current Index: tensor([58140, 58141, 58142, 58143])
+
+current Index: tensor([58144, 58145, 58146, 58147])
+
+current Index: tensor([58148, 58149, 58150, 58151])
+
+current Index: tensor([58152, 58153, 58154, 58155])
+
+current Index: tensor([58156, 58157, 58158, 58159])
+
+current Index: tensor([58160, 58161, 58162, 58163])
+
+current Index: tensor([58164, 58165, 58166, 58167])
+
+current Index: tensor([58168, 58169, 58170, 58171])
+
+current Index: tensor([58172, 58173, 58174, 58175])
+
+current Index: tensor([58176, 58177, 58178, 58179])
+
+current Index: tensor([58180, 58181, 58182, 58183])
+
+current Index: tensor([58184, 58185, 58186, 58187])
+
+current Index: tensor([58188, 58189, 58190, 58191])
+
+current Index: tensor([58192, 58193, 58194, 58195])
+
+current Index: tensor([58196, 58197, 58198, 58199])
+
+current Index: tensor([58200, 58201, 58202, 58203])
+
+current Index: tensor([58204, 58205, 58206, 58207])
+
+current Index: tensor([58208, 58209, 58210, 58211])
+
+current Index: tensor([58212, 58213, 58214, 58215])
+
+current Index: tensor([58216, 58217, 58218, 58219])
+
+current Index: tensor([58220, 58221, 58222, 58223])
+
+current Index: tensor([58224, 58225, 58226, 58227])
+
+current Index: tensor([58228, 58229, 58230, 58231])
+
+current Index: tensor([58232, 58233, 58234, 58235])
+
+current Index: tensor([58236, 58237, 58238, 58239])
+
+current Index: tensor([58240, 58241, 58242, 58243])
+
+current Index: tensor([58244, 58245, 58246, 58247])
+
+current Index: tensor([58248, 58249, 58250, 58251])
+
+current Index: tensor([58252, 58253, 58254, 58255])
+
+current Index: tensor([58256, 58257, 58258, 58259])
+
+current Index: tensor([58260, 58261, 58262, 58263])
+
+current Index: tensor([58264, 58265, 58266, 58267])
+
+current Index: tensor([58268, 58269, 58270, 58271])
+
+current Index: tensor([58272, 58273, 58274, 58275])
+
+current Index: tensor([58276, 58277, 58278, 58279])
+
+current Index: tensor([58280, 58281, 58282, 58283])
+
+current Index: tensor([58284, 58285, 58286, 58287])
+
+current Index: tensor([58288, 58289, 58290, 58291])
+
+current Index: tensor([58292, 58293, 58294, 58295])
+
+current Index: tensor([58296, 58297, 58298, 58299])
+
+current Index: tensor([58300, 58301, 58302, 58303])
+
+current Index: tensor([58304, 58305, 58306, 58307])
+
+current Index: tensor([58308, 58309, 58310, 58311])
+
+current Index: tensor([58312, 58313, 58314, 58315])
+
+current Index: tensor([58316, 58317, 58318, 58319])
+
+current Index: tensor([58320, 58321, 58322, 58323])
+
+current Index: tensor([58324, 58325, 58326, 58327])
+
+current Index: tensor([58328, 58329, 58330, 58331])
+
+current Index: tensor([58332, 58333, 58334, 58335])
+
+current Index: tensor([58336, 58337, 58338, 58339])
+
+current Index: tensor([58340, 58341, 58342, 58343])
+
+current Index: tensor([58344, 58345, 58346, 58347])
+
+current Index: tensor([58348, 58349, 58350, 58351])
+
+current Index: tensor([58352, 58353, 58354, 58355])
+
+current Index: tensor([58356, 58357, 58358, 58359])
+
+current Index: tensor([58360, 58361, 58362, 58363])
+
+current Index: tensor([58364, 58365, 58366, 58367])
+
+current Index: tensor([58368, 58369, 58370, 58371])
+
+current Index: tensor([58372, 58373, 58374, 58375])
+
+current Index: tensor([58376, 58377, 58378, 58379])
+
+current Index: tensor([58380, 58381, 58382, 58383])
+
+current Index: tensor([58384, 58385, 58386, 58387])
+
+current Index: tensor([58388, 58389, 58390, 58391])
+
+current Index: tensor([58392, 58393, 58394, 58395])
+
+current Index: tensor([58396, 58397, 58398, 58399])
+
+current Index: tensor([58400, 58401, 58402, 58403])
+
+current Index: tensor([58404, 58405, 58406, 58407])
+
+current Index: tensor([58408, 58409, 58410, 58411])
+
+current Index: tensor([58412, 58413, 58414, 58415])
+
+current Index: tensor([58416, 58417, 58418, 58419])
+
+current Index: tensor([58420, 58421, 58422, 58423])
+
+current Index: tensor([58424, 58425, 58426, 58427])
+
+current Index: tensor([58428, 58429, 58430, 58431])
+
+current Index: tensor([58432, 58433, 58434, 58435])
+
+current Index: tensor([58436, 58437, 58438, 58439])
+
+current Index: tensor([58440, 58441, 58442, 58443])
+
+current Index: tensor([58444, 58445, 58446, 58447])
+
+current Index: tensor([58448, 58449, 58450, 58451])
+
+current Index: tensor([58452, 58453, 58454, 58455])
+
+current Index: tensor([58456, 58457, 58458, 58459])
+
+current Index: tensor([58460, 58461, 58462, 58463])
+
+current Index: tensor([58464, 58465, 58466, 58467])
+
+current Index: tensor([58468, 58469, 58470, 58471])
+
+current Index: tensor([58472, 58473, 58474, 58475])
+
+current Index: tensor([58476, 58477, 58478, 58479])
+
+current Index: tensor([58480, 58481, 58482, 58483])
+
+current Index: tensor([58484, 58485, 58486, 58487])
+
+current Index: tensor([58488, 58489, 58490, 58491])
+
+current Index: tensor([58492, 58493, 58494, 58495])
+
+current Index: tensor([58496, 58497, 58498, 58499])
+
+current Index: tensor([58500, 58501, 58502, 58503])
+
+current Index: tensor([58504, 58505, 58506, 58507])
+
+current Index: tensor([58508, 58509, 58510, 58511])
+
+current Index: tensor([58512, 58513, 58514, 58515])
+
+current Index: tensor([58516, 58517, 58518, 58519])
+
+current Index: tensor([58520, 58521, 58522, 58523])
+
+current Index: tensor([58524, 58525, 58526, 58527])
+
+current Index: tensor([58528, 58529, 58530, 58531])
+
+current Index: tensor([58532, 58533, 58534, 58535])
+
+current Index: tensor([58536, 58537, 58538, 58539])
+
+current Index: tensor([58540, 58541, 58542, 58543])
+
+current Index: tensor([58544, 58545, 58546, 58547])
+
+current Index: tensor([58548, 58549, 58550, 58551])
+
+current Index: tensor([58552, 58553, 58554, 58555])
+
+current Index: tensor([58556, 58557, 58558, 58559])
+
+current Index: tensor([58560, 58561, 58562, 58563])
+
+current Index: tensor([58564, 58565, 58566, 58567])
+
+current Index: tensor([58568, 58569, 58570, 58571])
+
+current Index: tensor([58572, 58573, 58574, 58575])
+
+current Index: tensor([58576, 58577, 58578, 58579])
+
+current Index: tensor([58580, 58581, 58582, 58583])
+
+current Index: tensor([58584, 58585, 58586, 58587])
+
+current Index: tensor([58588, 58589, 58590, 58591])
+
+current Index: tensor([58592, 58593, 58594, 58595])
+
+current Index: tensor([58596, 58597, 58598, 58599])
+
+current Index: tensor([58600, 58601, 58602, 58603])
+
+current Index: tensor([58604, 58605, 58606, 58607])
+
+current Index: tensor([58608, 58609, 58610, 58611])
+
+current Index: tensor([58612, 58613, 58614, 58615])
+
+current Index: tensor([58616, 58617, 58618, 58619])
+
+current Index: tensor([58620, 58621, 58622, 58623])
+
+current Index: tensor([58624, 58625, 58626, 58627])
+
+current Index: tensor([58628, 58629, 58630, 58631])
+
+current Index: tensor([58632, 58633, 58634, 58635])
+
+current Index: tensor([58636, 58637, 58638, 58639])
+
+current Index: tensor([58640, 58641, 58642, 58643])
+
+current Index: tensor([58644, 58645, 58646, 58647])
+
+current Index: tensor([58648, 58649, 58650, 58651])
+
+current Index: tensor([58652, 58653, 58654, 58655])
+
+current Index: tensor([58656, 58657, 58658, 58659])
+
+current Index: tensor([58660, 58661, 58662, 58663])
+
+current Index: tensor([58664, 58665, 58666, 58667])
+
+current Index: tensor([58668, 58669, 58670, 58671])
+
+current Index: tensor([58672, 58673, 58674, 58675])
+
+current Index: tensor([58676, 58677, 58678, 58679])
+
+current Index: tensor([58680, 58681, 58682, 58683])
+
+current Index: tensor([58684, 58685, 58686, 58687])
+
+current Index: tensor([58688, 58689, 58690, 58691])
+
+current Index: tensor([58692, 58693, 58694, 58695])
+
+current Index: tensor([58696, 58697, 58698, 58699])
+
+current Index: tensor([58700, 58701, 58702, 58703])
+
+current Index: tensor([58704, 58705, 58706, 58707])
+
+current Index: tensor([58708, 58709, 58710, 58711])
+
+current Index: tensor([58712, 58713, 58714, 58715])
+
+current Index: tensor([58716, 58717, 58718, 58719])
+
+current Index: tensor([58720, 58721, 58722, 58723])
+
+current Index: tensor([58724, 58725, 58726, 58727])
+
+current Index: tensor([58728, 58729, 58730, 58731])
+
+current Index: tensor([58732, 58733, 58734, 58735])
+
+current Index: tensor([58736, 58737, 58738, 58739])
+
+current Index: tensor([58740, 58741, 58742, 58743])
+
+current Index: tensor([58744, 58745, 58746, 58747])
+
+current Index: tensor([58748, 58749, 58750, 58751])
+
+current Index: tensor([58752, 58753, 58754, 58755])
+
+current Index: tensor([58756, 58757, 58758, 58759])
+
+current Index: tensor([58760, 58761, 58762, 58763])
+
+current Index: tensor([58764, 58765, 58766, 58767])
+
+current Index: tensor([58768, 58769, 58770, 58771])
+
+current Index: tensor([58772, 58773, 58774, 58775])
+
+current Index: tensor([58776, 58777, 58778, 58779])
+
+current Index: tensor([58780, 58781, 58782, 58783])
+
+current Index: tensor([58784, 58785, 58786, 58787])
+
+current Index: tensor([58788, 58789, 58790, 58791])
+
+current Index: tensor([58792, 58793, 58794, 58795])
+
+current Index: tensor([58796, 58797, 58798, 58799])
+
+current Index: tensor([58800, 58801, 58802, 58803])
+
+current Index: tensor([58804, 58805, 58806, 58807])
+
+current Index: tensor([58808, 58809, 58810, 58811])
+
+current Index: tensor([58812, 58813, 58814, 58815])
+
+current Index: tensor([58816, 58817, 58818, 58819])
+
+current Index: tensor([58820, 58821, 58822, 58823])
+
+current Index: tensor([58824, 58825, 58826, 58827])
+
+current Index: tensor([58828, 58829, 58830, 58831])
+
+current Index: tensor([58832, 58833, 58834, 58835])
+
+current Index: tensor([58836, 58837, 58838, 58839])
+
+current Index: tensor([58840, 58841, 58842, 58843])
+
+current Index: tensor([58844, 58845, 58846, 58847])
+
+current Index: tensor([58848, 58849, 58850, 58851])
+
+current Index: tensor([58852, 58853, 58854, 58855])
+
+current Index: tensor([58856, 58857, 58858, 58859])
+
+current Index: tensor([58860, 58861, 58862, 58863])
+
+current Index: tensor([58864, 58865, 58866, 58867])
+
+current Index: tensor([58868, 58869, 58870, 58871])
+
+current Index: tensor([58872, 58873, 58874, 58875])
+
+current Index: tensor([58876, 58877, 58878, 58879])
+
+current Index: tensor([58880, 58881, 58882, 58883])
+
+current Index: tensor([58884, 58885, 58886, 58887])
+
+current Index: tensor([58888, 58889, 58890, 58891])
+
+current Index: tensor([58892, 58893, 58894, 58895])
+
+current Index: tensor([58896, 58897, 58898, 58899])
+
+current Index: tensor([58900, 58901, 58902, 58903])
+
+current Index: tensor([58904, 58905, 58906, 58907])
+
+current Index: tensor([58908, 58909, 58910, 58911])
+
+current Index: tensor([58912, 58913, 58914, 58915])
+
+current Index: tensor([58916, 58917, 58918, 58919])
+
+current Index: tensor([58920, 58921, 58922, 58923])
+
+current Index: tensor([58924, 58925, 58926, 58927])
+
+current Index: tensor([58928, 58929, 58930, 58931])
+
+current Index: tensor([58932, 58933, 58934, 58935])
+
+current Index: tensor([58936, 58937, 58938, 58939])
+
+current Index: tensor([58940, 58941, 58942, 58943])
+
+current Index: tensor([58944, 58945, 58946, 58947])
+
+current Index: tensor([58948, 58949, 58950, 58951])
+
+current Index: tensor([58952, 58953, 58954, 58955])
+
+current Index: tensor([58956, 58957, 58958, 58959])
+
+current Index: tensor([58960, 58961, 58962, 58963])
+
+current Index: tensor([58964, 58965, 58966, 58967])
+
+current Index: tensor([58968, 58969, 58970, 58971])
+
+current Index: tensor([58972, 58973, 58974, 58975])
+
+current Index: tensor([58976, 58977, 58978, 58979])
+
+current Index: tensor([58980, 58981, 58982, 58983])
+
+current Index: tensor([58984, 58985, 58986, 58987])
+
+current Index: tensor([58988, 58989, 58990, 58991])
+
+current Index: tensor([58992, 58993, 58994, 58995])
+
+current Index: tensor([58996, 58997, 58998, 58999])
+
+current Index: tensor([59000, 59001, 59002, 59003])
+
+current Index: tensor([59004, 59005, 59006, 59007])
+
+current Index: tensor([59008, 59009, 59010, 59011])
+
+current Index: tensor([59012, 59013, 59014, 59015])
+
+current Index: tensor([59016, 59017, 59018, 59019])
+
+current Index: tensor([59020, 59021, 59022, 59023])
+
+current Index: tensor([59024, 59025, 59026, 59027])
+
+current Index: tensor([59028, 59029, 59030, 59031])
+
+current Index: tensor([59032, 59033, 59034, 59035])
+
+current Index: tensor([59036, 59037, 59038, 59039])
+
+current Index: tensor([59040, 59041, 59042, 59043])
+
+current Index: tensor([59044, 59045, 59046, 59047])
+
+current Index: tensor([59048, 59049, 59050, 59051])
+
+current Index: tensor([59052, 59053, 59054, 59055])
+
+current Index: tensor([59056, 59057, 59058, 59059])
+
+current Index: tensor([59060, 59061, 59062, 59063])
+
+current Index: tensor([59064, 59065, 59066, 59067])
+
+current Index: tensor([59068, 59069, 59070, 59071])
+
+current Index: tensor([59072, 59073, 59074, 59075])
+
+current Index: tensor([59076, 59077, 59078, 59079])
+
+current Index: tensor([59080, 59081, 59082, 59083])
+
+current Index: tensor([59084, 59085, 59086, 59087])
+
+current Index: tensor([59088, 59089, 59090, 59091])
+
+current Index: tensor([59092, 59093, 59094, 59095])
+
+current Index: tensor([59096, 59097, 59098, 59099])
+
+current Index: tensor([59100, 59101, 59102, 59103])
+
+current Index: tensor([59104, 59105, 59106, 59107])
+
+current Index: tensor([59108, 59109, 59110, 59111])
+
+current Index: tensor([59112, 59113, 59114, 59115])
+
+current Index: tensor([59116, 59117, 59118, 59119])
+
+current Index: tensor([59120, 59121, 59122, 59123])
+
+current Index: tensor([59124, 59125, 59126, 59127])
+
+current Index: tensor([59128, 59129, 59130, 59131])
+
+current Index: tensor([59132, 59133, 59134, 59135])
+
+current Index: tensor([59136, 59137, 59138, 59139])
+
+current Index: tensor([59140, 59141, 59142, 59143])
+
+current Index: tensor([59144, 59145, 59146, 59147])
+
+current Index: tensor([59148, 59149, 59150, 59151])
+
+current Index: tensor([59152, 59153, 59154, 59155])
+
+current Index: tensor([59156, 59157, 59158, 59159])
+
+current Index: tensor([59160, 59161, 59162, 59163])
+
+current Index: tensor([59164, 59165, 59166, 59167])
+
+current Index: tensor([59168, 59169, 59170, 59171])
+
+current Index: tensor([59172, 59173, 59174, 59175])
+
+current Index: tensor([59176, 59177, 59178, 59179])
+
+current Index: tensor([59180, 59181, 59182, 59183])
+
+current Index: tensor([59184, 59185, 59186, 59187])
+
+current Index: tensor([59188, 59189, 59190, 59191])
+
+current Index: tensor([59192, 59193, 59194, 59195])
+
+current Index: tensor([59196, 59197, 59198, 59199])
+
+current Index: tensor([59200, 59201, 59202, 59203])
+
+current Index: tensor([59204, 59205, 59206, 59207])
+
+current Index: tensor([59208, 59209, 59210, 59211])
+
+current Index: tensor([59212, 59213, 59214, 59215])
+
+current Index: tensor([59216, 59217, 59218, 59219])
+
+current Index: tensor([59220, 59221, 59222, 59223])
+
+current Index: tensor([59224, 59225, 59226, 59227])
+
+current Index: tensor([59228, 59229, 59230, 59231])
+
+current Index: tensor([59232, 59233, 59234, 59235])
+
+current Index: tensor([59236, 59237, 59238, 59239])
+
+current Index: tensor([59240, 59241, 59242, 59243])
+
+current Index: tensor([59244, 59245, 59246, 59247])
+
+current Index: tensor([59248, 59249, 59250, 59251])
+
+current Index: tensor([59252, 59253, 59254, 59255])
+
+current Index: tensor([59256, 59257, 59258, 59259])
+
+current Index: tensor([59260, 59261, 59262, 59263])
+
+current Index: tensor([59264, 59265, 59266, 59267])
+
+current Index: tensor([59268, 59269, 59270, 59271])
+
+current Index: tensor([59272, 59273, 59274, 59275])
+
+current Index: tensor([59276, 59277, 59278, 59279])
+
+current Index: tensor([59280, 59281, 59282, 59283])
+
+current Index: tensor([59284, 59285, 59286, 59287])
+
+current Index: tensor([59288, 59289, 59290, 59291])
+
+current Index: tensor([59292, 59293, 59294, 59295])
+
+current Index: tensor([59296, 59297, 59298, 59299])
+
+current Index: tensor([59300, 59301, 59302, 59303])
+
+current Index: tensor([59304, 59305, 59306, 59307])
+
+current Index: tensor([59308, 59309, 59310, 59311])
+
+current Index: tensor([59312, 59313, 59314, 59315])
+
+current Index: tensor([59316, 59317, 59318, 59319])
+
+current Index: tensor([59320, 59321, 59322, 59323])
+
+current Index: tensor([59324, 59325, 59326, 59327])
+
+current Index: tensor([59328, 59329, 59330, 59331])
+
+current Index: tensor([59332, 59333, 59334, 59335])
+
+current Index: tensor([59336, 59337, 59338, 59339])
+
+current Index: tensor([59340, 59341, 59342, 59343])
+
+current Index: tensor([59344, 59345, 59346, 59347])
+
+current Index: tensor([59348, 59349, 59350, 59351])
+
+current Index: tensor([59352, 59353, 59354, 59355])
+
+current Index: tensor([59356, 59357, 59358, 59359])
+
+current Index: tensor([59360, 59361, 59362, 59363])
+
+current Index: tensor([59364, 59365, 59366, 59367])
+
+current Index: tensor([59368, 59369, 59370, 59371])
+
+current Index: tensor([59372, 59373, 59374, 59375])
+
+current Index: tensor([59376, 59377, 59378, 59379])
+
+current Index: tensor([59380, 59381, 59382, 59383])
+
+current Index: tensor([59384, 59385, 59386, 59387])
+
+current Index: tensor([59388, 59389, 59390, 59391])
+
+current Index: tensor([59392, 59393, 59394, 59395])
+
+current Index: tensor([59396, 59397, 59398, 59399])
+
+current Index: tensor([59400, 59401, 59402, 59403])
+
+current Index: tensor([59404, 59405, 59406, 59407])
+
+current Index: tensor([59408, 59409, 59410, 59411])
+
+current Index: tensor([59412, 59413, 59414, 59415])
+
+current Index: tensor([59416, 59417, 59418, 59419])
+
+current Index: tensor([59420, 59421, 59422, 59423])
+
+current Index: tensor([59424, 59425, 59426, 59427])
+
+current Index: tensor([59428, 59429, 59430, 59431])
+
+current Index: tensor([59432, 59433, 59434, 59435])
+
+current Index: tensor([59436, 59437, 59438, 59439])
+
+current Index: tensor([59440, 59441, 59442, 59443])
+
+current Index: tensor([59444, 59445, 59446, 59447])
+
+current Index: tensor([59448, 59449, 59450, 59451])
+
+current Index: tensor([59452, 59453, 59454, 59455])
+
+current Index: tensor([59456, 59457, 59458, 59459])
+
+current Index: tensor([59460, 59461, 59462, 59463])
+
+current Index: tensor([59464, 59465, 59466, 59467])
+
+current Index: tensor([59468, 59469, 59470, 59471])
+
+current Index: tensor([59472, 59473, 59474, 59475])
+
+current Index: tensor([59476, 59477, 59478, 59479])
+
+current Index: tensor([59480, 59481, 59482, 59483])
+
+current Index: tensor([59484, 59485, 59486, 59487])
+
+current Index: tensor([59488, 59489, 59490, 59491])
+
+current Index: tensor([59492, 59493, 59494, 59495])
+
+current Index: tensor([59496, 59497, 59498, 59499])
+
+current Index: tensor([59500, 59501, 59502, 59503])
+
+current Index: tensor([59504, 59505, 59506, 59507])
+
+current Index: tensor([59508, 59509, 59510, 59511])
+
+current Index: tensor([59512, 59513, 59514, 59515])
+
+current Index: tensor([59516, 59517, 59518, 59519])
+
+current Index: tensor([59520, 59521, 59522, 59523])
+
+current Index: tensor([59524, 59525, 59526, 59527])
+
+current Index: tensor([59528, 59529, 59530, 59531])
+
+current Index: tensor([59532, 59533, 59534, 59535])
+
+current Index: tensor([59536, 59537, 59538, 59539])
+
+current Index: tensor([59540, 59541, 59542, 59543])
+
+current Index: tensor([59544, 59545, 59546, 59547])
+
+current Index: tensor([59548, 59549, 59550, 59551])
+
+current Index: tensor([59552, 59553, 59554, 59555])
+
+current Index: tensor([59556, 59557, 59558, 59559])
+
+current Index: tensor([59560, 59561, 59562, 59563])
+
+current Index: tensor([59564, 59565, 59566, 59567])
+
+current Index: tensor([59568, 59569, 59570, 59571])
+
+current Index: tensor([59572, 59573, 59574, 59575])
+
+current Index: tensor([59576, 59577, 59578, 59579])
+
+current Index: tensor([59580, 59581, 59582, 59583])
+
+current Index: tensor([59584, 59585, 59586, 59587])
+
+current Index: tensor([59588, 59589, 59590, 59591])
+
+current Index: tensor([59592, 59593, 59594, 59595])
+
+current Index: tensor([59596, 59597, 59598, 59599])
+
+current Index: tensor([59600, 59601, 59602, 59603])
+
+current Index: tensor([59604, 59605, 59606, 59607])
+
+current Index: tensor([59608, 59609, 59610, 59611])
+
+current Index: tensor([59612, 59613, 59614, 59615])
+
+current Index: tensor([59616, 59617, 59618, 59619])
+
+current Index: tensor([59620, 59621, 59622, 59623])
+
+current Index: tensor([59624, 59625, 59626, 59627])
+
+current Index: tensor([59628, 59629, 59630, 59631])
+
+current Index: tensor([59632, 59633, 59634, 59635])
+
+current Index: tensor([59636, 59637, 59638, 59639])
+
+current Index: tensor([59640, 59641, 59642, 59643])
+
+current Index: tensor([59644, 59645, 59646, 59647])
+
+current Index: tensor([59648, 59649, 59650, 59651])
+
+current Index: tensor([59652, 59653, 59654, 59655])
+
+current Index: tensor([59656, 59657, 59658, 59659])
+
+current Index: tensor([59660, 59661, 59662, 59663])
+
+current Index: tensor([59664, 59665, 59666, 59667])
+
+current Index: tensor([59668, 59669, 59670, 59671])
+
+current Index: tensor([59672, 59673, 59674, 59675])
+
+current Index: tensor([59676, 59677, 59678, 59679])
+
+current Index: tensor([59680, 59681, 59682, 59683])
+
+current Index: tensor([59684, 59685, 59686, 59687])
+
+current Index: tensor([59688, 59689, 59690, 59691])
+
+current Index: tensor([59692, 59693, 59694, 59695])
+
+current Index: tensor([59696, 59697, 59698, 59699])
+
+current Index: tensor([59700, 59701, 59702, 59703])
+
+current Index: tensor([59704, 59705, 59706, 59707])
+
+current Index: tensor([59708, 59709, 59710, 59711])
+
+current Index: tensor([59712, 59713, 59714, 59715])
+
+current Index: tensor([59716, 59717, 59718, 59719])
+
+current Index: tensor([59720, 59721, 59722, 59723])
+
+current Index: tensor([59724, 59725, 59726, 59727])
+
+current Index: tensor([59728, 59729, 59730, 59731])
+
+current Index: tensor([59732, 59733, 59734, 59735])
+
+current Index: tensor([59736, 59737, 59738, 59739])
+
+current Index: tensor([59740, 59741, 59742, 59743])
+
+current Index: tensor([59744, 59745, 59746, 59747])
+
+current Index: tensor([59748, 59749, 59750, 59751])
+
+current Index: tensor([59752, 59753, 59754, 59755])
+
+current Index: tensor([59756, 59757, 59758, 59759])
+
+current Index: tensor([59760, 59761, 59762, 59763])
+
+current Index: tensor([59764, 59765, 59766, 59767])
+
+Stopping at epoch 0 and batch_idx tensor([59768, 59769, 59770, 59771]) because wall time would be reached=> Saving checkpoint at epoch 0  0%|          | 0/50 [1:17:48<?, ?it/s]
+End of Training

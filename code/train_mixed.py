@@ -236,7 +236,7 @@ print(">>>Start of Training<<<")
 
 def restart_script():
     from subprocess import call
-    VRAM = "3.89"
+    VRAM = "4.5G"
     if "Res50" in config["model"]:
         VRAM = "4.5G"
     recallParameter = 'qsub -N ' + "ep" + str(epoch) + config["model"] + ' -l nv_mem_free=' + VRAM + ' -v CFG=' + str(
@@ -247,7 +247,7 @@ def restart_script():
 
 time_tmp = []
 avrg_batch_time = 60 * 5
-restart_time = 60 * 60 * 1.3
+restart_time = 60 * 60 * 0.5
 restart = False
 dataset.set_start_index(checkpoint["batch_index"])
 epoch_start = time.time()
@@ -278,7 +278,7 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
             dataset.start_index = 0
             break
         # start training if last idx position was found
-        sys.stderr.write("\ncurrent Index: {}\n".format(str(batch_index)))
+        #sys.stderr.write("\ncurrent Index: {}\n".format(str(batch_index)))
         pred = net(images, old_pred)
         loss = criterion(pred, labels.long())
         optimizer.zero_grad()

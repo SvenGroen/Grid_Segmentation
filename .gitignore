@@ -16,4 +16,5 @@
 **/*.tar
 /data/Images/
 /data/Videos/
-
+*.e*
+*.pe*

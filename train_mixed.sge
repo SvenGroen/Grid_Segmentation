@@ -6,7 +6,7 @@
 #$ -l hostname=!*cippy12* 
 #$ -l hostname=!*cippy21*
 #$ -l hostname=!*cippy25*
-#$ -l h_rt=01:25:00
+#$ -l h_rt=00:48:00
 #$ -o /dev/null"
 #$ -m n
 #$ -pe default 1
