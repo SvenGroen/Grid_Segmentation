@@ -16,24 +16,19 @@ from DataLoader.Datasets.Youtube.Youtube_Greenscreen import *
 from models.custom.simple_models.simple_models import *
 from models.DeepLabV3PlusPytorch.network import *
 import torch.nn.functional as F
-
+import numpy as np
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+a = torch.tensor([1])
+b = torch.tensor([2])
+c = torch.tensor([3])
 
+old = [None, None]
+old[1] = a
+old[0] = b
 
-def return_null(index, stop):
-  if index != stop:
-    return False
-  else:
-    return True
-
-
-a = range(65001)
-import time
-start = time.time()
-for i in a:
-  if not return_null(i, 65000):
-    print(i)
-    continue
-  else:
-    print("end found")
-    print(time.time() - start)
+old = list(np.flip(old))
+print(type(old))
+c =  old + [c]
+d = torch.cat(c, dim=0)
+e = torch.stack(c,dim=0)
+print(c)

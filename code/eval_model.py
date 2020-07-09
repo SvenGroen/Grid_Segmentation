@@ -9,25 +9,22 @@ import time
 import matplotlib.pyplot as plt
 import torch.nn.functional as F
 
+from collections import defaultdict
 from utils.stack import *
+from utils.metrics import *
 from models.custom.simple_models.simple_models import *
 from models.custom.simple_models.UNet import *
-from DataLoader.Datasets.Examples.NY.NY import *
-from collections import defaultdict
-from utils.metrics import *
-from torch.utils.data import DataLoader
 from models.DeepLabV3PlusPytorch.network import *
 from models.custom.simple_models.simple_models import ConvSame_3_net
 from models.ICNet.models import ICNet
-from models.ICNet.utils import ICNetLoss, IterationPolyLR, SegmentationMetric, SetupLogger
+from torch.utils.data import DataLoader
 from DataLoader.Datasets.Youtube.Youtube_Greenscreen import *
-from DataLoader.Datasets.Examples_Green.NY.NY_mixed import *
-from DataLoader.Datasets.Examples_Green.NY.NY_mixed_HD import *
+from DataLoader.Datasets.Youtube.Youtube_Greenscreen_mini import *
 from PIL import Image
 from pathlib import Path
 
-from DataLoader.Datasets.Youtube.Youtube_Greenscreen_mini import *
 
+# load model name and model save path
 parser = argparse.ArgumentParser()
 parser.add_argument("-mdl", "--model",
                     help="The name of the model.", type=str)
@@ -41,7 +38,7 @@ print("---Start of Python File---")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device: ", device)
 output_size = (int(2048 / 4), int(1080 / 4) * 2)
-FRAME_STOP_NUMBER = 29*20 # fps * dauer in sekunden
+FRAME_STOP_NUMBER = 29 * 12  # fps * dauer in sekunden in evaluation
 
 
 def save_figure(values, path, what=""):
@@ -52,32 +49,52 @@ def save_figure(values, path, what=""):
     plt.close()
     pass
 
-
-if "UNet" in model_name:
+if "UNet" in model_name :
     net = UNet(in_channels=3, out_channels=2, n_class=2, kernel_size=3, padding=1, stride=1)
-elif "Deep_mobile_gruV2" in model_name:
-    net = Deep_mobile_gruV2()
-elif "Deep_mobile_lstmV2" in model_name:
-    net = Deep_mobile_lstmV2()
-elif "Deep_mobile_lstm" in model_name:
-    net = Deep_mobile_lstm()
-elif "Deep_mobile_gru" in model_name:
-    net = Deep_mobile_gru()
-elif "Deep+_mobile" in model_name:
-    net = Deeplabv3Plus_mobile()  # https://github.com/VainF/DeepLabV3Plus-Pytorch
-elif "Deep_Res101" in model_name:
+elif "Deep+_mobile" in model_name :
+    net = Deeplabv3Plus_base(backbone="mobilenet")  # https://github.com/VainF/DeepLabV3Plus-Pytorch
+elif "Deep_mobile_lstmV1" in model_name :
+    net = Deeplabv3Plus_lstmV1(backbone="mobilenet")
+elif "Deep_mobile_lstmV2" in model_name :
+    net = Deeplabv3Plus_lstmV2(backbone="mobilenet")
+elif "Deep_mobile_lstmV3" in model_name :
+    net = Deeplabv3Plus_lstmV3(backbone="mobilenet")
+elif "Deep_mobile_gruV1" in model_name :
+    net = Deeplabv3Plus_gruV1(backbone="mobilenet")
+elif "Deep_mobile_gruV2" in model_name :
+    net = Deeplabv3Plus_gruV2(backbone="mobilenet")
+elif "Deep_mobile_gruV3" in model_name :
+    net = Deeplabv3Plus_gruV3(backbone="mobilenet")
+elif "Deep+_resnet50" in model_name :
+    net = Deeplabv3Plus_base(backbone="resnet50")
+elif "Deep_resnet50_lstmV1" in model_name :
+    net = Deeplabv3Plus_lstmV1(backbone="resnet50")
+elif "Deep_resnet50_lstmV2" in model_name :
+    net = Deeplabv3Plus_lstmV2(backbone="resnet50")
+elif "Deep_resnet50_lstmV3" in model_name :
+    net = Deeplabv3Plus_lstmV3(backbone="resnet50")
+elif "Deep_resnet50_gruV1" in model_name :
+    net = Deeplabv3Plus_gruV1(backbone="resnet50")
+elif "Deep_resnet50_gruV2" in model_name :
+    net = Deeplabv3Plus_gruV2(backbone="resnet50")
+elif "Deep_resnet50_gruV3" in model_name :
+    net = Deeplabv3Plus_gruV3(backbone="resnet50")
+elif "Deep_Res101" in model_name :
     net = Deeplab_Res101()
-elif "Deep_Res50" in model_name:
+    norm_ImageNet = False
+elif "Deep_Res50" in model_name :
     net = Deeplab_Res50()
-elif "FCN_Res50" in model_name:
+    norm_ImageNet = False
+elif "FCN_Res50" in model_name :
     net = FCN_Res50()
-elif "ConvSame_3" in model_name:
-    net = ConvSame_3_net()  # <--- SET MODEL
-elif "ICNet" in model_name:
+    norm_ImageNet = False
+elif "ICNet" in model_name :
     net = ICNet(nclass=2, backbone='resnet50', pretrained_base=False)  # https://github.com/liminn/ICNet-pytorch
 else:
     net = None
     print("Model unknown")
+
+# load model and make directory to store evaluation results
 model_name = Path(model_name)
 full_path = model_path / model_name
 eval_results_path = full_path / "evaluation_results"
@@ -102,6 +119,7 @@ dataset = Youtube_Greenscreen(train=False)
 # dataset = Youtube_Greenscreen_mini()
 test_loader = DataLoader(dataset=dataset, batch_size=1, shuffle=False, num_workers=0)
 
+# Meassure the metrics
 metrics = defaultdict(AverageMeter)
 metrics["Jaccard"] = AverageMeter()
 metrics["Overall_acc"] = AverageMeter()
@@ -109,40 +127,47 @@ metrics["per_class_acc"] = AverageMeter()
 metrics["dice"] = AverageMeter()
 metrics["time_taken"] = AverageMeter()
 metrics["cuda_time"] = AverageMeter()
-
-to_PIL = T.ToPILImage()
-tmp_img, tmp_lbl, tmp_pred = [], [], []
-
-fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-out_vid = cv2.VideoWriter(str(eval_results_path) + "/example_video.mp4", fourcc, 29, (1536, 270))
 if torch.cuda.is_available():
     start = torch.cuda.Event(enable_timing=True)
     end = torch.cuda.Event(enable_timing=True)
 
-old_pred = [None, None]
+to_PIL = T.ToPILImage() # for convertion into PILLOW Image
+tmp_img, tmp_lbl, tmp_pred = [], [], [] # used for stacking images later
 
+# Video writer to save results
+fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+fourcc2 = cv2.VideoWriter_fourcc(*"mp4v")
+out_vid = cv2.VideoWriter(str(eval_results_path) + "/example_video.mp4", fourcc, 29, (1536, 270))
+out_vid2 = cv2.VideoWriter(str(eval_results_path) + "/example_video2.mp4", fourcc2, 29, (512, 270))
+
+old_pred = [None, None]
 for i, batch in enumerate(test_loader):
     idx, (images, labels) = batch
     if idx.item() % 10 == 0:
         print("Processed {} from {} images".format(idx.item(), len(dataset)))
+
+    # meassure time the model takes to predict
     if torch.cuda.is_available():
         start.record()
     start_time = time.time()
-    pred = net(images, old_pred)
-
+    pred = net(images, old_pred) # predict
     outputs = torch.argmax(pred, dim=1).float()
     if torch.cuda.is_available():
         end.record()
         torch.cuda.synchronize(device=device)
         metrics["cuda_time"].append(start.elapsed_time(end))
     time_taken = time.time() - start_time
+
+    # save metric results and old predictions
     metrics["time_taken"].update(time_taken)
-    old_pred[1] = old_pred[0]
-    old_pred[0] = pred.unsqueeze(1).detach()
-    # hist = fast_hist(outputs,labels,2)
+    old_pred[0] = old_pred[1]  # oldest at 0 position
+    old_pred[1] = pred.unsqueeze(1).detach()  # newest at 1 position
+
+    # Conversion for metric evaluations
     labels = labels.type(torch.uint8)
     outputs = outputs.type(torch.uint8)
-    overall_acc, avg_per_class_acc, avg_jacc, avg_dice = eval_metrics(outputs.to("cpu"), labels.to("cpu"),
+    overall_acc, avg_per_class_acc, avg_jacc, avg_dice = eval_metrics(outputs.to("cpu"),
+                                                                      labels.to("cpu"),
                                                                       num_classes=2)
     metrics["IoU"].append(avg_jacc)
     metrics["Jaccard"].update(avg_jacc)
@@ -150,41 +175,33 @@ for i, batch in enumerate(test_loader):
     metrics["per_class_acc"].update(avg_per_class_acc)
     metrics["dice"].update(avg_dice)
 
-    # write video
+    # create mask for evaluation video 2 (raw image with Greenscreen based on prediction)
+    mask = outputs.squeeze(0).numpy()
+    mask = np.expand_dims(mask, axis=-1)
+
+    # write videos
+    # conversions since hstack expects PIL image or np array and cv2 np array with channel at last position
     tmp_prd = to_PIL(outputs[0].cpu().float())
     tmp_inp = to_PIL(images.squeeze(0).cpu())
     tmp_inp = Image.fromarray(cv2.cvtColor(np.asarray(tmp_inp), cv2.COLOR_RGB2BGR))
     tmp_lbl = to_PIL(labels.cpu().float())
     out_vid.write(np.array(hstack([tmp_inp, tmp_lbl, tmp_prd])))
-    a = hstack([tmp_inp, tmp_lbl, tmp_prd])
+    replaced_out = np.where(mask, tmp_inp, [0, 255, 0])
+    out_vid2.write(np.uint8(replaced_out))
+    stacked_out = hstack([tmp_inp, tmp_lbl, tmp_prd])
     if i == 27:
-        a.save(str(eval_results_path / "example_output.jpg"), "JPEG")
-    # save example outputs
-    # if len(tmp_pred) < 5:
-    #     img = to_PIL(images[0].to("cpu"))
-    #     lbl = labels[0].to("cpu").float()
-    #     lbl = to_PIL(lbl)
-    #     pred_img = outputs[0].to("cpu").float()
-    #     pred_img = to_PIL(pred_img)
-    #     tmp_img.append(img)
-    #     tmp_lbl.append(lbl)
-    #     tmp_pred.append(pred_img)
+        # snapchot of one prediciton
+        stacked_out.save(str(eval_results_path / "example_output.jpg"), "JPEG")
+    # break after certain amount of frames (remove for final (last) evaluation)
     if i == FRAME_STOP_NUMBER:
         break
-
+out_vid2.release()
 out_vid.release()
 
-# Save image file
-out = []
-# for i in range(len(tmp_img)):
-#     out.append(hstack([tmp_img[i], tmp_lbl[i], tmp_pred[i]]))
-# result = vstack(out)
-# result.save(str(eval_results_path / "example_output.jpg"), "JPEG")
-
+# save figures
 save_figure(metrics["IoU"].history, path=eval_results_path, what="IoU")
 
-# save results
-
+# save metric results in .txt file
 with open(eval_results_path / "metrics.json", "w") as js:
     tmp = {}
     for k, v in metrics.items():
