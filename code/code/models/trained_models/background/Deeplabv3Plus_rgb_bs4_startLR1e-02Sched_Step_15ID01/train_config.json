@@ -1,0 +1,1 @@
+{"model": "Deeplabv3Plus_rgb", "ID": "01", "lr": 0.01, "batch_size": 4, "num_epochs": 1, "scheduler_step_size": 15, "save freq": 1, "save_path": "code/models/trained_models/background"}

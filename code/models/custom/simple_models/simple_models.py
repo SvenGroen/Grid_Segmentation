@@ -12,6 +12,7 @@ from utils.convlstm import *
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
+
 # BASE
 class Deeplabv3Plus_base(nn.Module):
     def __init__(self, backbone="mobilenet"):
@@ -253,3 +254,14 @@ class FCN_Res50(nn.Module):
     def forward(self, x, *args):
         x = self.base(x)
         return x["out"]
+
+class Deeplabv3Plus_rgb(nn.Module):
+    def __init__(self, backbone="mobilenet"):
+        super().__init__()
+        if backbone == "mobilenet":
+            self.base = deeplabv3plus_mobilenet(num_classes=3, pretrained_backbone=True)
+        elif backbone == "resnet50":
+            self.base = deeplabv3plus_resnet50(num_classes=3, pretrained_backbone=True)
+
+    def forward(self, x, *args):
+        return self.base(x)
