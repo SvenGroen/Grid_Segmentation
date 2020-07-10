@@ -19,15 +19,15 @@ class Backgrounds(data.Dataset):
     def __init__(self, start_index=torch.tensor([0])):
         self.file_path = Path("data/Images/other/background_dataset")
         self.start_index = start_index[0].item()
-
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     def __len__(self):
-        return 100
+        return 1000
 
     def __getitem__(self, idx):
         img = Image.open(self.file_path / "01.jpg")
         img = img.resize((512, 257))
         to_tensor = T.ToTensor()
-        return idx, (to_tensor(img), to_tensor(img))
+        return idx, (to_tensor(img).to(self.device), to_tensor(img).to(self.device))
 
     def show(self):
         img = Image.open(self.file_path / "01.jpg")
