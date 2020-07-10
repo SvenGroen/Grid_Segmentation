@@ -205,7 +205,7 @@ def restart_script():
     from subprocess import call
     VRAM = "4.5G"
     recallParameter = 'qsub -N ' + "ep" + str(epoch) + config["model"] + ' -l nv_mem_free=' + VRAM + ' -v CFG=' + str(
-        model_save_path / "train_config.json") + ' train_mixed.sge'
+        model_save_path / "train_config.json") + ' train_rgb.sge'
     call(recallParameter, shell=True)
     pass
 
