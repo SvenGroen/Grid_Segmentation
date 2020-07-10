@@ -265,3 +265,23 @@ class Deeplabv3Plus_rgb(nn.Module):
 
     def forward(self, x, *args):
         return self.base(x)
+
+class Deeplabv3Plus_rgb_gruV1(nn.Module):
+    def __init__(self, backbone="mobilenet"):
+        super().__init__()
+        if backbone == "mobilenet":
+            self.base = deeplabv3plus_mobilenet(num_classes=3, pretrained_backbone=True)
+        elif backbone == "resnet50":
+            self.base = deeplabv3plus_resnet50(num_classes=3, pretrained_backbone=True)
+
+        self.gru = ConvGRU(input_size=(270, 512), input_dim=3, hidden_dim=[3], kernel_size=(3, 3), num_layers=1,
+                           dtype=torch.FloatTensor, batch_first=True, bias=True, return_all_layers=True)
+        self.hidden = [None]
+
+    def forward(self, x, *args):
+        x = self.base(x)
+        x = x.unsqueeze(1)
+        out, self.hidden = self.gru(x, self.hidden[-1])
+        self.hidden = [tuple(state.detach() for state in i) for i in self.hidden]
+        out = out[0][:, 0, :, :, :]  # <--- not to sure if 0 or -1
+        return out

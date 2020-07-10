@@ -27,7 +27,7 @@ sys.stderr.write("Starting at: {}\n".format(time.ctime(start_time)))
 # -cfg code/models/trained_models/minisV2/Deep_mobile_lstm_bs4_startLR1e-03Sched_Step_20ID1/train_config.json
 config = {  # DEFAULT CONFIG
     # This config is replaced by the config given as a parameter in -cfg, which will be generated in multiple_train.py.
-    "model": "Deeplabv3Plus_rgb",
+    "model": "Deeplabv3Plus_rgb_gru",
     "ID": "01",
     "lr": 1e-02,
     "batch_size": 4,
@@ -91,6 +91,8 @@ elif config["model"] == "Deep_resnet50_gruV3":
     net = Deeplabv3Plus_gruV3(backbone="resnet50")
 elif config["model"] == "Deeplabv3Plus_rgb":
     net = Deeplabv3Plus_rgb()
+elif config["model"] == "Deeplabv3Plus_rgb_gru":
+    net = Deeplabv3Plus_rgb_gruV1()
 else:
     net = None
     print("Model unknown")
@@ -107,7 +109,7 @@ optimizer = optim.Adam(net.parameters(), lr=config["lr"])
 scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=config["scheduler_step_size"], gamma=0.1)
 
 batch_index = torch.tensor(range(config["batch_size"]))
-dataset = Backgrounds()
+dataset = Backgrounds(train=True)
 # dataset = Youtube_Greenscreen_mini()
 train_loader = DataLoader(dataset=dataset, batch_size=config["batch_size"], shuffle=False)
 

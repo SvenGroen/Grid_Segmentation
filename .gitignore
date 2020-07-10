@@ -16,6 +16,8 @@
 /data/Images/Greenscreen*/
 /data/Videos/Greenscreen*/
 /data/Videos/YT_*/
+/data/Images/
+/data/Videos/
 **/*.tar
 *.e*
 *.pe*
