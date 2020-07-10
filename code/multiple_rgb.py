@@ -7,9 +7,9 @@ from pathlib import Path
 
 models = ["Deeplabv3Plus_rgb"]
 start_lrs = [1e-02, 1e-3]
-step_sizes = [20,20]
-num_epochs = [100,50]
-batch_sizes = [2,4]
+step_sizes = [5,5]
+num_epochs = [25,25]
+batch_sizes = [8, 10]
 config = {}
 config_paths = []
 models_name = []

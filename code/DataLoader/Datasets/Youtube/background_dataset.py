@@ -21,9 +21,12 @@ class Backgrounds(data.Dataset):
         self.start_index = start_index[0].item()
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     def __len__(self):
-        return 1000
+        return 100
 
     def __getitem__(self, idx):
+        idx = idx + self.start_index
+        if idx >= self.__len__():
+            return 0, (0, 0)
         img = Image.open(self.file_path / "01.jpg")
         img = img.resize((512, 257))
         to_tensor = T.ToTensor()

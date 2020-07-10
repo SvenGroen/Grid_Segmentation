@@ -196,7 +196,6 @@ def save_checkpoint(checkpoint, filename=str(model_save_path / train_name) + ".p
     checkpoint["scheduler"] = scheduler.state_dict()
     checkpoint["batch_index"] = batch_index
     checkpoint["running_loss"] = running_loss
-    checkpoint["old_pred"] = old_pred
     torch.save(checkpoint, Path(filename))
 
 
@@ -240,7 +239,7 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
 
         # check if end of batch is reached
         # the dataset will return 0-tensor as idx in case the end of the batch is reached
-        if torch.all(idx == torch.zeros(config["batch_size"])):
+        if torch.all(idx == torch.zeros(len(idx))):
             sys.stderr.write("\nEnd reached of batch")
             dataset.start_index = 0 # reset start index for the next batch
             break
