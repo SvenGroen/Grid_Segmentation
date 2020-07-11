@@ -5,11 +5,11 @@ from pathlib import Path
 # models = ["Deep+_mobile", "Deep_mobile_lstm", "Deep_mobile_lstmV2", "Deep_mobile_gru",
 #           "Deep_mobile_gruV2"]  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "ICNet", "FCN_Res50", "Deep_mobile_lstm", "Deep_mobile_lstmV2"
 
-models = ["Deeplabv3Plus_rgb"]
-start_lrs = [1e-02, 1e-3]
-step_sizes = [5,5]
-num_epochs = [25,25]
-batch_sizes = [8, 10]
+models = ["Deeplabv3Plus_rgb", "Deeplabv3Plus_rgb_gru"]
+start_lrs = [1e-02]
+step_sizes = [5]
+num_epochs = [25]
+batch_sizes = [8]
 config = {}
 config_paths = []
 models_name = []

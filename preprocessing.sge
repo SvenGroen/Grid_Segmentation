@@ -27,7 +27,8 @@ echo ""
 echo "Start"
 echo ""
 
-setup_file=code/preprocessing/Vid2Img_preprocess.py
+setup_file=code/preprocessing/rgb_preprocess_02.py
+#setup_file=code/preprocessing/Vid2Img_preprocess.py
 #setup_file=code/preprocessing/YT_preprocess.py
 env_name=torch
 #Scratch_wd_21 is a variable that stores the path to my scratch folder in which i installed anaconda
