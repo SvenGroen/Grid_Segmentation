@@ -93,6 +93,8 @@ elif config["model"] == "Deeplabv3Plus_rgb":
     net = Deeplabv3Plus_rgb()
 elif config["model"] == "Deeplabv3Plus_rgb_gru":
     net = Deeplabv3Plus_rgb_gruV1()
+elif config["model"] == "Deeplabv3Plus_rgb_lstmV1":
+    net = Deeplabv3Plus_rgb_lstmV1(backbone="mobilenet")
 else:
     net = None
     print("Model unknown")
@@ -214,7 +216,7 @@ def restart_script():
 print(">>>Start of Training<<<")
 time_tmp = []
 avrg_batch_time = 60 * 5
-restart_time = 60 * 60 * 0.5  # restart after 30 min
+restart_time = 60 * 60 * 0.48  # restart after 30 min
 restart = False  # flag
 
 dataset.set_start_index(checkpoint["batch_index"])  # continue training at dataset position of last stop
@@ -230,7 +232,7 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
         batch_start_time = time.time()
         if batch_start_time + avrg_batch_time - start_time > restart_time:
             sys.stderr.write("\nStopping at epoch {} and batch_idx "
-                             "{} because wall time would be reached".format(epoch, str(batch_index)))
+                             "{} because wall time would be reached, with avg batch time of: {}".format(epoch, str(batch_index), str(avrg_batch_time)))
             save_checkpoint(checkpoint)
             restart_script()
             restart = True
@@ -267,7 +269,7 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
     scheduler.step()
     save_figure(loss_values, what="loss")
     save_figure(lrs, what="LR")
-    sys.stderr.write("End of Epoch: {}\n".format(epoch))
+    sys.stderr.write("\nEnd of Epoch: {}\n".format(epoch))
 
 
 sys.stderr.write("End of Training\n")

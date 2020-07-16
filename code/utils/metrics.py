@@ -1,7 +1,9 @@
 import numpy as np
 import torch
-
+from torch.autograd import Variable
+import subprocess
 EPS = 1e-6
+
 
 
 def get_IoU(outputs, labels):
@@ -123,6 +125,29 @@ def jaccard_index(hist):
     avg_jacc = nanmean(jaccard)
     return avg_jacc
 
+def make_one_hot(labels, C=2):
+    '''
+    Converts an integer label torch.autograd.Variable to a one-hot Variable.
+
+    Parameters
+    ----------
+    labels : torch.autograd.Variable of torch.cuda.LongTensor
+        N x 1 x H x W, where N is batch size.
+        Each value is an integer representing correct classification.
+    C : integer.
+        number of classes in labels.
+
+    Returns
+    -------
+    target : torch.autograd.Variable of torch.cuda.FloatTensor
+        N x C x H x W, where C is class number. One-hot encoded.
+    '''
+    one_hot = torch.FloatTensor(labels.size(0), C, labels.size(2), labels.size(3)).zero_()
+    target = one_hot.scatter_(1, labels.data, 1)
+
+    target = Variable(target)
+
+    return target
 
 class AverageMeter(object):
     def __init__(self):
@@ -140,24 +165,48 @@ class AverageMeter(object):
         self.sum += val * n
         self.count += n
         self.avg = self.sum / self.count
+        self.history.append(val)
+
     def append(self, val):
         self.history.append(val)
 
+def get_gpu_memory_map():
+    """Get the current gpu usage.
+
+    Returns
+    -------
+    usage: dict
+        Keys are device ids as integers.
+        Values are memory usage as integers in MB.
+    """
+    result = subprocess.check_output(
+        [
+            'nvidia-smi', '--query-gpu=memory.used',
+            '--format=csv,nounits,noheader'
+        ], encoding='utf-8')
+    # Convert lines into a dictionary
+    gpu_memory = [int(x) for x in result.strip().split('\n')]
+    gpu_memory_map = dict(zip(range(len(gpu_memory)), gpu_memory))
+    return gpu_memory_map
 
 if __name__ == '__main__':
     true = torch.tensor([[
-        [1, 0, 0,0],
-        [1, 0, 0,0],
-        [1, 0, 0,0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 1],
+        [0, 0, 0, 1],
     ]])
     pred = torch.tensor([[
-        [1, 0, 0,0],
-        [1, 1, 0,0],
-        [1, 0, 0,0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 1],
     ]])
-    avrg = AverageMeter()
-    avrg.reset()
-    avrg.update(2)
-    print(avrg.val, avrg.avg)
-    avrg.update(15)
-    print(avrg.val, avrg.avg)
+
+    hist = fast_hist(true, pred, num_classes=2)
+    jac = jaccard_index(hist)
+    dice = dice_coefficient(hist)
+    print(dice)
+    loss2 = dice_loss(pred, true.long())
+    print(loss2)
+
+
+

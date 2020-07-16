@@ -32,7 +32,11 @@ class Youtube_Greenscreen(data.Dataset):
         return len(self.data["Inputs"])
 
     def set_start_index(self, idx):
-        self.start_index = idx[0].item()
+        if isinstance(idx, int):
+            self.start_index=idx
+        else:
+            self.start_index = idx[0].item()
+
 
     def __getitem__(self, idx):
         # if not idx == self.start_index and not self.found_restart:
@@ -51,9 +55,9 @@ class Youtube_Greenscreen(data.Dataset):
         lbl = lbl.squeeze(0)
 
         if torch.cuda.is_available():
-            return idx, (inp.cuda(), lbl.round().cuda())
+            return idx, (inp.cuda(), lbl.round().long().cuda())
         else:
-            return idx, (inp, lbl.round())
+            return idx, (inp, lbl.round().long())
         # if torch.cuda.is_available():
         #     return idx, (inp, lbl.round())
         # else:

@@ -25,6 +25,7 @@ from PIL import Image
 from pathlib import Path
 
 # load model name and model save path
+# -mdl Deeplabv3Plus_rgb_lstmV1_bs8_startLR1e-02Sched_Step_6ID0 -pth code/models/trained_models/rgb_test
 parser = argparse.ArgumentParser()
 parser.add_argument("-mdl", "--model",
                     help="The name of the model.", type=str)
@@ -38,7 +39,7 @@ print("---Start of Python File---")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device: ", device)
 output_size = (int(2048 / 4), int(1080 / 4))
-FRAME_STOP_NUMBER = 5  # fps * dauer in sekunden in evaluation
+FRAME_STOP_NUMBER = 29*15  # fps * dauer in sekunden in evaluation
 
 
 def save_figure(values, path, what=""):
@@ -80,6 +81,10 @@ elif "Deep_resnet50_gruV2" in model_name:
     net = Deeplabv3Plus_gruV2(backbone="resnet50")
 elif "Deep_resnet50_gruV3" in model_name:
     net = Deeplabv3Plus_gruV3(backbone="resnet50")
+elif "Deeplabv3Plus_rgb_gru" in model_name:
+    net = Deeplabv3Plus_rgb_gruV1()
+elif "Deeplabv3Plus_rgb_lstmV1" in model_name:
+    net = Deeplabv3Plus_rgb_lstmV1()
 elif "Deeplabv3Plus_rgb" in model_name:
     net = Deeplabv3Plus_rgb()
 elif "Deep_Res101" in model_name:
@@ -118,7 +123,7 @@ net.eval()
 net.to(device)
 
 # Load test data
-dataset = Backgrounds()
+dataset = Backgrounds(train=True)
 # dataset = Youtube_Greenscreen_mini()
 test_loader = DataLoader(dataset=dataset, batch_size=1, shuffle=False, num_workers=0)
 
@@ -138,7 +143,8 @@ to_PIL = T.ToPILImage()  # for convertion into PILLOW Image
 tmp_img, tmp_lbl, tmp_pred = [], [], []  # used for stacking images later
 
 # Video writer to save results
-
+fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+out_vid = cv2.VideoWriter(str(eval_results_path) + "/example_video.mp4", fourcc, 29, (1024, 270))
 
 for i, batch in enumerate(test_loader):
     idx, (images, labels) = batch
@@ -175,14 +181,16 @@ for i, batch in enumerate(test_loader):
     # conversions since hstack expects PIL image or np array and cv2 np array with channel at last position
     tmp_prd = to_PIL(outputs.squeeze(0).cpu())
     tmp_inp = to_PIL(images.squeeze(0).cpu())
+    tmp_inp = cv2.cvtColor(np.array(tmp_inp), cv2.COLOR_RGB2BGR)
+    tmp_prd = cv2.cvtColor(np.array(tmp_prd), cv2.COLOR_RGB2BGR)
     stacked_out = hstack([tmp_inp, tmp_prd])
-
-    stacked_out.save(str(eval_results_path / "example_output_{}.jpg".format(i)), "JPEG")
+    out_vid.write(np.array(stacked_out))
+    # stacked_out.save(str(eval_results_path / "example_output_{}.jpg".format(i)), "JPEG")
     # break after certain amount of frames (remove for final (last) evaluation)
     if i == FRAME_STOP_NUMBER:
         break
 
-
+out_vid.release()
 
 # save figures
 save_figure(metrics["IoU"].history, path=eval_results_path, what="IoU")

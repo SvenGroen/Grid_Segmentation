@@ -1,5 +1,9 @@
+import torch
 from PIL import Image
 import numpy as np
+from torch.autograd import Variable
+
+
 def vstack(images):
     if len(images) == 0:
         raise ValueError("Need 0 or more images")
@@ -32,3 +36,4 @@ def hstack(images):
         stacked.paste(img, (x_pos, 0))
         x_pos += img.size[0]
     return stacked
+

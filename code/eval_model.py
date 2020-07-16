@@ -151,6 +151,7 @@ for i, batch in enumerate(test_loader):
         start.record()
     start_time = time.time()
     pred = net(images, old_pred) # predict
+    # outputs = pred.float()
     outputs = torch.argmax(pred, dim=1).float()
     if torch.cuda.is_available():
         end.record()

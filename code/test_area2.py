@@ -1,34 +1,46 @@
-import os
+import json
+import argparse
 import time
-import datetime
-from pathlib import Path
+import sys
 
 import cv2
-import yaml
 import torch
-import torch.nn as nn
-import torch.utils.data as data
-import torch.optim as optim
-from tqdm import tqdm
-from torch.utils.data import DataLoader
-from DataLoader.Datasets.Examples_Green.NY.NY_mixed import *
-from DataLoader.Datasets.Youtube.Youtube_Greenscreen import *
-from models.custom.simple_models.simple_models import *
-from models.DeepLabV3PlusPytorch.network import *
 import torch.nn.functional as F
+import torch.optim as optim
 import numpy as np
+import matplotlib.pyplot as plt
+
+from pathlib import Path
+from tqdm import tqdm
+from collections import defaultdict
+from torch.utils.data import DataLoader
+# import models and dataset
+from utils.metrics import *
+from models.custom.simple_models.simple_models import *
+from models.custom.simple_models.UNet import *
+from models.DeepLabV3PlusPytorch.network import *
+from models.ICNet.models import ICNet
+from models.ICNet.utils import ICNetLoss, IterationPolyLR, SegmentationMetric, SetupLogger
+from DataLoader.Datasets.Youtube.Youtube_Greenscreen import *
+from DataLoader.Datasets.Youtube.Youtube_Greenscreen_mini import *
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-a = torch.tensor([1])
-b = torch.tensor([2])
-c = torch.tensor([3])
+metrics = defaultdict(AverageMeter)
+metrics["IoU"].update(0)
+metrics["IoU"].update(1)
+metric_log = list()
+metric_log.append(metrics)
+metrics2 = defaultdict(AverageMeter)
+metrics2["IoU"].update(2)
+metrics2["IoU"].update(3)
+metric_log.append(metrics2)
 
-old = [None, None]
-old[1] = a
-old[0] = b
+print("Save:")
+checkpoint = {}
+checkpoint["metric_log"] = metric_log
+torch.save(checkpoint, "test.pth.tar")
 
-old = list(np.flip(old))
-print(type(old))
-c =  old + [c]
-d = torch.cat(c, dim=0)
-e = torch.stack(c,dim=0)
-print(c)
+
+checkpoint2 = torch.load("test.pth.tar")
+
+for k in checkpoint2:
+    print(k)

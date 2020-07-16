@@ -2,17 +2,23 @@ import json
 import argparse
 import time
 import sys
+
+import cv2
 import torch
 import torch.nn.functional as F
+import torchvision.transforms as T
 import torch.optim as optim
 import numpy as np
 import matplotlib.pyplot as plt
 
 from pathlib import Path
+
+from PIL.Image import Image
 from tqdm import tqdm
 from collections import defaultdict
 from torch.utils.data import DataLoader
 # import models and dataset
+from utils import *
 from models.custom.simple_models.simple_models import *
 from models.custom.simple_models.UNet import *
 from models.DeepLabV3PlusPytorch.network import *
@@ -20,6 +26,8 @@ from models.ICNet.models import ICNet
 from models.ICNet.utils import ICNetLoss, IterationPolyLR, SegmentationMetric, SetupLogger
 from DataLoader.Datasets.Youtube.Youtube_Greenscreen import *
 from DataLoader.Datasets.Youtube.Youtube_Greenscreen_mini import *
+
+
 
 start_time = time.time()
 sys.stderr.write("Starting at: {}\n".format(time.ctime(start_time)))
@@ -31,10 +39,11 @@ config = {  # DEFAULT CONFIG
     "ID": "01",
     "lr": 1e-02,
     "batch_size": 4,
-    "num_epochs": 1,
+    "num_epochs": 6,
     "scheduler_step_size": 15,
     "save freq": 1,
-    "save_path": "code/models/trained_models/minisV2"
+    "loss": "Boundary",  # / "SoftDice" / "Focal" / "CrossEntropy" / "Boundary"
+    "save_path": "code/models/trained_models/testing"
 }
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -100,8 +109,7 @@ elif config["model"] == "FCN_Res50":
     norm_ImageNet = False
 elif config["model"] == "ICNet":
     net = ICNet(nclass=2, backbone='resnet50', pretrained_base=False)  # https://github.com/liminn/ICNet-pytorch
-    criterion = ICNetLoss()
-    criterion.to(device)
+
 else:
     net = None
     print("Model unknown")
@@ -109,10 +117,19 @@ net.train()
 net.to(device)
 
 # parameters not set by config
-if config["model"] != "ICNet":
+if config["model"] == "ICNet":
+    criterion = ICNetLoss()
+elif config["loss"] == "CrossEntropy":
     criterion = F.cross_entropy
+elif config["loss"] == "SoftDice":
+    criterion = SegLoss.dice_loss.SoftDiceLoss(smooth=0.0001, apply_nonlin=F.softmax)
+elif config["loss"] == "Focal":
+    criterion = SegLoss.focal_loss.FocalLoss(smooth=0.0001, apply_nonlin=F.softmax)
+elif config["loss"] == "Boundary":
+    criterion = SegLoss.boundary_loss.BDLoss()
 norm_ImageNet = False
 start_epoch = 0
+criterion.to(device)
 
 optimizer = optim.Adam(net.parameters(), lr=config["lr"])
 scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=config["scheduler_step_size"], gamma=0.1)
@@ -126,7 +143,7 @@ train_loader = DataLoader(dataset=dataset, batch_size=config["batch_size"], shuf
 # saving the models
 train_name = config["model"] + "_bs" + str(config["batch_size"]) + "_startLR" + format(config["lr"],
                                                                                        ".0e") + "Sched_Step_" + str(
-    config["scheduler_step_size"]) + "ID" + config["ID"]  # sets name of model based on parameters
+    config["scheduler_step_size"]) + "_" + config["loss"] +"_ID" + config["ID"]  # sets name of model based on parameters
 model_save_path = Path.cwd() / Path(config["save_path"]) / train_name
 model_save_path.mkdir(parents=True, exist_ok=True)  # create folder to save results
 with open(str(model_save_path / "train_config.json"), "w") as js:  # save learn config
@@ -136,6 +153,7 @@ with open(str(model_save_path / "train_config.json"), "w") as js:  # save learn 
 lrs = []
 LOAD_POSITION = -1
 print("Trying to load previous Checkpoint ...")
+metric_log = defaultdict(list)
 try:
     checkpoint = torch.load(str(model_save_path / train_name) + ".pth.tar", map_location=torch.device(device))
     print("=> Loading checkpoint at epoch {}".format(checkpoint["epoch"][LOAD_POSITION]))
@@ -150,6 +168,7 @@ try:
     config["batch_size"] = checkpoint["batchsize"][LOAD_POSITION]
     runtime = checkpoint["runtime"]
     batch_index = checkpoint["batch_index"]
+    metric_log = checkpoint["metric_log"]
 except IOError:
     loss_values = []
     print("=> No previous checkpoint found")
@@ -163,6 +182,7 @@ except IOError:
     checkpoint["runtime"] = time.time() - start_time
     checkpoint["scheduler"] = scheduler.state_dict()
     checkpoint["batch_index"] = batch_index
+    checkpoint["metric_log"] = metric_log
 
 # Start training
 
@@ -208,6 +228,7 @@ def save_checkpoint(checkpoint, filename=str(model_save_path / train_name) + ".p
     checkpoint["batch_index"] = batch_index
     checkpoint["running_loss"] = running_loss
     checkpoint["old_pred"] = old_pred
+    checkpoint["metric_log"] = metric_log
     torch.save(checkpoint, Path(filename))
 
 
@@ -218,19 +239,90 @@ def restart_script():
     recallParameter = 'qsub -N ' + "ep" + str(epoch) + config["model"] + ' -l nv_mem_free=' + VRAM + ' -v CFG=' + str(
         model_save_path / "train_config.json") + ' train_mixed.sge'
     call(recallParameter, shell=True)
-    pass
+
+
+
+
+
+def evaluate(model, train=False, eval_length=29 * 6, epoch=0, random_start=True):
+    print("Evaluating")
+    metrics = defaultdict(AverageMeter)
+    to_PIL = T.ToPILImage()
+    model.eval()
+    old_pred = [None, None]
+    dset = Youtube_Greenscreen(train=train)
+    if random_start:
+        start_index = np.random.choice(range(len(dset) - eval_length))
+        dset.set_start_index(int(start_index))
+    loader = DataLoader(dataset=dset, batch_size=1, shuffle=False, num_workers=0)
+    out_folder = model_save_path / "intermediate results"
+    out_folder.mkdir(parents=True, exist_ok=True)
+    mode = "train" if train else "val"
+    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+    out_vid = cv2.VideoWriter(str(out_folder) + "/intermediate_{}_ep{}.mp4".format(mode, epoch), fourcc, 29,
+                              (1536, 270))
+    for i, batch in enumerate(loader):
+        idx, (images, labels) = batch
+        pred = model(images, old_pred)  # predict
+        outputs = torch.argmax(pred, dim=1).float()
+        old_pred[0] = old_pred[1]  # oldest at 0 position
+        old_pred[1] = pred.unsqueeze(1).detach()  # newest at 1 position
+        # Conversion for metric evaluations
+        labels = labels.type(torch.uint8)
+        outputs = outputs.type(torch.uint8)
+        overall_acc, avg_per_class_acc, avg_jacc, avg_dice = eval_metrics(outputs.to("cpu"),
+                                                                          labels.to("cpu"),
+                                                                          num_classes=2)
+
+        metrics["Mean IoU"].update(avg_jacc)
+        metrics["Pixel Accuracy"].update(overall_acc)
+        metrics["Per Class Accuracy"].update(avg_per_class_acc)
+        metrics["Dice"].update(avg_dice)
+
+        # conversions since hstack expects PIL image or np array and cv2 np array with channel at last position
+        tmp_prd = to_PIL(outputs[0].cpu().float())
+        tmp_inp = to_PIL(images.squeeze(0).cpu())
+        tmp_inp = Image.fromarray(cv2.cvtColor(np.asarray(tmp_inp), cv2.COLOR_RGB2BGR))
+        tmp_lbl = to_PIL(labels.cpu().float())
+        out_vid.write(np.array(stack.hstack([tmp_inp, tmp_lbl, tmp_prd])))
+        # break after certain amount of frames (remove for final (last) evaluation)
+        if i == eval_length:
+            break
+    out_vid.release()
+    model.train()
+    return metrics
+
+
+def visualize_metric(metric_log, step_size=2):
+    for key in metric_log["train"][0]:
+        y = defaultdict(list)
+        for i in range(len(metric_log["train"])):
+            y["train"].append(metric_log["train"][i][key].avg)
+            y["test"].append(metric_log["test"][i][key].avg)
+        print(y["train"], y["test"])
+        plt.plot(range(0, epoch + 1, step_size), y["train"], color='red', label="train")
+        plt.plot(range(0, epoch + 1, step_size), y["test"], color='blue', label="test")
+        plt.legend()
+        plt.title('Average Train/Test {} score'.format(key))
+        plt.xlabel('Epoch')
+        plt.ylabel('Average {}'.format(key))
+        plt.savefig(str(model_save_path / "intermediate results" / (key + ".jpg")))
+        plt.close()
 
 
 print(">>>Start of Training<<<")
 time_tmp = []
 avrg_batch_time = 60 * 5
 restart_time = 60 * 60 * 0.5  # restart after 30 min
+evaluation_steps = 2
 restart = False  # flag
 
 dataset.set_start_index(checkpoint["batch_index"])  # continue training at dataset position of last stop
 epoch_start = time.time()
 sys.stderr.write("\nEpoch starting at: {}".format(time.ctime(epoch_start)))
+
 for epoch in tqdm(range(start_epoch, config["num_epochs"])):
+    sys.stderr.write(metrics.get_gpu_memory_map())
     old_pred = [None, None]
     for param_group in optimizer.param_groups:
         lr = param_group['lr']
@@ -254,11 +346,15 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
         # the dataset will return 0-tensor as idx in case the end of the batch is reached
         if torch.all(idx == torch.zeros(config["batch_size"])):
             sys.stderr.write("\nEnd reached of batch")
-            dataset.start_index = 0 # reset start index for the next batch
+            dataset.start_index = 0  # reset start index for the next batch
             break
 
         pred = net(images, old_pred)
-        loss = criterion(pred, labels.long())
+        if config["loss"] == "Boundary":
+            mask = metrics.make_one_hot(labels.unsqueeze(1), C=2)
+            loss = criterion(pred, labels, mask)
+        else:
+            loss = criterion(pred, labels)
         print(loss)
         optimizer.zero_grad()
         loss.backward()
@@ -268,8 +364,17 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
         old_pred[1] = pred.unsqueeze(1).detach()  # newest at 1 position
         # (detach so no error is thrown due to multiple backpropagations)
         batch_index = idx
-        time_tmp.append(time.time() - batch_start_time) # meassure time passed
+        time_tmp.append(time.time() - batch_start_time)  # meassure time passed
         avrg_batch_time = np.array(time_tmp).mean()
+
+
+    if epoch % evaluation_steps == 0:
+        print("evaluation at epoch", epoch)
+        train_eval = evaluate(net, train=True, eval_length=29 * 2, epoch=epoch)
+        test_eval = evaluate(net, train=False, eval_length=29 * 2, epoch=epoch)
+        metric_log["train"].append(train_eval)
+        metric_log["test"].append(test_eval)
+        visualize_metric(metric_log, step_size=evaluation_steps)
 
     if restart:
         break
@@ -280,7 +385,6 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
     save_figure(loss_values, what="loss")
     save_figure(lrs, what="LR")
     sys.stderr.write("End of Epoch: {}\n".format(epoch))
-
 
 sys.stderr.write("End of Training\n")
 print(">>>End of Training<<<")
