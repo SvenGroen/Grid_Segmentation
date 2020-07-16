@@ -285,3 +285,25 @@ class Deeplabv3Plus_rgb_gruV1(nn.Module):
         self.hidden = [tuple(state.detach() for state in i) for i in self.hidden]
         out = out[0][:, 0, :, :, :]  # <--- not to sure if 0 or -1
         return out
+
+class Deeplabv3Plus_rgb_lstmV1(nn.Module):
+    def __init__(self, backbone="mobilenet"):
+        super().__init__()
+        if backbone == "mobilenet":
+            self.base = deeplabv3plus_mobilenet(num_classes=3, pretrained_backbone=True)
+        elif backbone == "resnet50":
+            self.base = deeplabv3plus_resnet50(num_classes=3, pretrained_backbone=True)
+
+        self.lstm = ConvLSTM(input_dim=3, hidden_dim=[3], kernel_size=(3, 3), num_layers=1, batch_first=True,
+                             bias=True,
+                             return_all_layers=False)
+        self.hidden = None
+
+    def forward(self, x, *args):
+        input_shape = x.shape[-2:]
+        out = self.base(x)
+        out = F.interpolate(out, size=input_shape, mode='bilinear', align_corners=False)
+        out = out.unsqueeze(1)
+        out, self.hidden = self.lstm(out, self.hidden)
+        self.hidden = [tuple(state.detach() for state in i) for i in self.hidden]
+        return out[-1].squeeze(1)
