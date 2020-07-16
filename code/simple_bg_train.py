@@ -93,8 +93,7 @@ elif config["model"] == "Deeplabv3Plus_rgb":
     net = Deeplabv3Plus_rgb()
 elif config["model"] == "Deeplabv3Plus_rgb_gru":
     net = Deeplabv3Plus_rgb_gruV1()
-elif config["model"] == "Deeplabv3Plus_rgb_lstmV1":
-    net = Deeplabv3Plus_rgb_lstmV1(backbone="mobilenet")
+
 else:
     net = None
     print("Model unknown")

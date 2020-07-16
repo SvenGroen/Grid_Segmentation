@@ -2,11 +2,8 @@
 #$ -l mem=4G
 #$ -cwd
 #$ -l cuda=1
-#$ -l hostname=!*cippy19*
-#$ -l hostname=!*cippy12* 
-#$ -l hostname=!*cippy21*
-#$ -l hostname=!*cippy25*
-#$ -l h_rt=00:48:00
+#$ -l hostname=!*cippy*
+#$ -l h_rt=00:40:00
 #$ -o /dev/null"
 #$ -m n
 #$ -pe default 1

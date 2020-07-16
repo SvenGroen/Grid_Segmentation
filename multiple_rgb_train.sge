@@ -2,7 +2,7 @@
 #$ -l mem=4G
 #$ -cwd
 #$ -l cuda=0
-#$ -l hostname=*cippy*
+#$ -l hostname=*cippy18*
 #$ -pe default 1
 #$ -l h_rt=00:40:00
 #$ -N job_starter

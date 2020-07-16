@@ -5,10 +5,10 @@ from pathlib import Path
 # models = ["Deep+_mobile", "Deep_mobile_lstm", "Deep_mobile_lstmV2", "Deep_mobile_gru",
 #           "Deep_mobile_gruV2"]  # Options available: "UNet", "Deep_Res101", "ConvSame_3", "Deep_Res50", "Deep+_mobile", "ICNet", "FCN_Res50", "Deep_mobile_lstm", "Deep_mobile_lstmV2"
 
-models = ["Deeplabv3Plus_rgb", "Deeplabv3Plus_rgb_gru"]
+models = ["Deeplabv3Plus_rgb_lstmV1"]
 start_lrs = [1e-02]
-step_sizes = [5]
-num_epochs = [25]
+step_sizes = [6]
+num_epochs = [30]
 batch_sizes = [8]
 config = {}
 config_paths = []
@@ -38,10 +38,10 @@ for i, cfg in enumerate(config_paths):
     from subprocess import call
 
     if "Deep" in models_name[i]:
-        vRam="4.5G"
+        vRam = "4.5G"
     else:
-        vRam="3.2G"
+        vRam = "4.5G"
 
     recallParameter = 'qsub -N ' + "log_" + str(i) + models_name[
-        i] + ' -l nv_mem_free='+vRam+' -v CFG=' + cfg + ' train_rgb.sge'
+        i] + ' -l nv_mem_free=' + vRam + ' -v CFG=' + cfg + ' train_rgb.sge'
     call(recallParameter, shell=True)
