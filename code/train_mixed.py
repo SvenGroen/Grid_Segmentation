@@ -27,22 +27,20 @@ from models.ICNet.utils import ICNetLoss, IterationPolyLR, SegmentationMetric, S
 from DataLoader.Datasets.Youtube.Youtube_Greenscreen import *
 from DataLoader.Datasets.Youtube.Youtube_Greenscreen_mini import *
 
-
-
 start_time = time.time()
 sys.stderr.write("Starting at: {}\n".format(time.ctime(start_time)))
 
 # -cfg code/models/trained_models/minisV2/Deep_mobile_lstm_bs4_startLR1e-03Sched_Step_20ID1/train_config.json
 config = {  # DEFAULT CONFIG
     # This config is replaced by the config given as a parameter in -cfg, which will be generated in multiple_train.py.
-    "model": "Deep_resnet50_lstmV3",
+    "model": "Deep_mobile_lstmV5",
     "ID": "01",
     "lr": 1e-02,
     "batch_size": 4,
     "num_epochs": 6,
     "scheduler_step_size": 15,
     "save freq": 1,
-    "loss": "Boundary",  # / "SoftDice" / "Focal" / "CrossEntropy" / "Boundary"
+    "loss": "CrossEntropy",  # / "SoftDice" / "Focal" / "CrossEntropy" / "Boundary"
     "save_path": "code/models/trained_models/testing"
 }
 
@@ -78,12 +76,18 @@ elif config["model"] == "Deep_mobile_lstmV2":
     net = Deeplabv3Plus_lstmV2(backbone="mobilenet")
 elif config["model"] == "Deep_mobile_lstmV3":
     net = Deeplabv3Plus_lstmV3(backbone="mobilenet")
+elif config["model"] == "Deep_mobile_lstmV4":
+    net = Deeplabv3Plus_lstmV4(backbone="mobilenet")
+elif config["model"] == "Deep_mobile_lstmV5":
+    net = Deeplabv3Plus_lstmV5(backbone="mobilenet")
 elif config["model"] == "Deep_mobile_gruV1":
     net = Deeplabv3Plus_gruV1(backbone="mobilenet")
 elif config["model"] == "Deep_mobile_gruV2":
     net = Deeplabv3Plus_gruV2(backbone="mobilenet")
 elif config["model"] == "Deep_mobile_gruV3":
     net = Deeplabv3Plus_gruV3(backbone="mobilenet")
+elif config["model"] == "Deep_mobile_gruV4":
+    net = Deeplabv3Plus_gruV4(backbone="mobilenet")
 elif config["model"] == "Deep+_resnet50":
     net = Deeplabv3Plus_base(backbone="resnet50")
 elif config["model"] == "Deep_resnet50_lstmV1":
@@ -92,12 +96,16 @@ elif config["model"] == "Deep_resnet50_lstmV2":
     net = Deeplabv3Plus_lstmV2(backbone="resnet50")
 elif config["model"] == "Deep_resnet50_lstmV3":
     net = Deeplabv3Plus_lstmV3(backbone="resnet50")
+elif config["model"] == "Deep_resnet50_lstmV4":
+    net = Deeplabv3Plus_lstmV4(backbone="resnet50")
 elif config["model"] == "Deep_resnet50_gruV1":
     net = Deeplabv3Plus_gruV1(backbone="resnet50")
 elif config["model"] == "Deep_resnet50_gruV2":
     net = Deeplabv3Plus_gruV2(backbone="resnet50")
 elif config["model"] == "Deep_resnet50_gruV3":
     net = Deeplabv3Plus_gruV3(backbone="resnet50")
+elif config["model"] == "Deep_resnet50_gruV4":
+    net = Deeplabv3Plus_gruV4(backbone="resnet50")
 elif config["model"] == "Deep_Res101":
     net = Deeplab_Res101()
     norm_ImageNet = False
@@ -120,7 +128,7 @@ net.to(device)
 if config["model"] == "ICNet":
     criterion = ICNetLoss()
 elif config["loss"] == "CrossEntropy":
-    criterion = F.cross_entropy
+    criterion = torch.nn.CrossEntropyLoss()
 elif config["loss"] == "SoftDice":
     criterion = SegLoss.dice_loss.SoftDiceLoss(smooth=0.0001, apply_nonlin=F.softmax)
 elif config["loss"] == "Focal":
@@ -141,9 +149,10 @@ train_loader = DataLoader(dataset=dataset, batch_size=config["batch_size"], shuf
 
 # ----------------------------------------------------------------------------------------------------
 # saving the models
-train_name = config["model"] + "_bs" + str(config["batch_size"]) + "_startLR" + format(config["lr"],
-                                                                                       ".0e") + "Sched_Step_" + str(
-    config["scheduler_step_size"]) + "_" + config["loss"] +"_ID" + config["ID"]  # sets name of model based on parameters
+train_name = config["model"] + "_bs" + str(config["batch_size"]) \
+             + "_startLR" + format(config["lr"], ".0e") \
+             + "Sched_Step_" + str(config["scheduler_step_size"]) \
+             + "_" + config["loss"] + "_ID" + config["ID"]  # sets name of model based on parameters
 model_save_path = Path.cwd() / Path(config["save_path"]) / train_name
 model_save_path.mkdir(parents=True, exist_ok=True)  # create folder to save results
 with open(str(model_save_path / "train_config.json"), "w") as js:  # save learn config
@@ -241,9 +250,6 @@ def restart_script():
     call(recallParameter, shell=True)
 
 
-
-
-
 def evaluate(model, train=False, eval_length=29 * 6, epoch=0, random_start=True):
     print("Evaluating")
     metrics = defaultdict(AverageMeter)
@@ -322,7 +328,8 @@ epoch_start = time.time()
 sys.stderr.write("\nEpoch starting at: {}".format(time.ctime(epoch_start)))
 
 for epoch in tqdm(range(start_epoch, config["num_epochs"])):
-    sys.stderr.write(metrics.get_gpu_memory_map())
+    if torch.cuda.is_available():
+        sys.stderr.write(metrics.get_gpu_memory_map())
     old_pred = [None, None]
     for param_group in optimizer.param_groups:
         lr = param_group['lr']
@@ -366,7 +373,6 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
         batch_index = idx
         time_tmp.append(time.time() - batch_start_time)  # meassure time passed
         avrg_batch_time = np.array(time_tmp).mean()
-
 
     if epoch % evaluation_steps == 0:
         print("evaluation at epoch", epoch)

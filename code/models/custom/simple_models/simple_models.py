@@ -109,6 +109,63 @@ class Deeplabv3Plus_lstmV3(nn.Module):
         out = F.interpolate(out, size=input_shape, mode='bilinear', align_corners=False)
         return out
 
+class Deeplabv3Plus_lstmV4(nn.Module):
+    def __init__(self, backbone="mobilenet"):
+        super().__init__()
+        if backbone == "mobilenet":
+            self.base = deeplabv3plus_mobilenet(num_classes=2, pretrained_backbone=True)
+            in_channels = 320
+            low_level_channels = 24
+        elif backbone == "resnet50":
+            self.base = deeplabv3plus_resnet50(num_classes=2, pretrained_backbone=True)
+            in_channels = 2048
+            low_level_channels = 256
+
+        self.backbone = self.base.backbone
+        self.classifier = DeepLabHeadV3PlusLSTM(in_channels, low_level_channels, 2, [12, 24, 36], store_previous=True)
+        self.hidden = None
+
+    def forward(self, x, *args):
+        input_shape = x.shape[-2:]
+        out = self.base(x)
+        out = F.interpolate(out, size=input_shape, mode='bilinear', align_corners=False)
+        return out
+
+class Deeplabv3Plus_lstmV5(nn.Module):
+    def __init__(self, backbone="mobilenet"):
+        super().__init__()
+        if backbone == "mobilenet":
+            self.base = deeplabv3plus_mobilenet(num_classes=2, pretrained_backbone=True)
+        elif backbone == "resnet50":
+            self.base = deeplabv3plus_resnet50(num_classes=2, pretrained_backbone=True)
+
+        self.lstm = ConvLSTM(input_dim=2, hidden_dim=[6,2], kernel_size=(3, 3), num_layers=2, batch_first=True,
+                             bias=True,
+                             return_all_layers=False)
+        self.hidden = None
+
+    def forward(self, x, *args):
+        input_shape = x.shape[-2:]
+        x = self.base(x)
+        out = F.interpolate(x, size=input_shape, mode='bilinear', align_corners=False)
+        out = out.unsqueeze(1)
+        if len(args) != 0:
+            old_pred = args[0]
+            # initialize if necessary
+            if None in old_pred:
+                for i in range(len(old_pred)):
+                    old_pred[i] = torch.zeros_like(out)
+            # match shape
+            elif len(old_pred[0].shape) != len(out.shape):
+                for i in range(len(old_pred)):
+                    old_pred[i] = old_pred[i].unsqueeze(1)
+            out = old_pred + [out]
+            out = torch.cat(out, dim=1)
+
+        out, self.hidden = self.lstm(out)
+        out = out[0][:, 0, :, :, :]  # <--- not to sure if 0 or -1
+        self.hidden = [tuple(state.detach() for state in i) for i in self.hidden]
+        return out
 
 # --- GRU ---
 class Deeplabv3Plus_gruV1(nn.Module):
@@ -180,6 +237,29 @@ class Deeplabv3Plus_gruV3(nn.Module):
 
         self.backbone = self.base.backbone
         self.classifier = DeepLabHeadV3PlusGRU(in_channels, low_level_channels, 2, [12, 24, 36])
+        self.hidden = None
+
+    def forward(self, x, *args):
+        input_shape = x.shape[-2:]
+        features = self.backbone(x)
+        out = self.classifier(features)
+        out = F.interpolate(out, size=input_shape, mode='bilinear', align_corners=False)
+        return out
+
+class Deeplabv3Plus_gruV4(nn.Module):
+    def __init__(self, backbone="mobilenet"):
+        super().__init__()
+        if backbone == "mobilenet":
+            self.base = deeplabv3plus_mobilenet(num_classes=2, pretrained_backbone=True)
+            in_channels = 320
+            low_level_channels = 24
+        elif backbone == "resnet50":
+            self.base = deeplabv3plus_resnet50(num_classes=2, pretrained_backbone=True)
+            in_channels = 2048
+            low_level_channels = 256
+
+        self.backbone = self.base.backbone
+        self.classifier = DeepLabHeadV3PlusGRU(in_channels, low_level_channels, 2, [12, 24, 36], store_previous=True)
         self.hidden = None
 
     def forward(self, x, *args):
