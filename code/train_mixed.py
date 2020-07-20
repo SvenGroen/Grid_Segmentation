@@ -33,10 +33,10 @@ sys.stderr.write("Starting at: {}\n".format(time.ctime(start_time)))
 # -cfg code/models/trained_models/minisV2/Deep_mobile_lstm_bs4_startLR1e-03Sched_Step_20ID1/train_config.json
 config = {  # DEFAULT CONFIG
     # This config is replaced by the config given as a parameter in -cfg, which will be generated in multiple_train.py.
-    "model": "Deep_mobile_lstmV5",
+    "model": "Deep_mobile_lstmV2",
     "ID": "01",
     "lr": 1e-02,
-    "batch_size": 4,
+    "batch_size": 16,
     "num_epochs": 6,
     "scheduler_step_size": 15,
     "save freq": 1,
@@ -255,6 +255,7 @@ def evaluate(model, train=False, eval_length=29 * 6, epoch=0, random_start=True)
     metrics = defaultdict(AverageMeter)
     to_PIL = T.ToPILImage()
     model.eval()
+    model.start_eval()
     old_pred = [None, None]
     dset = Youtube_Greenscreen(train=train)
     if random_start:
@@ -286,6 +287,7 @@ def evaluate(model, train=False, eval_length=29 * 6, epoch=0, random_start=True)
         metrics["Dice"].update(avg_dice)
 
         # conversions since hstack expects PIL image or np array and cv2 np array with channel at last position
+
         tmp_prd = to_PIL(outputs[0].cpu().float())
         tmp_inp = to_PIL(images.squeeze(0).cpu())
         tmp_inp = Image.fromarray(cv2.cvtColor(np.asarray(tmp_inp), cv2.COLOR_RGB2BGR))
@@ -296,6 +298,7 @@ def evaluate(model, train=False, eval_length=29 * 6, epoch=0, random_start=True)
             break
     out_vid.release()
     model.train()
+    model.end_eval()
     return metrics
 
 
@@ -364,7 +367,7 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
             loss = criterion(pred, labels)
         print(loss)
         optimizer.zero_grad()
-        loss.backward()
+        # loss.backward()
         optimizer.step()
         running_loss += loss.item() * images.size(0)
         old_pred[0] = old_pred[1]  # oldest at 0 position
@@ -373,6 +376,7 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
         batch_index = idx
         time_tmp.append(time.time() - batch_start_time)  # meassure time passed
         avrg_batch_time = np.array(time_tmp).mean()
+        break
 
     if epoch % evaluation_steps == 0:
         print("evaluation at epoch", epoch)

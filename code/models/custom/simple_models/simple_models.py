@@ -62,6 +62,15 @@ class Deeplabv3Plus_lstmV2(nn.Module):
                              bias=True,
                              return_all_layers=False)
         self.hidden = None
+        self.tmp_hidden = None
+
+    def start_eval(self):
+        self.tmp_hidden = self.hidden
+        self.hidden = None
+    def end_eval(self):
+        self.hidden = self.tmp_hidden
+        self.tmp_hidden = None
+
 
     def forward(self, x, *args):
         input_shape = x.shape[-2:]
