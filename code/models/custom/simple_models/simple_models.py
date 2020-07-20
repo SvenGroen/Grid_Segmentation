@@ -182,10 +182,13 @@ class Deeplabv3Plus_lstmV5(nn.Module):
             self.base = deeplabv3plus_mobilenet(num_classes=2, pretrained_backbone=True)
         elif backbone == "resnet50":
             self.base = deeplabv3plus_resnet50(num_classes=2, pretrained_backbone=True)
-
+        if keep_hidden:
+            return_all_layers=True
+        else:
+            return_all_layers=False
         self.lstm = ConvLSTM(input_dim=2, hidden_dim=[2, 2], kernel_size=(3, 3), num_layers=2, batch_first=True,
                              bias=True,
-                             return_all_layers=False)
+                             return_all_layers=return_all_layers)
         self.hidden = None
         self.tmp_hidden = None
         self.keep_hidden=keep_hidden

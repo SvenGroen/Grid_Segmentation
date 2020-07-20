@@ -34,15 +34,16 @@ sys.stderr.write("Starting at: {}\n".format(time.ctime(start_time)))
 config = {  # DEFAULT CONFIG
     # This config is replaced by the config given as a parameter in -cfg, which will be generated in multiple_train.py.
 
-    "model": "Deep_resnet50_lstmV3",
+    "model": "Deep_mobile_lstmV5.1",
     "ID": "01",
     "lr": 1e-02,
-    "batch_size": 12,
+    "batch_size": 4,
     "num_epochs": 6,
     "scheduler_step_size": 15,
     "save freq": 1,
     "loss": "CrossEntropy",  # / "SoftDice" / "Focal" / "CrossEntropy" / "Boundary" / "CrossDice"
-    "save_path": "code/models/trained_models/testing"
+    "save_path": "code/models/trained_models/testing",
+    "track_ID": 99
 }
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -357,7 +358,6 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
     with open(str(model_save_path / "time_passed.txt"), "w") as txt_file:
         txt_file.write("Time Passed: {} min.\n".format((time.time() - start_time) / 60.))
     for batch in train_loader:
-
         if torch.cuda.is_available():
             curr_gpu_mem = metrics.get_gpu_memory_map()[0]
             max_gpu_mem = max_gpu_mem if max_gpu_mem > curr_gpu_mem else curr_gpu_mem
@@ -376,21 +376,22 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
         # no restart, continue training
         idx, (images, labels) = batch
         sys.stderr.write(f"\nCurrent epoch:{epoch}; \t current batch_idx: {idx}\n")
+
         # check if end of batch is reached
         # the dataset will return 0-tensor as idx in case the end of the batch is reached
         if len(idx) == config["batch_size"]:
-            if 0 in idx:
-                tmp = 0
-                if idx[0] != 0:
-                    sys.stderr.write(f"\n 0 not at the beginning at index: {idx}\n")
-                for i in idx:
-                    sys.stderr.write("\n Counting 0s\n")
-                    if i == 0:
-                        tmp += 1
-                if tmp > 1:
-                    sys.stderr.write(f"\nEnd reached of batch cause of too many 0's( {tmp} )\n")
-                    dataset.start_index = 0  # reset start index for the next batch
-                    break
+            # if 0 in idx:
+            #     tmp = 0
+            #     if idx[0] != 0:
+            #         sys.stderr.write(f"\n 0 not at the beginning at index: {idx}\n")
+            #     for i in idx:
+            #         sys.stderr.write("\n Counting 0s\n")
+            #         if i == 0:
+            #             tmp += 1
+            #     if tmp > 1:
+            #         sys.stderr.write(f"\nEnd reached of batch cause of too many 0's( {tmp} )\n")
+            #         dataset.start_index = 0  # reset start index for the next batch
+            #         break
             if torch.all(idx == torch.zeros(config["batch_size"])):
                 sys.stderr.write(f"\nEnd reached of batch at index {idx}\n")
                 dataset.start_index = 0  # reset start index for the next batch
@@ -414,7 +415,7 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
         batch_index = idx
         time_tmp.append(time.time() - batch_start_time)  # meassure time passed
         avrg_batch_time = np.array(time_tmp).mean()
-        break
+
 
     # if epoch % evaluation_steps == 0:
     #     print("evaluation at epoch", epoch)
