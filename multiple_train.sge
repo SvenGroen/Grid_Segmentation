@@ -3,10 +3,15 @@
 #$ -cwd
 #$ -l cuda=0
 #$ -pe default 1
+#$ -l hostname=*cippy18*
 #$ -l h_rt=00:40:00
 #$ -N job_starter
 #$ -o /dev/null"
 #$ -e /dev/null"
+
+
+
+
 
 echo " Start of SGE job " 
 echo "$date"

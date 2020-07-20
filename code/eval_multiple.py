@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-model_path = Path("code/models/trained_models/minisV2")
+model_path = Path("code/models/trained_models/minisV3")
 for i,model_name in enumerate(model_path.glob("*")):
     model = model_name.stem
 

@@ -142,12 +142,14 @@ def make_one_hot(labels, C=2):
     target : torch.autograd.Variable of torch.cuda.FloatTensor
         N x C x H x W, where C is class number. One-hot encoded.
     '''
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     one_hot = torch.FloatTensor(labels.size(0), C, labels.size(2), labels.size(3)).zero_()
-    target = one_hot.scatter_(1, labels.data, 1)
+    one_hot = one_hot.to(device)
+    target = one_hot.scatter_(1, labels.data.to(device), 1)
 
     target = Variable(target)
 
-    return target
+    return target.to(device)
 
 class AverageMeter(object):
     def __init__(self):

@@ -26,26 +26,21 @@ class Youtube_Greenscreen(data.Dataset):
         with open("data/Images/Greenscreen_Video_frames_4sec/" + self.mode + "/out_log.json", "r") as json_file:
             self.data = json.load(json_file)
         self.start_index = start_index[0].item()
-        self.found_restart = False
 
     def __len__(self):
         return len(self.data["Inputs"])
 
     def set_start_index(self, idx):
         if isinstance(idx, int):
-            self.start_index=idx
+            self.start_index = idx
         else:
             self.start_index = idx[0].item()
 
-
     def __getitem__(self, idx):
-        # if not idx == self.start_index and not self.found_restart:
-        #     return idx, (0, 0)
-        # self.found_restart = True
 
         idx = idx + self.start_index
         if idx >= self.__len__():
-            return 0, (0,0)
+            return 0, (0, 0)
         img = Image.open(str(Path.cwd() / Path(self.data["Inputs"][idx])))
         lbl = Image.open(str(Path.cwd() / Path(self.data["labels"][idx]))).convert("L")
         state = random.getstate()  # makes sure the transformations are applied equally

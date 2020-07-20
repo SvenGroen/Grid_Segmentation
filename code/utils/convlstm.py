@@ -1,6 +1,6 @@
 import torch.nn as nn
 import torch
-
+import sys
 
 class ConvLSTMCell(nn.Module):
 
@@ -37,7 +37,10 @@ class ConvLSTMCell(nn.Module):
 
     def forward(self, input_tensor, cur_state):
         h_cur, c_cur = cur_state
-        
+
+        print(input_tensor.shape, h_cur.shape)
+        sys.stderr.write("\n "+ str(input_tensor.shape) + " and " + str( h_cur.shape)+ "\n")
+
         combined = torch.cat([input_tensor, h_cur], dim=1)  # concatenate along channel axis
 
         combined_conv = self.conv(combined)
