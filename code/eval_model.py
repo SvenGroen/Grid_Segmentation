@@ -59,12 +59,18 @@ elif "Deep_mobile_lstmV2" in model_name :
     net = Deeplabv3Plus_lstmV2(backbone="mobilenet")
 elif "Deep_mobile_lstmV3" in model_name :
     net = Deeplabv3Plus_lstmV3(backbone="mobilenet")
+elif "Deep_mobile_lstmV4" in model_name :
+    net = Deeplabv3Plus_lstmV4(backbone="mobilenet")
+elif "Deep_mobile_lstmV5" in model_name :
+    net = Deeplabv3Plus_lstmV5(backbone="mobilenet")
 elif "Deep_mobile_gruV1" in model_name :
     net = Deeplabv3Plus_gruV1(backbone="mobilenet")
 elif "Deep_mobile_gruV2" in model_name :
     net = Deeplabv3Plus_gruV2(backbone="mobilenet")
 elif "Deep_mobile_gruV3" in model_name :
     net = Deeplabv3Plus_gruV3(backbone="mobilenet")
+elif "Deep_mobile_gruV4" in model_name :
+    net = Deeplabv3Plus_gruV4(backbone="mobilenet")
 elif "Deep+_resnet50" in model_name :
     net = Deeplabv3Plus_base(backbone="resnet50")
 elif "Deep_resnet50_lstmV1" in model_name :
@@ -73,12 +79,18 @@ elif "Deep_resnet50_lstmV2" in model_name :
     net = Deeplabv3Plus_lstmV2(backbone="resnet50")
 elif "Deep_resnet50_lstmV3" in model_name :
     net = Deeplabv3Plus_lstmV3(backbone="resnet50")
+elif "Deep_resnet50_lstmV4" in model_name :
+    net = Deeplabv3Plus_lstmV4(backbone="resnet50")
+elif "Deep_resnet50_lstmV5" in model_name :
+    net = Deeplabv3Plus_lstmV5(backbone="resnet50")
 elif "Deep_resnet50_gruV1" in model_name :
     net = Deeplabv3Plus_gruV1(backbone="resnet50")
 elif "Deep_resnet50_gruV2" in model_name :
     net = Deeplabv3Plus_gruV2(backbone="resnet50")
 elif "Deep_resnet50_gruV3" in model_name :
     net = Deeplabv3Plus_gruV3(backbone="resnet50")
+elif "Deep_resnet50_gruV4" in model_name :
+    net = Deeplabv3Plus_gruV4(backbone="resnet50")
 elif "Deep_Res101" in model_name :
     net = Deeplab_Res101()
     norm_ImageNet = False
@@ -115,8 +127,8 @@ net.eval()
 net.to(device)
 
 # Load test data
-dataset = Youtube_Greenscreen(train=False)
-# dataset = Youtube_Greenscreen_mini()
+# dataset = Youtube_Greenscreen(train=False)
+dataset = Youtube_Greenscreen_mini(batch_size= 1)
 test_loader = DataLoader(dataset=dataset, batch_size=1, shuffle=False, num_workers=0)
 
 # Meassure the metrics
@@ -177,7 +189,7 @@ for i, batch in enumerate(test_loader):
     metrics["dice"].update(avg_dice)
 
     # create mask for evaluation video 2 (raw image with Greenscreen based on prediction)
-    mask = outputs.squeeze(0).numpy()
+    mask = outputs.squeeze(0).cpu().numpy()
     mask = np.expand_dims(mask, axis=-1)
 
     # write videos

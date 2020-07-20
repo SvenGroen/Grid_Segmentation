@@ -22,6 +22,12 @@ class Deeplabv3Plus_base(nn.Module):
         elif backbone == "resnet50":
             self.base = deeplabv3plus_resnet50(num_classes=2, pretrained_backbone=True)
 
+    def start_eval(self):
+        pass
+
+    def end_eval(self):
+        pass
+
     def forward(self, x, *args):
         return self.base(x)
 
@@ -39,6 +45,14 @@ class Deeplabv3Plus_lstmV1(nn.Module):
                              bias=True,
                              return_all_layers=False)
         self.hidden = None
+
+    def start_eval(self):
+        self.tmp_hidden = self.hidden
+        self.hidden = None
+
+    def end_eval(self):
+        self.hidden = self.tmp_hidden
+        self.tmp_hidden = None
 
     def forward(self, x, *args):
         input_shape = x.shape[-2:]
@@ -62,6 +76,15 @@ class Deeplabv3Plus_lstmV2(nn.Module):
                              bias=True,
                              return_all_layers=False)
         self.hidden = None
+        self.tmp_hidden = None
+
+    def start_eval(self):
+        self.tmp_hidden = self.hidden
+        self.hidden = None
+
+    def end_eval(self):
+        self.hidden = self.tmp_hidden
+        self.tmp_hidden = None
 
     def forward(self, x, *args):
         input_shape = x.shape[-2:]
@@ -102,12 +125,22 @@ class Deeplabv3Plus_lstmV3(nn.Module):
         self.backbone = self.base.backbone
         self.classifier = DeepLabHeadV3PlusLSTM(in_channels, low_level_channels, 2, [12, 24, 36])
         self.hidden = None
+        self.tmp_hidden = None
+
+    def start_eval(self):
+        self.tmp_hidden = self.hidden
+        self.hidden = None
+
+    def end_eval(self):
+        self.hidden = self.tmp_hidden
+        self.tmp_hidden = None
 
     def forward(self, x, *args):
         input_shape = x.shape[-2:]
         out = self.base(x)
         out = F.interpolate(out, size=input_shape, mode='bilinear', align_corners=False)
         return out
+
 
 class Deeplabv3Plus_lstmV4(nn.Module):
     def __init__(self, backbone="mobilenet"):
@@ -124,6 +157,15 @@ class Deeplabv3Plus_lstmV4(nn.Module):
         self.backbone = self.base.backbone
         self.classifier = DeepLabHeadV3PlusLSTM(in_channels, low_level_channels, 2, [12, 24, 36], store_previous=True)
         self.hidden = None
+        self.tmp_hidden = None
+
+    def start_eval(self):
+        self.tmp_hidden = self.hidden
+        self.hidden = None
+
+    def end_eval(self):
+        self.hidden = self.tmp_hidden
+        self.tmp_hidden = None
 
     def forward(self, x, *args):
         input_shape = x.shape[-2:]
@@ -131,18 +173,29 @@ class Deeplabv3Plus_lstmV4(nn.Module):
         out = F.interpolate(out, size=input_shape, mode='bilinear', align_corners=False)
         return out
 
+
 class Deeplabv3Plus_lstmV5(nn.Module):
-    def __init__(self, backbone="mobilenet"):
+    def __init__(self, backbone="mobilenet", keep_hidden=True):
         super().__init__()
         if backbone == "mobilenet":
             self.base = deeplabv3plus_mobilenet(num_classes=2, pretrained_backbone=True)
         elif backbone == "resnet50":
             self.base = deeplabv3plus_resnet50(num_classes=2, pretrained_backbone=True)
 
-        self.lstm = ConvLSTM(input_dim=2, hidden_dim=[6,2], kernel_size=(3, 3), num_layers=2, batch_first=True,
+        self.lstm = ConvLSTM(input_dim=2, hidden_dim=[2, 2], kernel_size=(3, 3), num_layers=2, batch_first=True,
                              bias=True,
                              return_all_layers=False)
         self.hidden = None
+        self.tmp_hidden = None
+        self.keep_hidden=keep_hidden
+
+    def start_eval(self):
+        self.tmp_hidden = self.hidden
+        self.hidden = None
+
+    def end_eval(self):
+        self.hidden = self.tmp_hidden
+        self.tmp_hidden = None
 
     def forward(self, x, *args):
         input_shape = x.shape[-2:]
@@ -161,11 +214,14 @@ class Deeplabv3Plus_lstmV5(nn.Module):
                     old_pred[i] = old_pred[i].unsqueeze(1)
             out = old_pred + [out]
             out = torch.cat(out, dim=1)
-
-        out, self.hidden = self.lstm(out)
+        if self.keep_hidden:
+            out, self.hidden = self.lstm(out, self.hidden)
+        else:
+            out, self.hidden = self.lstm(out)
         out = out[0][:, 0, :, :, :]  # <--- not to sure if 0 or -1
         self.hidden = [tuple(state.detach() for state in i) for i in self.hidden]
         return out
+
 
 # --- GRU ---
 class Deeplabv3Plus_gruV1(nn.Module):
@@ -179,7 +235,15 @@ class Deeplabv3Plus_gruV1(nn.Module):
         self.gru = ConvGRU(input_size=(270, 512), input_dim=2, hidden_dim=[2], kernel_size=(3, 3), num_layers=1,
                            dtype=torch.FloatTensor, batch_first=True, bias=True, return_all_layers=True)
         self.hidden = [None]
+        self.tmp_hidden = None
 
+    def start_eval(self):
+        self.tmp_hidden = self.hidden
+        self.hidden = None
+
+    def end_eval(self):
+        self.hidden = self.tmp_hidden
+        self.tmp_hidden = None
     def forward(self, x, *args):
         x = self.base(x)
         x = x.unsqueeze(1)
@@ -200,6 +264,15 @@ class Deeplabv3Plus_gruV2(nn.Module):
         self.gru = ConvGRU(input_size=(270, 512), input_dim=2, hidden_dim=[2], kernel_size=(3, 3), num_layers=1,
                            dtype=torch.FloatTensor, batch_first=True, bias=True, return_all_layers=True)
         self.hidden = [None]
+        self.tmp_hidden = [None]
+
+    def start_eval(self):
+        self.tmp_hidden = self.hidden
+        self.hidden = [None]
+
+    def end_eval(self):
+        self.hidden = self.tmp_hidden
+        self.tmp_hidden = [None]
 
     def forward(self, x, *args):
         out = self.base(x)
@@ -238,6 +311,15 @@ class Deeplabv3Plus_gruV3(nn.Module):
         self.backbone = self.base.backbone
         self.classifier = DeepLabHeadV3PlusGRU(in_channels, low_level_channels, 2, [12, 24, 36])
         self.hidden = None
+        self.tmp_hidden = None
+
+    def start_eval(self):
+        self.tmp_hidden = self.hidden
+        self.hidden = None
+
+    def end_eval(self):
+        self.hidden = self.tmp_hidden
+        self.tmp_hidden = None
 
     def forward(self, x, *args):
         input_shape = x.shape[-2:]
@@ -245,6 +327,7 @@ class Deeplabv3Plus_gruV3(nn.Module):
         out = self.classifier(features)
         out = F.interpolate(out, size=input_shape, mode='bilinear', align_corners=False)
         return out
+
 
 class Deeplabv3Plus_gruV4(nn.Module):
     def __init__(self, backbone="mobilenet"):
@@ -261,6 +344,15 @@ class Deeplabv3Plus_gruV4(nn.Module):
         self.backbone = self.base.backbone
         self.classifier = DeepLabHeadV3PlusGRU(in_channels, low_level_channels, 2, [12, 24, 36], store_previous=True)
         self.hidden = None
+        self.tmp_hidden = None
+
+    def start_eval(self):
+        self.tmp_hidden = self.hidden
+        self.hidden = None
+
+    def end_eval(self):
+        self.hidden = self.tmp_hidden
+        self.tmp_hidden = None
 
     def forward(self, x, *args):
         input_shape = x.shape[-2:]
@@ -268,6 +360,7 @@ class Deeplabv3Plus_gruV4(nn.Module):
         out = self.classifier(features)
         out = F.interpolate(out, size=input_shape, mode='bilinear', align_corners=False)
         return out
+
 
 # ----------- other models ------------------
 class ConvSame_3_net(nn.Module):
@@ -335,6 +428,7 @@ class FCN_Res50(nn.Module):
         x = self.base(x)
         return x["out"]
 
+
 class Deeplabv3Plus_rgb(nn.Module):
     def __init__(self, backbone="mobilenet"):
         super().__init__()
@@ -345,6 +439,7 @@ class Deeplabv3Plus_rgb(nn.Module):
 
     def forward(self, x, *args):
         return self.base(x)
+
 
 class Deeplabv3Plus_rgb_gruV1(nn.Module):
     def __init__(self, backbone="mobilenet"):
@@ -365,6 +460,7 @@ class Deeplabv3Plus_rgb_gruV1(nn.Module):
         self.hidden = [tuple(state.detach() for state in i) for i in self.hidden]
         out = out[0][:, 0, :, :, :]  # <--- not to sure if 0 or -1
         return out
+
 
 class Deeplabv3Plus_rgb_lstmV1(nn.Module):
     def __init__(self, backbone="mobilenet"):

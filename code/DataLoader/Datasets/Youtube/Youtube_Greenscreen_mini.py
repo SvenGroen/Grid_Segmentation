@@ -1,6 +1,6 @@
 import glob
 import random
-
+import sys
 import cv2
 from PIL import Image
 import torchvision.transforms as T
@@ -13,11 +13,12 @@ from collections import defaultdict
 import json
 from torch.utils import data
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 class Youtube_Greenscreen_mini(data.Dataset):
 
-
-    def __init__(self, transforms: list = None, norm_ImageNet=False):
+    def __init__(self, transforms: list = None, norm_ImageNet=False, start_index=torch.tensor([0]), batch_size=1):
         # set data
 
         self.transform, self.transform_out = self.preprocess_transforms(norm_ImageNet=norm_ImageNet,
@@ -26,12 +27,31 @@ class Youtube_Greenscreen_mini(data.Dataset):
         self.mode = "train"
         with open("data/Images/Greenscreen_Video_frames_4sec_mini/" + self.mode + "/out_log.json", "r") as json_file:
             self.data = json.load(json_file)
+        self.start_index = start_index[0].item()
+        self.shape = self.transform_out(self.transform(Image.open(str(Path.cwd() / Path(self.data["Inputs"][0]))))).shape
+        self.batch_size = batch_size
 
     def __len__(self):
-        return len(self.data["Inputs"])
+        length = len(self.data["Inputs"])
+        rest = length % self.batch_size
+        return length - rest
+
+    def set_start_index(self, idx):
+        if isinstance(idx, int):
+            self.start_index = idx
+        else:
+            self.start_index = idx[0].item()
 
     def __getitem__(self, idx):
-
+        idx = idx + self.start_index
+        if idx >= self.__len__():
+            # sys.stderr.write("\nreturn nothing\n")
+            # pass
+            sys.stderr.write(
+                f"\nend of batch reached at idx {idx} with len {self.__len__()} and start index: {self.start_index}\n")
+            # null = torch.tensor([0]).float().to(device)
+            zeros = torch.zeros(self.shape).float().to(device)
+            return 0, (0, 0)
         img = Image.open(str(Path.cwd() / Path(self.data["Inputs"][idx])))
         lbl = Image.open(str(Path.cwd() / Path(self.data["labels"][idx]))).convert("L")
         state = random.getstate()  # makes sure the transformations are applied equally
@@ -41,9 +61,9 @@ class Youtube_Greenscreen_mini(data.Dataset):
         lbl = lbl.squeeze(0)
 
         if torch.cuda.is_available():
-            return idx, (inp.cuda(), lbl.round().cuda())
+            return idx, (inp.cuda(), lbl.round().long().cuda())
         else:
-            return idx, (inp, lbl.round())
+            return idx, (inp, lbl.round().long())
 
     def show(self, num_images, start_idx: int = 0, random_images=True):
 
@@ -65,8 +85,8 @@ class Youtube_Greenscreen_mini(data.Dataset):
         result.show()
 
     def preprocess_transforms(self, norm_ImageNet, transforms):
-        transform = [] # label transforms
-        transform_out = [T.ToPILImage()] # input transforms
+        transform = []  # label transforms
+        transform_out = [T.ToPILImage()]  # input transforms
 
         if isinstance(transforms, list) and transforms is not None:
             transform = transform + transforms

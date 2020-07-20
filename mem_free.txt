@@ -1,0 +1,202 @@
+HOSTNAME                ARCH         NCPU  LOAD  MEMTOT  MEMUSE  SWAPTO  SWAPUS
+-------------------------------------------------------------------------------
+global                  -               -     -       -       -       -       -
+aitne.ni.uni-osnabrueck.de lx26-amd64      8  2.27   31.4G    2.5G   16.0G   55.0M
+    Host Resource(s):      hl:nv_mem_free=1.831G
+ananke.neurobiopsychologie.uni-osnabrueck.de lx26-amd64      8     -   31.4G       -   16.0G       -
+anansi.cogsci.uni-osnabrueck.de lx26-amd64      8     -   15.4G       -    3.8G       -
+arche.ni.uni-osnabrueck.de lx26-amd64      8  5.01   31.4G    5.4G   16.0G  316.0K
+    Host Resource(s):      hl:nv_mem_free=1.756G
+bellatrix.ikw.uni-osnabrueck.de lx26-amd64     12  0.02   31.3G    1.2G    3.8G     0.0
+    Host Resource(s):      hl:nv_mem_free=0.000
+bias.cv.uni-osnabrueck.de lx26-amd64      4  2.67   31.4G    2.3G   16.0G  394.3M
+    Host Resource(s):      hl:nv_mem_free=3.779G
+birke.ikw.uni-osnabrueck.de lx26-amd64      8     -   15.6G       -    8.0G       -
+blue.ni.uni-osnabrueck.de lx26-amd64      8  0.12   15.6G    3.9G    3.8G  173.8M
+    Host Resource(s):      hl:nv_mem_free=1.322G
+c01grid.ikw.uni-osnabrueck.de lx26-amd64     56 58.12  251.7G    9.1G  127.9G     0.0
+    Host Resource(s):      hl:nv_mem_free=0.000
+c02grid.ikw.uni-osnabrueck.de lx26-amd64     56 58.48  251.7G    7.1G  127.9G     0.0
+    Host Resource(s):      hl:nv_mem_free=0.000
+c03grid.ikw.uni-osnabrueck.de lx26-amd64     56 58.27  251.7G   10.3G  127.9G  285.4M
+    Host Resource(s):      hl:nv_mem_free=0.000
+c04grid.ikw.uni-osnabrueck.de lx26-amd64     56 58.16  251.7G    7.7G  127.9G     0.0
+    Host Resource(s):      hl:nv_mem_free=0.000
+c05grid.ikw.uni-osnabrueck.de lx26-amd64     56 58.10  251.7G    7.5G  127.9G     0.0
+    Host Resource(s):      hl:nv_mem_free=0.000
+callisto.neurobiopsychologie.uni-osnabrueck.de lx26-amd64      8  0.03   31.4G    2.0G   16.0G  132.0K
+    Host Resource(s):      hl:nv_mem_free=1.760G
+carmen.ni.uni-osnabrueck.de lx26-amd64      8     -   15.6G       -    8.0G       -
+chara.ni.uni-osnabrueck.de lx26-amd64     16     -   62.6G       -   14.9G       -
+charleston.ni.uni-osnabrueck.de lx26-amd64     12  3.10   62.6G    4.5G   14.9G    2.0M
+    Host Resource(s):      hl:nv_mem_free=3.594G
+chepstow.ni.uni-osnabrueck.de lx26-amd64      4     -   31.3G       -   14.9G       -
+cippy01.cogsci.uni-osnabrueck.de lx26-amd64      4  0.00   31.4G    1.2G   16.0G     0.0
+    Host Resource(s):      hl:nv_mem_free=1.889G
+cippy02.cogsci.uni-osnabrueck.de lx26-amd64      4  0.00   31.4G    1.1G   16.0G     0.0
+    Host Resource(s):      hl:nv_mem_free=1.889G
+cippy04.cogsci.uni-osnabrueck.de lx26-amd64      4  0.00   31.4G  775.7M   16.0G     0.0
+    Host Resource(s):      hl:nv_mem_free=0.000
+cippy05.cogsci.uni-osnabrueck.de lx26-amd64      4  0.00   31.4G    1.1G   16.0G     0.0
+    Host Resource(s):      hl:nv_mem_free=1.889G
+cippy06.cogsci.uni-osnabrueck.de lx26-amd64      4  0.00   31.4G  852.4M   16.0G     0.0
+    Host Resource(s):      hl:nv_mem_free=1.953G
+cippy07.cogsci.uni-osnabrueck.de lx26-amd64      4  0.03   31.4G    1.2G   16.0G     0.0
+    Host Resource(s):      hl:nv_mem_free=1.889G
+cippy08.cogsci.uni-osnabrueck.de lx26-amd64      8  0.00   15.6G    1.1G    3.8G     0.0
+    Host Resource(s):      hl:nv_mem_free=1.889G
+cippy09.cogsci.uni-osnabrueck.de lx26-amd64      4  0.01   31.4G    1.1G   16.0G   28.0K
+    Host Resource(s):      hl:nv_mem_free=1.889G
+cippy10.cogsci.uni-osnabrueck.de lx26-amd64      4  0.00   31.4G 1015.3M   16.0G     0.0
+    Host Resource(s):      hl:nv_mem_free=1.878G
+cippy11.cogsci.uni-osnabrueck.de lx26-amd64      4  0.05   31.4G  430.0M   16.0G  405.0M
+    Host Resource(s):      hl:nv_mem_free=1.889G
+cippy12.cogsci.uni-osnabrueck.de lx26-amd64      4  0.00   31.4G    1.5G   16.0G     0.0
+    Host Resource(s):      hl:nv_mem_free=1.889G
+cippy13.cogsci.uni-osnabrueck.de lx26-amd64      4  0.03   31.4G  867.3M   16.0G   20.4M
+    Host Resource(s):      hl:nv_mem_free=1.889G
+cippy14.cogsci.uni-osnabrueck.de lx26-amd64      8  0.17   31.4G    1.2G   16.0G    1.5M
+    Host Resource(s):      hl:nv_mem_free=3.876G
+cippy15.cogsci.uni-osnabrueck.de lx26-amd64      8  0.00   31.4G    1.1G   16.0G     0.0
+    Host Resource(s):      hl:nv_mem_free=3.876G
+cippy16.cogsci.uni-osnabrueck.de lx26-amd64      8  0.01   31.4G    1.2G   16.0G    6.8M
+    Host Resource(s):      hl:nv_mem_free=3.876G
+cippy17.cogsci.uni-osnabrueck.de lx26-amd64      8  0.01   31.4G 1021.8M   16.0G     0.0
+    Host Resource(s):      hl:nv_mem_free=3.837G
+cippy18.cogsci.uni-osnabrueck.de lx26-amd64      8  0.00   31.3G    1.1G   16.0G     0.0
+    Host Resource(s):      hl:nv_mem_free=3.876G
+cippy19.cogsci.uni-osnabrueck.de lx26-amd64      8  0.02   31.3G    1.1G   16.0G     0.0
+    Host Resource(s):      hl:nv_mem_free=3.876G
+cippy20.cogsci.uni-osnabrueck.de lx26-amd64      8  0.00   31.3G    1.1G   16.0G     0.0
+    Host Resource(s):      hl:nv_mem_free=3.876G
+cippy21.cogsci.uni-osnabrueck.de lx26-amd64      8  0.02   31.3G    1.2G   16.0G    4.0K
+    Host Resource(s):      hl:nv_mem_free=3.876G
+cippy22.cogsci.uni-osnabrueck.de lx26-amd64      8  0.02   31.3G    1.1G   16.0G     0.0
+    Host Resource(s):      hl:nv_mem_free=3.876G
+cippy23.cogsci.uni-osnabrueck.de lx26-amd64      8  0.12   31.3G  867.7M   16.0G   88.9M
+    Host Resource(s):      hl:nv_mem_free=3.910G
+cippy24.cogsci.uni-osnabrueck.de lx26-amd64      8  0.00   31.3G  949.4M   16.0G     0.0
+    Host Resource(s):      hl:nv_mem_free=3.876G
+cippy25.cogsci.uni-osnabrueck.de lx26-amd64      8  0.00   31.3G  945.6M   16.0G     0.0
+    Host Resource(s):      hl:nv_mem_free=3.876G
+cippy26.cogsci.uni-osnabrueck.de lx26-amd64      8  0.00   31.3G    1.0G   16.0G    8.8M
+    Host Resource(s):      hl:nv_mem_free=3.876G
+cyllene.neurobiopsychologie.uni-osnabrueck.de lx26-amd64      8     -   31.4G       -   16.0G       -
+dimension.cv.uni-osnabrueck.de lx26-amd64      8  0.02   31.3G  780.2M    3.7G     0.0
+    Host Resource(s):      hl:nv_mem_free=3.825G
+dodo.ikw.uni-osnabrueck.de lx26-amd64      8     -   15.6G       -    8.0G       -
+dvm02.ikw.uni-osnabrueck.de lx26-amd64      4  0.00    3.9G  606.2M    3.8G    2.5M
+dvm12.ikw.uni-osnabrueck.de lx26-amd64      4     -   15.7G       -    3.8G       -
+electra.ni.uni-osnabrueck.de lx26-amd64     16     -   62.6G       -   14.9G       -
+euporie.ni.uni-osnabrueck.de lx26-amd64      8     -   15.6G       -    8.0G       -
+fisheye.cv.uni-osnabrueck.de lx26-amd64      8  4.32   15.6G    3.6G    8.0G    8.0G
+    Host Resource(s):      hl:nv_mem_free=3.494G
+fred.neurobiopsychologie.uni-osnabrueck.de lx26-amd64      8  8.27   31.4G    3.1G   16.0G    3.1M
+grid01.ikw.uni-osnabrueck.de lx26-amd64     16 15.14   62.6G   21.1G    3.8G     0.0
+    Host Resource(s):      hl:nv_mem_free=10.572G
+grid02.ikw.uni-osnabrueck.de lx26-amd64     16     -   62.6G       -    3.8G       -
+grid03.ikw.uni-osnabrueck.de lx26-amd64     16  0.93   62.6G    1.3G    3.8G     0.0
+    Host Resource(s):      hl:nv_mem_free=10.664G
+heinz.ikw.uni-osnabrueck.de lx26-amd64      8  8.40   15.7G    1.3G    8.0G     0.0
+    Host Resource(s):      hl:nv_mem_free=0.000
+helike.neurobiopsychologie.uni-osnabrueck.de lx26-amd64      8  0.01   31.4G    1.1G   16.0G     0.0
+    Host Resource(s):      hl:nv_mem_free=1.953G
+hitode.ikw.uni-osnabrueck.de lx26-amd64      8  0.00   31.4G    1.4G   15.9G     0.0
+    Host Resource(s):      hl:nv_mem_free=3.805G
+iocaste.ikw.uni-osnabrueck.de lx26-amd64      8  0.02   15.6G  504.9M    3.8G     0.0
+    Host Resource(s):      hl:nv_mem_free=1.953G
+isonoe.neurobiopsychologie.uni-osnabrueck.de lx26-amd64      4  0.00   31.4G    2.0G   16.0G  116.0K
+    Host Resource(s):      hl:nv_mem_free=3.795G
+jupiter.neurobiopsychologie.Uni-Osnabrueck.DE lx26-amd64      4     -   14.7G       -    7.5G       -
+kale.ni.uni-osnabrueck.de lx26-amd64      8     -   15.6G       -    8.0G       -
+kalyke.neurobiopsychologie.uni-osnabrueck.de lx26-amd64      8  0.02   31.3G    9.4G    3.8G  407.4M
+    Host Resource(s):      hl:nv_mem_free=3.546G
+kingscote.ni.uni-osnabrueck.de lx26-amd64      4     -   31.3G       -   14.9G       -
+klio.neurobiopsychologie.Uni-Osnabrueck.DE lx26-amd64      4     -    7.7G       -    4.0G       -
+konrad.ikw.Uni-Osnabrueck.DE lx26-amd64      8  8.39   15.7G  863.3M    8.0G     0.0
+    Host Resource(s):      hl:nv_mem_free=0.000
+ksora.neurobiopsychologie.uni-osnabrueck.de lx26-amd64     16     -   31.1G       -   14.9G       -
+kuma.neurobiopsychologie.uni-osnabrueck.de lx26-amd64      8  8.26   31.3G    1.6G   14.9G     0.0
+    Host Resource(s):      hl:nv_mem_free=5.822G
+leda.neurobiopsychologie.Uni-Osnabrueck.DE lx26-amd64      8     -   15.6G       -    3.8G       -
+lefty.ni.uni-osnabrueck.de lx26-amd64      4  0.00   11.7G  481.4M    3.8G     0.0
+    Host Resource(s):      hl:nv_mem_free=3.897G
+light.cv.uni-osnabrueck.de lx26-amd64      8     -   31.3G       -   16.0G       -
+lynx.ni.uni-osnabrueck.de lx26-amd64     16  0.08   62.6G    4.4G   14.9G    2.8M
+    Host Resource(s):      hl:nv_mem_free=7.430G
+mars.neurobiopsychologie.Uni-Osnabrueck.DE lx26-amd64      4     -   14.7G       -    7.5G       -
+matar.ni.uni-osnabrueck.de lx26-amd64     16  2.38   62.6G    8.9G   14.9G  640.8M
+    Host Resource(s):      hl:nv_mem_free=7.174G
+melete.neurobiopsychologie.uni-osnabrueck.de lx26-amd64      4  0.00    7.7G  213.7M    4.0G     0.0
+    Host Resource(s):      hl:nv_mem_free=252.000M
+nelson.ikw.uni-osnabrueck.de lx26-amd64      8     -   31.4G       -    3.7G       -
+neptune.neurobiopsychologie.Uni-Osnabrueck.DE lx26-amd64      4     -   14.7G       -    3.8G       -
+ocular.cv.uni-osnabrueck.de lx26-amd64      8  5.03   15.6G    3.2G    3.8G    1.2G
+    Host Resource(s):      hl:nv_mem_free=3.653G
+orthosie.neurobiopsychologie.uni-osnabrueck.de lx26-amd64      8     -   31.4G       -   16.0G       -
+pappel.ikw.uni-osnabrueck.de lx26-amd64      8     -   15.6G       -    3.8G       -
+perception.cv.uni-osnabrueck.de lx26-amd64      8  6.15   15.6G    2.9G    8.0G    3.0G
+    Host Resource(s):      hl:nv_mem_free=3.626G
+pits.ni.uni-osnabrueck.de lx26-amd64      8  0.02   31.4G    1.1G   16.0G   44.6M
+    Host Resource(s):      hl:nv_mem_free=1.853G
+polis-virtual.ni.uni-osnabrueck.de lx26-amd64      4     -    7.8G       -    3.8G       -
+qmaster.ikw.Uni-Osnabrueck.DE lx26-amd64      6  0.23    5.8G  705.3M    4.0G    4.5M
+ramsauer.ikw.uni-osnabrueck.de lx26-amd64     80 83.26  251.9G    8.7G  128.0G    5.2M
+    Host Resource(s):      hl:nv_mem_free=0.000
+righty.ni.uni-osnabrueck.de lx26-amd64      8  1.08   11.7G    2.7G    6.0G   83.9M
+    Host Resource(s):      hl:nv_mem_free=4.781G
+rosecliff.ni.uni-osnabrueck.de lx26-amd64      4  0.00   31.3G  470.9M   14.9G     0.0
+    Host Resource(s):      hl:nv_mem_free=0.000
+rtg1.ikw.uni-osnabrueck.de lx26-amd64     12  0.03   31.3G  889.2M    3.8G     0.0
+    Host Resource(s):      hl:nv_mem_free=3.851G
+rtg2.ikw.uni-osnabrueck.de lx26-amd64     12  0.02   31.3G    2.0G    3.8G  271.2M
+    Host Resource(s):      hl:nv_mem_free=3.639G
+rtg3.ikw.uni-osnabrueck.de lx26-amd64     12     -   31.2G       -    3.8G       -
+rtg4.ikw.uni-osnabrueck.de lx26-amd64     12  0.03   31.3G    2.7G    3.8G     0.0
+    Host Resource(s):      hl:nv_mem_free=3.632G
+rtg5.ikw.uni-osnabrueck.de lx26-amd64     12  0.17   31.3G    2.4G    3.8G  605.7M
+    Host Resource(s):      hl:nv_mem_free=0.000
+rtg6.ikw.uni-osnabrueck.de lx26-amd64     12  0.07   31.3G    3.3G    3.8G  256.0K
+    Host Resource(s):      hl:nv_mem_free=0.000
+saturn.neurobiopsychologie.Uni-Osnabrueck.DE lx26-amd64      4  0.00   14.7G    2.0G    7.5G     0.0
+    Host Resource(s):      hl:nv_mem_free=258.000M
+scooby-doo.neurobiopsychologie.uni-osnabrueck.de lx26-amd64      8  0.09   23.5G    1.4G   12.0G  336.0K
+    Host Resource(s):      hl:nv_mem_free=1.709G
+scrappy-doo.neurobiopsychologie.uni-osnabrueck.de lx26-amd64      8  1.13   23.5G    4.3G   12.0G     0.0
+    Host Resource(s):      hl:nv_mem_free=1.710G
+shadow.cv.uni-osnabrueck.de lx26-amd64      8  7.03   31.3G    1.8G   16.0G   33.5M
+    Host Resource(s):      hl:nv_mem_free=3.779G
+shaggy.neurobiopsychologie.uni-osnabrueck.de lx26-amd64      8     -   31.4G       -    3.8G       -
+sinope.neurobiopsychologie.Uni-Osnabrueck.DE lx26-amd64      8     -   15.6G       -   24.0G       -
+sponde.ni.uni-osnabrueck.de lx26-amd64      8  0.00   15.6G  476.8M    8.0G     0.0
+    Host Resource(s):      hl:nv_mem_free=3.893G
+taygete.neurobiopsychologie.uni-osnabrueck.de lx26-amd64      8  0.00   31.4G  950.7M   16.0G     0.0
+    Host Resource(s):      hl:nv_mem_free=3.849G
+thebe.neurobiopsychologie.uni-osnabrueck.de lx26-amd64      8     -   31.4G       -   16.0G       -
+themisto.neurobiopsychologie.uni-osnabrueck.de lx26-amd64      8  0.09   31.4G  953.6M   16.0G     0.0
+    Host Resource(s):      hl:nv_mem_free=3.943G
+thor.ni.uni-osnabrueck.de lx26-amd64      8  0.21   15.6G    6.1G    8.0G     0.0
+    Host Resource(s):      hl:nv_mem_free=1.831G
+tori.ikw.uni-osnabrueck.de lx26-amd64      8  0.01   31.4G    4.0G   15.9G  168.5M
+    Host Resource(s):      hl:nv_mem_free=3.753G
+tower.ni.uni-osnabrueck.de lx26-amd64      8  0.01   15.6G  830.4M    3.8G   68.2M
+    Host Resource(s):      hl:nv_mem_free=1.853G
+twilight.cv.uni-osnabrueck.de lx26-amd64      8  5.25   31.3G    5.3G   16.0G   10.6G
+    Host Resource(s):      hl:nv_mem_free=3.485G
+vector.cv.uni-osnabrueck.de lx26-amd64      8  4.60   62.8G    2.9G    3.7G   40.1M
+    Host Resource(s):      hl:nv_mem_free=11.925G
+venus.neurobiopsychologie.Uni-Osnabrueck.DE lx26-amd64      4     -   14.7G       -    7.5G       -
+voxel.cv.uni-osnabrueck.de lx26-amd64      8  6.35   62.8G    2.4G    3.8G  397.1M
+    Host Resource(s):      hl:nv_mem_free=11.925G
+vr3.ikw.uni-osnabrueck.de lx26-amd64      8  1.25   31.3G   17.6G   14.9G   26.4M
+    Host Resource(s):      hl:nv_mem_free=3.770G
+vr4.ikw.uni-osnabrueck.de lx26-amd64      8  1.11   31.3G   17.1G   14.9G   12.4M
+    Host Resource(s):      hl:nv_mem_free=3.773G
+vr5.ikw.uni-osnabrueck.de lx26-amd64      8  1.15   31.3G    2.6G   14.9G     0.0
+    Host Resource(s):      hl:nv_mem_free=3.806G
+vr6.ikw.uni-osnabrueck.de lx26-amd64      8  1.06   31.3G   20.6G   14.9G  156.3M
+    Host Resource(s):      hl:nv_mem_free=3.801G
+westbrook.ni.uni-osnabrueck.de lx26-amd64      4     -   31.3G       -   14.9G       -
+whitehall.ni.uni-osnabrueck.de lx26-amd64      4     -   31.3G       -   14.9G       -
+xdev.ikw.uni-osnabrueck.de lx26-amd64      4  0.00   15.6G  832.6M    8.0G     0.0
+    Host Resource(s):      hl:nv_mem_free=3.943G

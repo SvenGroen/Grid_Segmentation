@@ -2,11 +2,12 @@
 #$ -l mem=4G
 #$ -cwd
 #$ -l cuda=1
-#$ -l hostname=!*cippy*
-#$ -l h_rt=00:48:00
-#$ -o /dev/null"
+#$ -l hostname=!*cv*
+#$ -l h_rt=01:29:00
+#$ -o /dev/null
 #$ -m n
 #$ -pe default 1
+
 
 echo " Start of SGE job " 
 echo "$date"
