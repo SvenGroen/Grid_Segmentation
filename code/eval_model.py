@@ -23,16 +23,21 @@ from DataLoader.Datasets.Youtube.Youtube_Greenscreen_mini import *
 from PIL import Image
 from pathlib import Path
 
-
 # load model name and model save path
 parser = argparse.ArgumentParser()
 parser.add_argument("-mdl", "--model",
                     help="The name of the model.", type=str)
 parser.add_argument("-pth", "--path", help="the path where the model is stored", type=str)
 
+
+
 args = parser.parse_args()
 model_name = args.model
 model_path = Path(args.path)
+
+with open(model_path+"/"+model_name+"/train_config.json") as js:
+    print("Loading config: ", args.config)
+    config = json.load(js)
 
 print("---Start of Python File---")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -49,59 +54,63 @@ def save_figure(values, path, what=""):
     plt.close()
     pass
 
-if "UNet" in model_name :
+
+if config["model"] == "UNet":
     net = UNet(in_channels=3, out_channels=2, n_class=2, kernel_size=3, padding=1, stride=1)
-elif "Deep+_mobile" in model_name :
+elif config["model"] == "Deep+_mobile":
     net = Deeplabv3Plus_base(backbone="mobilenet")  # https://github.com/VainF/DeepLabV3Plus-Pytorch
-elif "Deep_mobile_lstmV1" in model_name :
+elif config["model"] == "Deep_mobile_lstmV1":
     net = Deeplabv3Plus_lstmV1(backbone="mobilenet")
-elif "Deep_mobile_lstmV2" in model_name :
+elif config["model"] == "Deep_mobile_lstmV2":
     net = Deeplabv3Plus_lstmV2(backbone="mobilenet")
-elif "Deep_mobile_lstmV3" in model_name :
+elif config["model"] == "Deep_mobile_lstmV3":
     net = Deeplabv3Plus_lstmV3(backbone="mobilenet")
-elif "Deep_mobile_lstmV4" in model_name :
+elif config["model"] == "Deep_mobile_lstmV4":
     net = Deeplabv3Plus_lstmV4(backbone="mobilenet")
-elif "Deep_mobile_lstmV5" in model_name :
-    net = Deeplabv3Plus_lstmV5(backbone="mobilenet")
-elif "Deep_mobile_gruV1" in model_name :
+elif config["model"] == "Deep_mobile_lstmV5.1":
+    net = Deeplabv3Plus_lstmV5(backbone="mobilenet", keep_hidden=True)
+elif config["model"] == "Deep_mobile_lstmV5.2":
+    net = Deeplabv3Plus_lstmV5(backbone="mobilenet", keep_hidden=False)
+elif config["model"] == "Deep_mobile_gruV1":
     net = Deeplabv3Plus_gruV1(backbone="mobilenet")
-elif "Deep_mobile_gruV2" in model_name :
+elif config["model"] == "Deep_mobile_gruV2":
     net = Deeplabv3Plus_gruV2(backbone="mobilenet")
-elif "Deep_mobile_gruV3" in model_name :
+elif config["model"] == "Deep_mobile_gruV3":
     net = Deeplabv3Plus_gruV3(backbone="mobilenet")
-elif "Deep_mobile_gruV4" in model_name :
+elif config["model"] == "Deep_mobile_gruV4":
     net = Deeplabv3Plus_gruV4(backbone="mobilenet")
-elif "Deep+_resnet50" in model_name :
+elif config["model"] == "Deep+_resnet50":
     net = Deeplabv3Plus_base(backbone="resnet50")
-elif "Deep_resnet50_lstmV1" in model_name :
+elif config["model"] == "Deep_resnet50_lstmV1":
     net = Deeplabv3Plus_lstmV1(backbone="resnet50")
-elif "Deep_resnet50_lstmV2" in model_name :
+elif config["model"] == "Deep_resnet50_lstmV2":
     net = Deeplabv3Plus_lstmV2(backbone="resnet50")
-elif "Deep_resnet50_lstmV3" in model_name :
+elif config["model"] == "Deep_resnet50_lstmV3":
     net = Deeplabv3Plus_lstmV3(backbone="resnet50")
-elif "Deep_resnet50_lstmV4" in model_name :
+elif config["model"] == "Deep_resnet50_lstmV4":
     net = Deeplabv3Plus_lstmV4(backbone="resnet50")
-elif "Deep_resnet50_lstmV5" in model_name :
+elif config["model"] == "Deep_resnet50_lstmV5":
     net = Deeplabv3Plus_lstmV5(backbone="resnet50")
-elif "Deep_resnet50_gruV1" in model_name :
+elif config["model"] == "Deep_resnet50_gruV1":
     net = Deeplabv3Plus_gruV1(backbone="resnet50")
-elif "Deep_resnet50_gruV2" in model_name :
+elif config["model"] == "Deep_resnet50_gruV2":
     net = Deeplabv3Plus_gruV2(backbone="resnet50")
-elif "Deep_resnet50_gruV3" in model_name :
+elif config["model"] == "Deep_resnet50_gruV3":
     net = Deeplabv3Plus_gruV3(backbone="resnet50")
-elif "Deep_resnet50_gruV4" in model_name :
+elif config["model"] == "Deep_resnet50_gruV4":
     net = Deeplabv3Plus_gruV4(backbone="resnet50")
-elif "Deep_Res101" in model_name :
+elif config["model"] == "Deep_Res101":
     net = Deeplab_Res101()
     norm_ImageNet = False
-elif "Deep_Res50" in model_name :
+elif config["model"] == "Deep_Res50":
     net = Deeplab_Res50()
     norm_ImageNet = False
-elif "FCN_Res50" in model_name :
+elif config["model"] == "FCN_Res50":
     net = FCN_Res50()
     norm_ImageNet = False
-elif "ICNet" in model_name :
+elif config["model"] == "ICNet":
     net = ICNet(nclass=2, backbone='resnet50', pretrained_base=False)  # https://github.com/liminn/ICNet-pytorch
+
 else:
     net = None
     print("Model unknown")
@@ -128,7 +137,7 @@ net.to(device)
 
 # Load test data
 # dataset = Youtube_Greenscreen(train=False)
-dataset = Youtube_Greenscreen_mini(batch_size= 1)
+dataset = Youtube_Greenscreen_mini(batch_size=1)
 test_loader = DataLoader(dataset=dataset, batch_size=1, shuffle=False, num_workers=0)
 
 # Meassure the metrics
@@ -143,8 +152,8 @@ if torch.cuda.is_available():
     start = torch.cuda.Event(enable_timing=True)
     end = torch.cuda.Event(enable_timing=True)
 
-to_PIL = T.ToPILImage() # for convertion into PILLOW Image
-tmp_img, tmp_lbl, tmp_pred = [], [], [] # used for stacking images later
+to_PIL = T.ToPILImage()  # for convertion into PILLOW Image
+tmp_img, tmp_lbl, tmp_pred = [], [], []  # used for stacking images later
 
 # Video writer to save results
 fourcc = cv2.VideoWriter_fourcc(*"mp4v")
@@ -162,7 +171,7 @@ for i, batch in enumerate(test_loader):
     if torch.cuda.is_available():
         start.record()
     start_time = time.time()
-    pred = net(images, old_pred) # predict
+    pred = net(images, old_pred)  # predict
     # outputs = pred.float()
     outputs = torch.argmax(pred, dim=1).float()
     if torch.cuda.is_available():

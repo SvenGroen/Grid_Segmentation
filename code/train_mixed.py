@@ -144,7 +144,7 @@ elif config["loss"] == "Boundary":
 elif config["loss"] == "CrossDice":
     dice = SegLoss.dice_loss.SoftDiceLoss(smooth=0.0001, apply_nonlin=F.softmax)
     entropy = torch.nn.CrossEntropyLoss()
-    criterion = lambda x, y: dice(x, y) + entropy(x, y)
+    criterion = lambda x, y: (dice(x, y) + entropy(x, y)) / 2.
 
 norm_ImageNet = False
 start_epoch = 0
@@ -256,7 +256,7 @@ def restart_script():
     # restarts the training script
     from subprocess import call
     sys.stderr.write("restarting script ID: {}".format(str(config["track_ID"])))
-    VRAM = "6.9G"
+    VRAM = "9G"
     recallParameter = 'qsub -N ' + "id" + str(config["track_ID"]) + "e" + str(epoch) + config[
         "model"] + ' -l nv_mem_free=' + VRAM + ' -v CFG=' + str(
         model_save_path / "train_config.json") + ' train_mixed.sge'
@@ -271,8 +271,6 @@ def evaluate(model, train=False, eval_length=29 * 6, epoch=0, random_start=True)
     metrics = defaultdict(AverageMeter)
     to_PIL = T.ToPILImage()
 
-    model.eval()
-    model.start_eval()
 
     old_pred = [None, None]
     dset = Youtube_Greenscreen(train=train)
@@ -406,7 +404,7 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
             loss = criterion(pred, labels)
 
         optimizer.zero_grad()
-        # loss.backward()
+        loss.backward()
         optimizer.step()
         running_loss += loss.item() * images.size(0)
         old_pred[0] = old_pred[1]  # oldest at 0 position

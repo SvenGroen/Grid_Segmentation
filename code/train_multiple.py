@@ -4,12 +4,22 @@ from pathlib import Path
 # models = ["Deep_mobile_lstmV3", "Deep_mobile_lstmV4", "Deep_mobile_lstmV5", "Deep_mobile_gruV3",
 #           "Deep_mobile_gruV4", "Deep+_resnet50", "Deep_resnet50_lstmV2", "Deep_resnet50_lstmV3", "Deep_resnet50_lstmV4",
 #           "Deep_resnet50_lstmV5"]
-models = ["Deep_mobile_lstmV3", "Deep_mobile_lstmV4", "Deep_mobile_lstmV5.1", "Deep_mobile_lstmV5.2"]
-start_lrs = [1e-3, 1e-3, 1e-3]
-step_sizes = [6, 6, 6, 6]
+# models = ["Deep_mobile_lstmV3", "Deep_mobile_lstmV4", "Deep_mobile_lstmV5.1", "Deep_mobile_lstmV5.2"]
+# start_lrs = [1e-3, 1e-3, 1e-3]
+# step_sizes = [6, 6, 6]
+# num_epochs = [30, 30, 30]
+# batch_sizes = [8, 8, 8]
+# loss = ["CrossEntropy", "SoftDice", "CrossDice"]  # / "SoftDice" / "Focal" / "CrossEntropy" / "Boundary" / "CrossDice"
+
+models = ["Deep_mobile_gruV3", "Deep_mobile_gruV4", "Deep+_resnet50", "Deep_resnet50_lstmV2", "Deep_resnet50_lstmV3",
+          "Deep_resnet50_lstmV4", "Deep_mobile_lstmV4", "Deep_mobile_lstmV5.1", "Deep_mobile_lstmV5.2"]
+
+# models = ["Deep_mobile_lstmV4"]
+start_lrs = [1e-1, 1e-2, 1e-4]
+step_sizes = [6, 6, 6]
 num_epochs = [30, 30, 30]
-batch_sizes = [8, 8, 8]
-loss = ["CrossEntropy", "SoftDice", "CrossDice"]  # / "SoftDice" / "Focal" / "CrossEntropy" / "Boundary" / "CrossDice"
+batch_sizes = [6, 6, 6]
+loss = ["SoftDice", "CrossEntropy", "CrossDice"]  # / "SoftDice" / "Focal" / "CrossEntropy" / "Boundary" / "CrossDice"
 
 config_paths = []
 models_name = []
@@ -27,8 +37,7 @@ for model in models:
         config["scheduler_step_size"] = step_sizes[i]
         config["loss"] = loss[i]
         config["save_freq"] = 1
-        config["save_path"] = "code/models/trained_models/minisV3"
-
+        config["save_path"] = "code/models/trained_models/minisV4"
 
         # print(config)
         configs.append(config)
@@ -47,9 +56,10 @@ for i, config in enumerate(configs):
     with open(str(model_save_path / "train_config.json"), "w") as js:  # save learn config
         json.dump(config, js)
 
-    vRam = "7G"
+    vRam = "9G"
     recallParameter = 'qsub -N ' + "id" + str(i).zfill(2) + config["model"] \
-                      + ' -l nv_mem_free=' + vRam + ' -v CFG=' + str(model_save_path / "train_config.json") + ' train_mixed.sge'
+                      + ' -l nv_mem_free=' + vRam + ' -v CFG=' + str(
+        model_save_path / "train_config.json") + ' train_mixed.sge'
     # print(recallParameter)
     call(recallParameter, shell=True)
 

@@ -1,12 +1,10 @@
 #!/bin/bash
-#$ -l mem=8G
+#$ -l mem=4G
 #$ -cwd
 #$ -l cuda=1
-#$ -pe default 2
-#$ -l h_rt=05:00:00
-#$ -l hostname=!*cippy19*
-#$ -l hostname=!*cippy12*
-#$ -l hostname=!*cippy21*
+#$ -pe default 1
+#$ -l h_rt=01:29:00
+#$ -l hostname=!*cv*
 #$ -l cuda=1
 #$ -m n
 

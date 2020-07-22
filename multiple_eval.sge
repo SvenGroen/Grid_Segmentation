@@ -2,14 +2,8 @@
 #$ -l mem=2G
 #$ -cwd
 #$ -pe default 1
-#$ -l hostname=1picture
-#$ -l hostname=!*cippy12* 
-#$ -l hostname=!*cippy19* 
-#$ -l hostname=!*cippy21*
-#$ -N job_starter 
-#$ -l hostname=!*cippy25*
-#$ -l hostname=*cippy*
-#$ -l hostname=!*cippy06*
+#$ -l hostname=*cippy18*
+#$ -N job_starter
 #$ -o /dev/null"
 #$ -e /dev/null"
 

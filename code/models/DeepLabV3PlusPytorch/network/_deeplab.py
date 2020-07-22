@@ -7,7 +7,7 @@ from .utils import _SimpleSegmentationModel
 
 __all__ = ["DeepLabV3"]
 
-
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 class DeepLabV3(_SimpleSegmentationModel):
     """
     Implements DeepLabV3 model from
@@ -61,6 +61,7 @@ class DeepLabHeadV3PlusGRU(nn.Module):
         if self.gru is None:
             self.gru = ConvGRU(input_size=tuple(out.shape[-2:]), input_dim=304, hidden_dim=[304], kernel_size=(3, 3), num_layers=1,
                            dtype=torch.FloatTensor, batch_first=True, bias=True, return_all_layers=True)
+            self.gru = self.gru.to(device)
         if self.store_previous:
             if None in self.old_pred:
                 for i in range(len(self.old_pred)):
