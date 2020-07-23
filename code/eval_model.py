@@ -35,8 +35,7 @@ args = parser.parse_args()
 model_name = args.model
 model_path = Path(args.path)
 
-with open(model_path+"/"+model_name+"/train_config.json") as js:
-    print("Loading config: ", args.config)
+with open(str(model_path/model_name/"train_config.json")) as js:
     config = json.load(js)
 
 print("---Start of Python File---")
