@@ -15,11 +15,11 @@ models = ["Deep_mobile_gruV3", "Deep_mobile_gruV4", "Deep+_resnet50", "Deep_resn
           "Deep_resnet50_lstmV4", "Deep_mobile_lstmV4", "Deep_mobile_lstmV5.1", "Deep_mobile_lstmV5.2"]
 
 # models = ["Deep_mobile_lstmV4"]
-start_lrs = [1e-1, 1e-2, 1e-4]
+start_lrs = [1e-3, 1e-4, 1e-5]
 step_sizes = [6, 6, 6]
 num_epochs = [30, 30, 30]
 batch_sizes = [6, 6, 6]
-loss = ["SoftDice", "CrossEntropy", "CrossDice"]  # / "SoftDice" / "Focal" / "CrossEntropy" / "Boundary" / "CrossDice"
+loss = ["CrossDice", "CrossDice", "CrossDice"]  # / "SoftDice" / "Focal" / "CrossEntropy" / "Boundary" / "CrossDice"
 
 config_paths = []
 models_name = []
@@ -37,7 +37,7 @@ for model in models:
         config["scheduler_step_size"] = step_sizes[i]
         config["loss"] = loss[i]
         config["save_freq"] = 1
-        config["save_path"] = "code/models/trained_models/minisV4"
+        config["save_path"] = "code/models/trained_models/minisV5"
 
         # print(config)
         configs.append(config)

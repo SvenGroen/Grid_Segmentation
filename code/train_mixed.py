@@ -26,6 +26,7 @@ from models.ICNet.models import ICNet
 from models.ICNet.utils import ICNetLoss, IterationPolyLR, SegmentationMetric, SetupLogger
 from DataLoader.Datasets.Youtube.Youtube_Greenscreen import *
 from DataLoader.Datasets.Youtube.Youtube_Greenscreen_mini import *
+from utils.torch_poly_lr_decay import PolynomialLRDecay
 
 start_time = time.time()
 sys.stderr.write("Starting at: {}\n".format(time.ctime(start_time)))
@@ -150,8 +151,10 @@ norm_ImageNet = False
 start_epoch = 0
 # criterion.to(device)
 
-optimizer = optim.Adam(net.parameters(), lr=config["lr"])
-scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=config["scheduler_step_size"], gamma=0.1)
+optimizer = optim.Adam(net.parameters(), lr=config["lr"], weight_decay=0.0001)
+# scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=config["scheduler_step_size"], gamma=0.1)
+scheduler = PolynomialLRDecay(optimizer, max_decay_steps=config["num_epochs"], end_learning_rate=config["lr"]*0.001, power=2.0)
+
 
 batch_index = torch.tensor(range(config["batch_size"]))
 # dataset = Youtube_Greenscreen(train=True, start_index=batch_index)
