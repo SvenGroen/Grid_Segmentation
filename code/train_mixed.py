@@ -35,7 +35,7 @@ sys.stderr.write("Starting at: {}\n".format(time.ctime(start_time)))
 config = {  # DEFAULT CONFIG
     # This config is replaced by the config given as a parameter in -cfg, which will be generated in multiple_train.py.
 
-    "model": "Deep_mobile_lstmV5.1",
+    "model": "Deep_mobile_lstmV5_1",
     "ID": "01",
     "lr": 1e-02,
     "batch_size": 4,
@@ -81,9 +81,9 @@ elif config["model"] == "Deep_mobile_lstmV3":
     net = Deeplabv3Plus_lstmV3(backbone="mobilenet")
 elif config["model"] == "Deep_mobile_lstmV4":
     net = Deeplabv3Plus_lstmV4(backbone="mobilenet")
-elif config["model"] == "Deep_mobile_lstmV5.1":
+elif config["model"] == "Deep_mobile_lstmV5_1":
     net = Deeplabv3Plus_lstmV5(backbone="mobilenet", keep_hidden=True)
-elif config["model"] == "Deep_mobile_lstmV5.2":
+elif config["model"] == "Deep_mobile_lstmV5_2":
     net = Deeplabv3Plus_lstmV5(backbone="mobilenet", keep_hidden=False)
 elif config["model"] == "Deep_mobile_gruV1":
     net = Deeplabv3Plus_gruV1(backbone="mobilenet")
@@ -153,8 +153,8 @@ start_epoch = 0
 
 optimizer = optim.Adam(net.parameters(), lr=config["lr"], weight_decay=0.0001)
 # scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=config["scheduler_step_size"], gamma=0.1)
-scheduler = PolynomialLRDecay(optimizer, max_decay_steps=config["num_epochs"], end_learning_rate=config["lr"]*0.001, power=2.0)
-
+# scheduler = PolynomialLRDecay(optimizer, max_decay_steps=config["num_epochs"], end_learning_rate=config["lr"]*0.001, power=2.0)
+scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min')
 
 batch_index = torch.tensor(range(config["batch_size"]))
 # dataset = Youtube_Greenscreen(train=True, start_index=batch_index)
@@ -381,18 +381,6 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
         # check if end of batch is reached
         # the dataset will return 0-tensor as idx in case the end of the batch is reached
         if len(idx) == config["batch_size"]:
-            # if 0 in idx:
-            #     tmp = 0
-            #     if idx[0] != 0:
-            #         sys.stderr.write(f"\n 0 not at the beginning at index: {idx}\n")
-            #     for i in idx:
-            #         sys.stderr.write("\n Counting 0s\n")
-            #         if i == 0:
-            #             tmp += 1
-            #     if tmp > 1:
-            #         sys.stderr.write(f"\nEnd reached of batch cause of too many 0's( {tmp} )\n")
-            #         dataset.start_index = 0  # reset start index for the next batch
-            #         break
             if torch.all(idx == torch.zeros(config["batch_size"])):
                 sys.stderr.write(f"\nEnd reached of batch at index {idx}\n")
                 dataset.start_index = 0  # reset start index for the next batch
@@ -431,7 +419,7 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
 
     # save figures and values at the end of the batch
     loss_values.append(running_loss / len(dataset))
-    scheduler.step()
+    scheduler.step(running_loss/len(dataset))
     save_figure(loss_values, what="loss")
     save_figure(lrs, what="LR")
     sys.stderr.write("End of Epoch: {}\n".format(epoch))

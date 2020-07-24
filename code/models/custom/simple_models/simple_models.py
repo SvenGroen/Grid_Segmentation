@@ -186,7 +186,7 @@ class Deeplabv3Plus_lstmV5(nn.Module):
             return_all_layers=True
         else:
             return_all_layers=False
-        self.lstm = ConvLSTM(input_dim=2, hidden_dim=[2, 2], kernel_size=(3, 3), num_layers=2, batch_first=True,
+        self.lstm = ConvLSTM(input_dim=2, hidden_dim=[2], kernel_size=(3, 3), num_layers=1, batch_first=True,
                              bias=True,
                              return_all_layers=return_all_layers)
         self.hidden = None

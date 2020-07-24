@@ -11,8 +11,8 @@ from pathlib import Path
 # batch_sizes = [8, 8, 8]
 # loss = ["CrossEntropy", "SoftDice", "CrossDice"]  # / "SoftDice" / "Focal" / "CrossEntropy" / "Boundary" / "CrossDice"
 
-models = ["Deep_mobile_gruV3", "Deep_mobile_gruV4", "Deep+_resnet50", "Deep_resnet50_lstmV2", "Deep_resnet50_lstmV3",
-          "Deep_resnet50_lstmV4", "Deep_mobile_lstmV4", "Deep_mobile_lstmV5.1", "Deep_mobile_lstmV5.2"]
+models = ["Deep_mobile_gruV3", "Deep_mobile_gruV4", "Deep+_resnet50", "Deep_resnet50_lstmV3",
+          "Deep_resnet50_lstmV4", "Deep_mobile_lstmV4", "Deep_mobile_lstmV5_1", "Deep_mobile_lstmV5_2"]
 
 # models = ["Deep_mobile_lstmV4"]
 start_lrs = [1e-3, 1e-4, 1e-5]
@@ -37,7 +37,7 @@ for model in models:
         config["scheduler_step_size"] = step_sizes[i]
         config["loss"] = loss[i]
         config["save_freq"] = 1
-        config["save_path"] = "code/models/trained_models/minisV5"
+        config["save_path"] = "code/models/trained_models/minisV6"
 
         # print(config)
         configs.append(config)

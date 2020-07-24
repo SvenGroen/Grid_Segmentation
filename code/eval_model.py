@@ -43,7 +43,9 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device: ", device)
 output_size = (int(2048 / 4), int(1080 / 4) * 2)
 FRAME_STOP_NUMBER = 29 * 12  # fps * dauer in sekunden in evaluation
-
+sys.stderr.write("\nModel: {}.\n".format(config["model"]))
+if config["model"] == "Deep_mobile_lstmV5.1":
+    config["model"]
 
 def save_figure(values, path, what=""):
     plt.plot(values)
@@ -66,9 +68,9 @@ elif config["model"] == "Deep_mobile_lstmV3":
     net = Deeplabv3Plus_lstmV3(backbone="mobilenet")
 elif config["model"] == "Deep_mobile_lstmV4":
     net = Deeplabv3Plus_lstmV4(backbone="mobilenet")
-elif config["model"] == "Deep_mobile_lstmV5.1":
+elif config["model"] == "Deep_mobile_lstmV5_1":
     net = Deeplabv3Plus_lstmV5(backbone="mobilenet", keep_hidden=True)
-elif config["model"] == "Deep_mobile_lstmV5.2":
+elif config["model"] == "Deep_mobile_lstmV5_2":
     net = Deeplabv3Plus_lstmV5(backbone="mobilenet", keep_hidden=False)
 elif config["model"] == "Deep_mobile_gruV1":
     net = Deeplabv3Plus_gruV1(backbone="mobilenet")
@@ -112,7 +114,7 @@ elif config["model"] == "ICNet":
 
 else:
     net = None
-    print("Model unknown")
+    sys.stderr.write("\nModel {} unkown.\n".format(config["model"]))
 
 # load model and make directory to store evaluation results
 model_name = Path(model_name)
