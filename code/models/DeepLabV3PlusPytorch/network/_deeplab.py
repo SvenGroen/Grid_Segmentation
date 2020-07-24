@@ -8,6 +8,8 @@ from .utils import _SimpleSegmentationModel
 __all__ = ["DeepLabV3"]
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+
 class DeepLabV3(_SimpleSegmentationModel):
     """
     Implements DeepLabV3 model from
@@ -27,7 +29,8 @@ class DeepLabV3(_SimpleSegmentationModel):
 
 
 class DeepLabHeadV3PlusGRU(nn.Module):
-    def __init__(self, in_channels, low_level_channels, num_classes, aspp_dilate=[12, 24, 36], backbone="mobilenet", store_previous=False):
+    def __init__(self, in_channels, low_level_channels, num_classes, aspp_dilate=[12, 24, 36], backbone="mobilenet",
+                 store_previous=False):
         super(DeepLabHeadV3PlusGRU, self).__init__()
         self.project = nn.Sequential(
             nn.Conv2d(low_level_channels, 48, 1, bias=False),
@@ -43,10 +46,10 @@ class DeepLabHeadV3PlusGRU(nn.Module):
             nn.ReLU(inplace=True),
             nn.Conv2d(256, num_classes, 1)
         )
-
-
+        input_shape =(68, 128) if in_channels == 2048 else (67, 128)
         self._init_weight()
-        self.gru = None
+        self.gru = ConvGRU(input_size=input_shape, input_dim=304, hidden_dim=[304], kernel_size=(3, 3), num_layers=1,
+                           dtype=torch.FloatTensor, batch_first=True, bias=True, return_all_layers=True)
         self.hidden = [None]
         self.store_previous = store_previous
         self.old_pred = [None, None]
@@ -59,8 +62,9 @@ class DeepLabHeadV3PlusGRU(nn.Module):
         concat = torch.cat([low_level_feature, output_feature], dim=1)
         out = concat.unsqueeze(1)
         if self.gru is None:
-            self.gru = ConvGRU(input_size=tuple(out.shape[-2:]), input_dim=304, hidden_dim=[304], kernel_size=(3, 3), num_layers=1,
-                           dtype=torch.FloatTensor, batch_first=True, bias=True, return_all_layers=True)
+            self.gru = ConvGRU(input_size=tuple(out.shape[-2:]), input_dim=304, hidden_dim=[304], kernel_size=(3, 3),
+                               num_layers=1,
+                               dtype=torch.FloatTensor, batch_first=True, bias=True, return_all_layers=True)
             self.gru = self.gru.to(device)
         if self.store_previous:
             if None in self.old_pred:

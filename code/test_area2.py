@@ -23,6 +23,16 @@ from models.ICNet.models import ICNet
 from models.ICNet.utils import ICNetLoss, IterationPolyLR, SegmentationMetric, SetupLogger
 from DataLoader.Datasets.Youtube.Youtube_Greenscreen import *
 from DataLoader.Datasets.Youtube.Youtube_Greenscreen_mini import *
+from utils.torch_poly_lr_decay import PolynomialLRDecay
+
+optim =  optim.Adam(net.parameters(), lr=config["lr"], weight_decay=0.0001)
+scheduler_poly_lr_decay = PolynomialLRDecay(optim, max_decay_steps=100, end_learning_rate=0.0001, power=2.0)
+
+for epoch in range(1000):
+    print(epoch)
+    scheduler_poly_lr_decay.step()     # you can handle step as epoch number
+
+
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 metrics = defaultdict(AverageMeter)
 metrics["IoU"].update(0)

@@ -28,7 +28,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-mdl", "--model",
                     help="The name of the model.", type=str)
 parser.add_argument("-pth", "--path", help="the path where the model is stored", type=str)
-
+#-mdl Deep_mobile_gruV3_bs6_startLR1e-01Sched_Step_6_SoftDice_ID0 -pth code/models/trained_models/minis
 
 
 args = parser.parse_args()
@@ -124,7 +124,7 @@ LOAD_POSITION = -1
 try:
     checkpoint = torch.load(str(full_path / model_name) + ".pth.tar", map_location=torch.device(device))
     print("=> Loading checkpoint at epoch {}".format(checkpoint["epoch"][LOAD_POSITION]))
-    net.load_state_dict(checkpoint["state_dict"])
+    net.load_state_dict(checkpoint["state_dict"], strict=True)
     print("Model was loaded.")
 except IOError:
     print("model was not found")
