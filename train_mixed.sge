@@ -26,7 +26,9 @@ echo "PWD: "
 echo $PWD
 
 
-setup_file=code/train_mixed.py 
+setup_file=code/train_mixed.py
+#setup_file=code/determine_lr.py
+
 env_name=torch
 #Scratch_wd_21 is a variable that stores the path to my scratch folder in which i installed anaconda
 export SCRATCH_WD_21="/net/projects/scratch/summer/valid_until_31_January_2021/sgroen"
