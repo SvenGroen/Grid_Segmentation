@@ -39,16 +39,13 @@ upper_green = np.array([150, 255, 150])
 MAX_DURATION = 4
 
 splits = ["train", "test"]
-# train =
-# test =
-train, test = train_test_split(video_names, random_state=seed, test_size=0.3)
-random.shuffle(train)
-random.shuffle(test)
+
 
 fourcc = cv2.VideoWriter_fourcc(*"mp4v")
 for split in splits:
     out_path = Path("data/Images/Greenscreen_Video_frames") / split
-    video_names = train if split == "train" else test
+    video_names = [vid.stem for vid in (vid_path/split).glob("*")]
+
     label_out_path = out_path / "labels"
     input_out_path = out_path / "Input"
     label_out_path.mkdir(parents=True, exist_ok=True)
@@ -60,7 +57,7 @@ for split in splits:
         print("--------------------------------")
         print("video: ", vid)
         new_vid_marker = True
-        cap = cv2.VideoCapture(str(vid_path / vid) + ".mp4")
+        cap = cv2.VideoCapture(str(vid_path / split / vid) + ".mp4")
         total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
         frame_rate = int(cap.get(cv2.CAP_PROP_FPS))
         cap.set(cv2.CAP_PROP_FPS, fps)
@@ -70,6 +67,7 @@ for split in splits:
         bgimg = str(bgimg[i % len(bgimg)])
         bgimg = cv2.imread(bgimg)
         bgimg = cv2.resize(bgimg, output_size)
+        bgimg = np.clip(add_noise(bgimg), a_min=0, a_max=255)
         start = True
 
         while cap.isOpened():
@@ -84,8 +82,8 @@ for split in splits:
                 out_name = str(frame_counter).zfill(5) + ".jpg"
                 cv2.imwrite(str(input_out_path / out_name), np.uint8(out_img))
                 cv2.imwrite(str(label_out_path / out_name), np.uint8(label))
-                out_log["Inputs"].append((str(input_out_path / out_name), new_vid_marker))
-                out_log["Labels"].append((str(label_out_path / out_name), new_vid_marker))
+                out_log["Inputs"].append((str(input_out_path / out_name), int(new_vid_marker)))
+                out_log["Labels"].append((str(label_out_path / out_name), int(new_vid_marker)))
                 frame_counter += 1
                 new_vid_marker = False
             else:

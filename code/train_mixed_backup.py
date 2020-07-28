@@ -24,7 +24,6 @@ from models.custom.simple_models.UNet import *
 from models.DeepLabV3PlusPytorch.network import *
 from models.ICNet.models import ICNet
 from models.ICNet.utils import ICNetLoss, IterationPolyLR, SegmentationMetric, SetupLogger
-from DataLoader.Datasets.Youtube.YT_Greenscreen import *
 from DataLoader.Datasets.Youtube.Youtube_Greenscreen import *
 from DataLoader.Datasets.Youtube.Youtube_Greenscreen_mini import *
 from utils.torch_poly_lr_decay import PolynomialLRDecay
@@ -37,7 +36,7 @@ sys.stderr.write("Starting at: {}\n".format(time.ctime(start_time)))
 config = {  # DEFAULT CONFIG
     # This config is replaced by the config given as a parameter in -cfg, which will be generated in multiple_train.py.
 
-    "model": "Deep_mobile_lstmV2_3",
+    "model": "Deep_mobile_lstmV5_1",
     "ID": "01",
     "lr": 1e-02,
     "batch_size": 4,
@@ -81,16 +80,8 @@ elif config["model"] == "Deep_mobile_lstmV1":
     net = Deeplabv3Plus_lstmV1(backbone="mobilenet")
     upper_lr_bound = 0.002
     lower_lr_bound = upper_lr_bound / 6
-elif config["model"] == "Deep_mobile_lstmV2_1":
-    net = Deeplabv3Plus_lstmV2(backbone="mobilenet", activate_3d=False, hidden_return_layer=0)
-    upper_lr_bound = 0.002
-    lower_lr_bound = upper_lr_bound / 6
-elif config["model"] == "Deep_mobile_lstmV2_2":
-    net = Deeplabv3Plus_lstmV2(backbone="mobilenet", activate_3d=False, hidden_return_layer=-1)
-    upper_lr_bound = 0.002
-    lower_lr_bound = upper_lr_bound / 6
-elif config["model"] == "Deep_mobile_lstmV2_3":
-    net = Deeplabv3Plus_lstmV2(backbone="mobilenet", activate_3d=True, hidden_return_layer=0)
+elif config["model"] == "Deep_mobile_lstmV2":
+    net = Deeplabv3Plus_lstmV2(backbone="mobilenet")
     upper_lr_bound = 0.002
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_lstmV3":
@@ -205,9 +196,9 @@ start_epoch = 0
 
 batch_index = torch.tensor(range(config["batch_size"]))
 # dataset = Youtube_Greenscreen(train=True, start_index=batch_index)
-dataset = YT_Greenscreen(train=True, start_index=batch_index)
-# dataset = Youtube_Greenscreen_mini(start_index=batch_index, batch_size=config["batch_size"])
+dataset = Youtube_Greenscreen_mini(start_index=batch_index, batch_size=config["batch_size"])
 train_loader = DataLoader(dataset=dataset, batch_size=config["batch_size"], shuffle=False)
+
 
 # optimizer = optim.Adam(net.parameters(), lr=lower_lr_bound, weight_decay=0.0001)
 optimizer = optim.SGD(net.parameters(), lr=lower_lr_bound, weight_decay=0.0001, momentum=0.9)
@@ -216,7 +207,9 @@ optimizer = optim.SGD(net.parameters(), lr=lower_lr_bound, weight_decay=0.0001, 
 # scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min')
 sys.stderr.write(f"\nlen(loader) = {len(train_loader)}\n")
 scheduler = optim.lr_scheduler.CyclicLR(optimizer, base_lr=lower_lr_bound, max_lr=upper_lr_bound, cycle_momentum=True,
-                                        mode="triangular2", step_size_up=4 * len(train_loader))
+                                        mode="triangular2", step_size_up=4*len(train_loader))
+
+
 
 # ----------------------------------------------------------------------------------------------------
 # saving the models
@@ -345,10 +338,7 @@ def evaluate(model, train=False, eval_length=29 * 6, epoch=0, random_start=True)
                               (1536, 270))
     for i, batch in enumerate(loader):
         sys.stderr.write("\nEvaluating\n")
-        idx, video_start, (images, labels) = batch
-        if torch.any(video_start):
-            print(video_start)
-            net.reset()
+        idx, (images, labels) = batch
         pred = model(images, old_pred)  # predict
         outputs = torch.argmax(pred, dim=1).float()
         old_pred[0] = old_pred[1]  # oldest at 0 position
@@ -413,7 +403,15 @@ lrs_batch = []
 for epoch in tqdm(range(start_epoch, config["num_epochs"])):
     old_pred = [None, None]
     running_loss = 0
+    with open(str(model_save_path / "time_passed.txt"), "w") as txt_file:
+        txt_file.write("Time Passed: {} min.".format((time.time() - start_time) / 60.))
     for batch in train_loader:
+        if torch.cuda.is_available():
+            curr_gpu_mem = metrics.get_gpu_memory_map()[0]
+            max_gpu_mem = max_gpu_mem if max_gpu_mem > curr_gpu_mem else curr_gpu_mem
+            sys.stderr.write("\n" + str(max_gpu_mem))
+            with open(str(model_save_path / "cuda_mem.txt"), "w") as txt_file:
+                txt_file.write(str(max_gpu_mem))
         batch_start_time = time.time()
         if batch_start_time + avrg_batch_time - start_time > restart_time:
             sys.stderr.write("\nStopping at epoch {} and batch_idx "
@@ -424,10 +422,8 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
             break
 
         # no restart, continue training
-        idx, video_start, (images, labels) = batch
+        idx, (images, labels) = batch
         sys.stderr.write(f"\nCurrent epoch:{epoch}; \t current batch_idx: {idx}\n")
-        if torch.any(video_start):
-            net.reset()
 
         # check if end of batch is reached
         # the dataset will return 0-tensor as idx in case the end of the batch is reached
@@ -436,9 +432,9 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
                 sys.stderr.write(f"\nEnd reached of batch at index {idx}\n")
                 dataset.start_index = 0  # reset start index for the next batch
                 break
-
+        else:
+            sys.stderr.write(f"\nIndex: {idx}; Length is not equal\n")
         pred = net(images, old_pred)
-
         if config["loss"] == "Boundary":
             mask = metrics.make_one_hot(labels.unsqueeze(1), C=2)
             loss = criterion(pred, labels, mask)
