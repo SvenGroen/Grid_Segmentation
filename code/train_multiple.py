@@ -1,10 +1,11 @@
 import json
 from pathlib import Path
+import sys
 
-models = ["Deep+_mobile", "Deep_mobile_lstmV1", "Deep_mobile_lstmV2", "Deep_mobile_lstmV3", "Deep_mobile_lstmV4",
-"Deep_mobile_lstmV5_1", "Deep_mobile_lstmV5_2", "Deep_mobile_gruV1", "Deep_mobile_gruV2", "Deep_mobile_gruV3",
-"Deep_mobile_gruV4", "Deep+_resnet50", "Deep_resnet50_lstmV1", "Deep_resnet50_lstmV2", "Deep_resnet50_lstmV3",
-"Deep_resnet50_lstmV4", "Deep_resnet50_gruV1", "Deep_resnet50_gruV2", "Deep_resnet50_gruV3", "Deep_resnet50_gruV4"]
+# models = ["Deep+_mobile", "Deep_mobile_lstmV1", "Deep_mobile_lstmV2", "Deep_mobile_lstmV3", "Deep_mobile_lstmV4",
+# "Deep_mobile_lstmV5_1", "Deep_mobile_lstmV5_2", "Deep_mobile_gruV1", "Deep_mobile_gruV2", "Deep_mobile_gruV3",
+# "Deep_mobile_gruV4", "Deep+_resnet50", "Deep_resnet50_lstmV1", "Deep_resnet50_lstmV2", "Deep_resnet50_lstmV3",
+# "Deep_resnet50_lstmV4", "Deep_resnet50_gruV1", "Deep_resnet50_gruV2", "Deep_resnet50_gruV3", "Deep_resnet50_gruV4"]
 
 
 # models = ["Deep_mobile_lstmV3", "Deep_mobile_lstmV4", "Deep_mobile_lstmV5", "Deep_mobile_gruV3",
@@ -16,15 +17,15 @@ models = ["Deep+_mobile", "Deep_mobile_lstmV1", "Deep_mobile_lstmV2", "Deep_mobi
 # num_epochs = [30, 30, 30]
 # batch_sizes = [8, 8, 8]
 # loss = ["CrossEntropy", "SoftDice", "CrossDice"]  # / "SoftDice" / "Focal" / "CrossEntropy" / "Boundary" / "CrossDice"
-
-# models = ["Deep+_mobile", "Deep_mobile_lstmV1", "Deep_mobile_lstmV2", "Deep_mobile_lstmV4", "Deep_mobile_gruV1",
-#           "Deep_mobile_gruV2", "Deep_mobile_gruV3", "Deep_mobile_gruV4", "Deep+_resnet50", "Deep_resnet50_lstmV3",
-          # "Deep_resnet50_lstmV4","Deep_resnet50_gruV4"]
-
+sys.stderr.write("start writing configs\n")
+models = ["Deep+_mobile", "Deep+_resnet50", "Deep_mobile_lstmV1", "Deep_mobile_lstmV2_2", "Deep_mobile_lstmV2_3", "Deep_mobile_lstmV4",
+          "Deep_mobile_gruV1", "Deep_mobile_gruV2", "Deep_mobile_gruV3", "Deep_mobile_gruV4",
+          "Deep_resnet50_lstmV3", "Deep_resnet50_lstmV4", "Deep_resnet50_gruV4"]
+# models = []
 # models = ["Deep_mobile_lstmV4"]
-start_lrs = [1e-3]
+start_lrs = [1e-7]
 step_sizes = [6]
-num_epochs = [30]
+num_epochs = [40]
 batch_sizes = [6]
 loss = ["CrossDice"]  # / "SoftDice" / "Focal" / "CrossEntropy" / "Boundary" / "CrossDice"
 
@@ -44,7 +45,7 @@ for model in models:
         config["scheduler_step_size"] = step_sizes[i]
         config["loss"] = loss[i]
         config["save_freq"] = 1
-        config["save_path"] = "code/models/trained_models/lr_test2"
+        config["save_path"] = "code/models/trained_models/YT_mini"
 
         # print(config)
         configs.append(config)

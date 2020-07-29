@@ -62,8 +62,12 @@ elif config["model"] == "Deep+_mobile":
     net = Deeplabv3Plus_base(backbone="mobilenet")  # https://github.com/VainF/DeepLabV3Plus-Pytorch
 elif config["model"] == "Deep_mobile_lstmV1":
     net = Deeplabv3Plus_lstmV1(backbone="mobilenet")
-elif config["model"] == "Deep_mobile_lstmV2":
-    net = Deeplabv3Plus_lstmV2(backbone="mobilenet")
+elif config["model"] == "Deep_mobile_lstmV2_1":
+    net = Deeplabv3Plus_lstmV2(backbone="mobilenet", activate_3d=False, hidden_return_layer=0)
+elif config["model"] == "Deep_mobile_lstmV2_2":
+    net = Deeplabv3Plus_lstmV2(backbone="mobilenet", activate_3d=False, hidden_return_layer=-1)
+elif config["model"] == "Deep_mobile_lstmV2_3":
+    net = Deeplabv3Plus_lstmV2(backbone="mobilenet", activate_3d=True, hidden_return_layer=0)
 elif config["model"] == "Deep_mobile_lstmV3":
     net = Deeplabv3Plus_lstmV3(backbone="mobilenet")
 elif config["model"] == "Deep_mobile_lstmV4":
