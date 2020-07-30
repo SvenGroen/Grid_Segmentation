@@ -276,11 +276,12 @@ class Deeplabv3Plus_gruV1(nn.Module):
 
     def start_eval(self):
         self.tmp_hidden = self.hidden
-        self.hidden = None
+        self.hidden = [None]
 
     def end_eval(self):
-        self.hidden = self.tmp_hiddenW
-        self.tmp_hidden = None
+        self.hidden = self.tmp_hidden
+        self.tmp_hidden = [None]
+
     def forward(self, x, *args):
         x = self.base(x)
         x = x.unsqueeze(1)
@@ -435,7 +436,6 @@ class Deeplab_Res101(nn.Module):
     def forward(self, x, *args):
         x = self.base(x)
         return x["out"]
-
 
 class Deeplab_Res101V2(nn.Module):
     def __init__(self):

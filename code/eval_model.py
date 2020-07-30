@@ -20,6 +20,7 @@ from models.ICNet.models import ICNet
 from torch.utils.data import DataLoader
 from DataLoader.Datasets.Youtube.Youtube_Greenscreen import *
 from DataLoader.Datasets.Youtube.Youtube_Greenscreen_mini import *
+from DataLoader.Datasets.Youtube.YT_Greenscreen import *
 from PIL import Image
 from pathlib import Path
 
@@ -28,24 +29,23 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-mdl", "--model",
                     help="The name of the model.", type=str)
 parser.add_argument("-pth", "--path", help="the path where the model is stored", type=str)
-#-mdl Deep_mobile_gruV3_bs6_startLR1e-01Sched_Step_6_SoftDice_ID0 -pth code/models/trained_models/minis
+# -mdl Deep_mobile_gruV3_bs6_startLR1e-01Sched_Step_6_SoftDice_ID0 -pth code/models/trained_models/minis
 
 
 args = parser.parse_args()
 model_name = args.model
 model_path = Path(args.path)
 
-with open(str(model_path/model_name/"train_config.json")) as js:
+with open(str(model_path / model_name / "train_config.json")) as js:
     config = json.load(js)
 
 print("---Start of Python File---")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Device: ", device)
 output_size = (int(2048 / 4), int(1080 / 4) * 2)
-FRAME_STOP_NUMBER = 29 * 12  # fps * dauer in sekunden in evaluation
+FRAME_STOP_NUMBER = 29 * 30 # fps * dauer in sekunden in evaluation
 sys.stderr.write("\nModel: {}.\n".format(config["model"]))
-if config["model"] == "Deep_mobile_lstmV5.1":
-    config["model"]
+
 
 def save_figure(values, path, what=""):
     plt.plot(values)
@@ -142,7 +142,9 @@ net.to(device)
 
 # Load test data
 # dataset = Youtube_Greenscreen(train=False)
-dataset = Youtube_Greenscreen_mini(batch_size=1)
+# dataset = Youtube_Greenscreen_mini(batch_size=1)
+
+dataset = YT_Greenscreen(train=True, start_index=0, batch_size=1)
 test_loader = DataLoader(dataset=dataset, batch_size=1, shuffle=False, num_workers=0)
 
 # Meassure the metrics
@@ -168,7 +170,10 @@ out_vid2 = cv2.VideoWriter(str(eval_results_path) + "/example_video2.mp4", fourc
 
 old_pred = [None, None]
 for i, batch in enumerate(test_loader):
-    idx, (images, labels) = batch
+    idx, video_start, (images, labels) = batch
+    if torch.any(video_start.bool()):
+        print(video_start)
+        net.reset()
     if idx.item() % 10 == 0:
         print("Processed {} from {} images".format(idx.item(), len(dataset)))
 

@@ -25,7 +25,7 @@ models = ["Deep+_mobile", "Deep+_resnet50", "Deep_mobile_lstmV1", "Deep_mobile_l
 # models = ["Deep_mobile_lstmV4"]
 start_lrs = [1e-7]
 step_sizes = [6]
-num_epochs = [40]
+num_epochs = [100]
 batch_sizes = [6]
 loss = ["CrossDice"]  # / "SoftDice" / "Focal" / "CrossEntropy" / "Boundary" / "CrossDice"
 
@@ -45,7 +45,7 @@ for model in models:
         config["scheduler_step_size"] = step_sizes[i]
         config["loss"] = loss[i]
         config["save_freq"] = 1
-        config["save_path"] = "code/models/trained_models/YT_mini"
+        config["save_path"] = "code/models/trained_models/YT_miniV2"
 
         # print(config)
         configs.append(config)

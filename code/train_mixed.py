@@ -205,7 +205,7 @@ start_epoch = 0
 
 batch_index = torch.tensor(range(config["batch_size"]))
 # dataset = Youtube_Greenscreen(train=True, start_index=batch_index)
-dataset = YT_Greenscreen(train=True, start_index=batch_index,batch_size=config["batch_size"])
+dataset = YT_Greenscreen(train=True, start_index=batch_index, batch_size=config["batch_size"])
 # dataset = Youtube_Greenscreen_mini(start_index=batch_index, batch_size=config["batch_size"])
 train_loader = DataLoader(dataset=dataset, batch_size=config["batch_size"], shuffle=False)
 
@@ -332,7 +332,7 @@ def evaluate(model, train=False, eval_length=29 * 6, epoch=0, random_start=True)
     to_PIL = T.ToPILImage()
 
     old_pred = [None, None]
-    dset = Youtube_Greenscreen(train=train)
+    dset = YT_Greenscreen(train=train, start_index=batch_index, batch_size=1)
     if random_start:
         start_index = np.random.choice(range(len(dset) - eval_length))
         dset.set_start_index(int(start_index))
@@ -402,7 +402,7 @@ print(">>>Start of Training<<<")
 time_tmp = []
 avrg_batch_time = 60 * 5
 restart_time = 60 * 60 * 1.  # restart after 1 h
-evaluation_steps = 2
+evaluation_steps = 10
 restart = False  # flag
 max_gpu_mem = 0
 dataset.set_start_index(checkpoint["batch_index"])  # continue training at dataset position of last stop
@@ -461,13 +461,13 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
         lrs_batch.append(lr_step)
 
     lrs.append(lr_step)
-    # if epoch % evaluation_steps == 0:
-    #     print("evaluation at epoch", epoch)
-    #     train_eval = evaluate(net, train=True, eval_length=29 * 2, epoch=epoch)
-    #     test_eval = evaluate(net, train=False, eval_length=29 * 2, epoch=epoch)
-    #     metric_log["train"].append(train_eval)
-    #     metric_log["test"].append(test_eval)
-    #     visualize_metric(metric_log, step_size=evaluation_steps)
+    if epoch % evaluation_steps == 0:
+        print("evaluation at epoch", epoch)
+        train_eval = evaluate(net, train=True, eval_length=29 * 2, epoch=epoch)
+        test_eval = evaluate(net, train=False, eval_length=29 * 2, epoch=epoch)
+        metric_log["train"].append(train_eval)
+        metric_log["test"].append(test_eval)
+        visualize_metric(metric_log, step_size=evaluation_steps)
 
     if restart:
         break

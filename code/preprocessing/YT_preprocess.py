@@ -67,7 +67,7 @@ for split in splits:
         bgimg = str(bgimg[i % len(bgimg)])
         bgimg = cv2.imread(bgimg)
         bgimg = cv2.resize(bgimg, output_size)
-        bgimg = np.clip(add_noise(bgimg), a_min=0, a_max=255)
+        #bgimg = np.clip(add_noise(bgimg), a_min=0, a_max=255)
         start = True
 
         while cap.isOpened():
