@@ -37,7 +37,7 @@ sys.stderr.write("Starting at: {}\n".format(time.ctime(start_time)))
 config = {  # DEFAULT CONFIG
     # This config is replaced by the config given as a parameter in -cfg, which will be generated in multiple_train.py.
 
-    "model": "Deep_mobile_lstmV2_3",
+    "model": "Deep_resnet50_lstmV5_1",
     "ID": "01",
     "lr": 1e-02,
     "batch_size": 4,
@@ -82,15 +82,11 @@ elif config["model"] == "Deep_mobile_lstmV1":
     upper_lr_bound = 0.002
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_lstmV2_1":
-    net = Deeplabv3Plus_lstmV2(backbone="mobilenet", activate_3d=False, hidden_return_layer=0)
+    net = Deeplabv3Plus_lstmV2(backbone="mobilenet", activate_3d=False)
     upper_lr_bound = 0.002
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_lstmV2_2":
-    net = Deeplabv3Plus_lstmV2(backbone="mobilenet", activate_3d=False, hidden_return_layer=-1)
-    upper_lr_bound = 0.002
-    lower_lr_bound = upper_lr_bound / 6
-elif config["model"] == "Deep_mobile_lstmV2_3":
-    net = Deeplabv3Plus_lstmV2(backbone="mobilenet", activate_3d=True, hidden_return_layer=0)
+    net = Deeplabv3Plus_lstmV2(backbone="mobilenet", activate_3d=True)
     upper_lr_bound = 0.002
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_lstmV3":
@@ -133,9 +129,13 @@ elif config["model"] == "Deep_resnet50_lstmV1":
     net = Deeplabv3Plus_lstmV1(backbone="resnet50")
     upper_lr_bound = 0.002
     lower_lr_bound = upper_lr_bound / 6
-elif config["model"] == "Deep_resnet50_lstmV2":
-    net = Deeplabv3Plus_lstmV2(backbone="resnet50")
-    upper_lr_bound = 0.001
+elif config["model"] == "Deep_resnet50_lstmV2_1":
+    net = Deeplabv3Plus_lstmV2(backbone="resnet50", activate_3d=False)
+    upper_lr_bound = 0.002
+    lower_lr_bound = upper_lr_bound / 6
+elif config["model"] == "Deep_resnet50_lstmV2_2":
+    net = Deeplabv3Plus_lstmV2(backbone="resnet50", activate_3d=True)
+    upper_lr_bound = 0.002
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_resnet50_lstmV3":
     net = Deeplabv3Plus_lstmV3(backbone="resnet50")
@@ -145,9 +145,13 @@ elif config["model"] == "Deep_resnet50_lstmV4":
     net = Deeplabv3Plus_lstmV4(backbone="resnet50")
     upper_lr_bound = 0.00025
     lower_lr_bound = upper_lr_bound / 6
-elif config["model"] == "Deep_resnet50_lstmV5":
-    net = Deeplabv3Plus_lstmV5(backbone="resnet50")
-    upper_lr_bound = 0.00055
+elif config["model"] == "Deep_resnet50_lstmV5_1":
+    net = Deeplabv3Plus_lstmV5(backbone="resnet50", keep_hidden=True)
+    upper_lr_bound = 0.0023
+    lower_lr_bound = upper_lr_bound / 6
+elif config["model"] == "Deep_resnet50_lstmV5_2":
+    net = Deeplabv3Plus_lstmV5(backbone="resnet50", keep_hidden=False)
+    upper_lr_bound = 0.001
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_resnet50_gruV1":
     net = Deeplabv3Plus_gruV1(backbone="resnet50")
@@ -209,14 +213,14 @@ dataset = YT_Greenscreen(train=True, start_index=batch_index, batch_size=config[
 # dataset = Youtube_Greenscreen_mini(start_index=batch_index, batch_size=config["batch_size"])
 train_loader = DataLoader(dataset=dataset, batch_size=config["batch_size"], shuffle=False)
 
-optimizer = optim.Adam(net.parameters(), lr=lower_lr_bound, weight_decay=0.0001)
+optimizer = optim.Adam(net.parameters(), lr=lower_lr_bound*1.15, weight_decay=0.0001)
 # optimizer = optim.SGD(net.parameters(), lr=lower_lr_bound, weight_decay=0.0001, momentum=0.9)
 # scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=config["scheduler_step_size"], gamma=0.1)
-# scheduler = PolynomialLRDecay(optimizer, max_decay_steps=config["num_epochs"], end_learning_rate=config["lr"]*0.001, power=2.0)
+scheduler = PolynomialLRDecay(optimizer, max_decay_steps=config["num_epochs"], end_learning_rate=upper_lr_bound*0.01, power=2.0)
 # scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min')
 sys.stderr.write(f"\nlen(loader) = {len(train_loader)}\n")
-scheduler = optim.lr_scheduler.CyclicLR(optimizer, base_lr=lower_lr_bound, max_lr=upper_lr_bound, cycle_momentum=False,
-                                        mode="triangular2", step_size_up=4 * len(train_loader))
+# scheduler = optim.lr_scheduler.CyclicLR(optimizer, base_lr=lower_lr_bound, max_lr=upper_lr_bound, cycle_momentum=False,
+                                        # mode="triangular2", step_size_up=4 * len(train_loader))
 
 # ----------------------------------------------------------------------------------------------------
 # saving the models
@@ -348,7 +352,7 @@ def evaluate(model, train=False, eval_length=29 * 6, epoch=0, random_start=True)
         idx, video_start, (images, labels) = batch
         if torch.any(video_start.bool()):
             print(video_start)
-            net.reset()
+            model.reset()
         pred = model(images, old_pred)  # predict
         outputs = torch.argmax(pred, dim=1).float()
         old_pred[0] = old_pred[1]  # oldest at 0 position
@@ -411,7 +415,7 @@ sys.stderr.write("\nEpoch starting at: {}".format(time.ctime(epoch_start)))
 
 lrs_batch = []
 for epoch in tqdm(range(start_epoch, config["num_epochs"])):
-    old_pred = [None, None]
+
     running_loss = 0
     for batch in train_loader:
         batch_start_time = time.time()
@@ -437,7 +441,7 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
                 dataset.start_index = 0  # reset start index for the next batch
                 break
 
-        pred = net(images, old_pred)
+        pred = net(images)
 
         if config["loss"] == "Boundary":
             mask = metrics.make_one_hot(labels.unsqueeze(1), C=2)
@@ -446,11 +450,10 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
             loss = criterion(pred, labels)
 
         optimizer.zero_grad()
-        loss.backward()
+        # loss.backward()
         optimizer.step()
         running_loss += loss.item() * images.size(0)
-        old_pred[0] = old_pred[1]  # oldest at 0 position
-        old_pred[1] = pred.unsqueeze(1).detach()  # newest at 1 position
+
         # (detach so no error is thrown due to multiple backpropagations)
         batch_index = idx
         time_tmp.append(time.time() - batch_start_time)  # meassure time passed
@@ -459,6 +462,8 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
         scheduler.step()
         lr_step = optimizer.state_dict()["param_groups"][0]["lr"]
         lrs_batch.append(lr_step)
+        print(loss)
+        break
 
     lrs.append(lr_step)
     if epoch % evaluation_steps == 0:

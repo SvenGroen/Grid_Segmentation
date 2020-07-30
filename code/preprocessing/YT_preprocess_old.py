@@ -43,7 +43,7 @@ random.shuffle(test)
 fourcc = cv2.VideoWriter_fourcc(*"mp4v")
 for split in ["train", "test"]:
     video_names = train if split == "train" else test
-    out_path = Path("data/Videos/Greenscreen_Video_frames_4sec") / split
+    out_path = Path("data/Videos/YT_Video_frames_4sec") / split
     label_out_path = out_path / "labels"
     input_out_path = out_path / "Input"
     label_out_path.mkdir(parents=True, exist_ok=True)

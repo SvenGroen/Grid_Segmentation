@@ -71,7 +71,7 @@ class Deeplabv3Plus_lstmV1(nn.Module):
 
 
 class Deeplabv3Plus_lstmV2(nn.Module):
-    def __init__(self, backbone="mobilenet", activate_3d=False, hidden_return_layer=0):
+    def __init__(self, backbone="mobilenet", activate_3d=False):
         super().__init__()
         if backbone == "mobilenet":
             self.base = deeplabv3plus_mobilenet(num_classes=2, pretrained_backbone=True)
@@ -81,53 +81,57 @@ class Deeplabv3Plus_lstmV2(nn.Module):
         self.lstm = ConvLSTM(input_dim=2, hidden_dim=[2], kernel_size=(3, 3), num_layers=1, batch_first=True,
                              bias=True,
                              return_all_layers=False)
-        self.conv3d= nn.Sequential(
+        self.conv3d = nn.Sequential(
             nn.Conv3d(in_channels=3, out_channels=1, kernel_size=1, padding=0, stride=1),
             nn.BatchNorm3d(num_features=1),
             nn.ReLU()
         )
-        self.hidden_return_layer=hidden_return_layer
-        self.activate_3d=activate_3d
+        self.activate_3d = activate_3d
         self.hidden = None
         self.tmp_hidden = None
+        self.tmp_old_pred = [None, None]
+        self.old_pred = [None, None]
 
     def reset(self):
         self.hidden = None
+        self.old_pred = [None, None]
 
     def start_eval(self):
         self.tmp_hidden = self.hidden
         self.hidden = None
+        self.tmp_old_pred = self.old_pred
+        self.old_pred = [None, None]
 
     def end_eval(self):
         self.hidden = self.tmp_hidden
         self.tmp_hidden = None
-
+        self.old_pred = self.tmp_old_pred
+        self.tmp_old_pred = [None, None]
 
     def forward(self, x, *args):
         input_shape = x.shape[-2:]
         x = self.base(x)
         out = F.interpolate(x, size=input_shape, mode='bilinear', align_corners=False)
         out = out.unsqueeze(1)
-        if len(args) != 0:
-            old_pred = args[0]
-            # initialize if necessary
-            if None in old_pred:
-                for i in range(len(old_pred)):
-                    old_pred[i] = torch.zeros_like(out)
-            # match shape
-            elif len(old_pred[0].shape) != len(out.shape):
-                for i in range(len(old_pred)):
-                    old_pred[i] = old_pred[i].unsqueeze(1)
-            out = old_pred + [out]
-            out = torch.cat(out, dim=1)
+        if None in self.old_pred:
+            for i in range(len(self.old_pred)):
+                self.old_pred[i] = torch.zeros_like(out)
+        # match shape
+        elif len(self.old_pred[0].shape) != len(out.shape):
+            for i in range(len(self.old_pred)):
+                self.old_pred[i] = self.old_pred[i].unsqueeze(1)
+        out = self.old_pred + [out]
+        out = torch.cat(out, dim=1)
 
         out, self.hidden = self.lstm(out, self.hidden)
         out = out[0]
         if self.activate_3d:
             out = self.conv3d(out)
 
-        out = out[:, self.hidden_return_layer, :, :, :]  # <--- not to sure if 0 or -1
+        out = out[:, -1, :, :, :]  # <--- not to sure if 0 or -1
         self.hidden = [tuple(state.detach() for state in i) for i in self.hidden]
+        self.old_pred[0] = self.old_pred[1]  # oldest at 0 position
+        self.old_pred[1] = out.unsqueeze(1).detach()  # newest at 1 position
         return out
 
 
@@ -145,18 +149,17 @@ class Deeplabv3Plus_lstmV3(nn.Module):
 
         self.backbone = self.base.backbone
         self.classifier = DeepLabHeadV3PlusLSTM(in_channels, low_level_channels, 2, [12, 24, 36])
-        self.hidden = None
         self.tmp_hidden = None
 
     def reset(self):
-        self.hidden = None
+        self.classifier.hidden = None
 
     def start_eval(self):
-        self.tmp_hidden = self.hidden
-        self.hidden = None
+        self.tmp_hidden = self.classifier.hidden
+        self.classifier.hidden = None
 
     def end_eval(self):
-        self.hidden = self.tmp_hidden
+        self.classifier.hidden = self.tmp_hidden
         self.tmp_hidden = None
 
     def forward(self, x, *args):
@@ -180,18 +183,18 @@ class Deeplabv3Plus_lstmV4(nn.Module):
 
         self.backbone = self.base.backbone
         self.classifier = DeepLabHeadV3PlusLSTM(in_channels, low_level_channels, 2, [12, 24, 36], store_previous=True)
-        self.hidden = None
+
         self.tmp_hidden = None
 
     def reset(self):
-        self.hidden = None
+        self.classifier.hidden = None
 
     def start_eval(self):
-        self.tmp_hidden = self.hidden
-        self.hidden = None
+        self.tmp_hidden = self.classifier.hidden
+        self.classifier.hidden = None
 
     def end_eval(self):
-        self.hidden = self.tmp_hidden
+        self.classifier.hidden = self.tmp_hidden
         self.tmp_hidden = None
 
     def forward(self, x, *args):
@@ -209,50 +212,59 @@ class Deeplabv3Plus_lstmV5(nn.Module):
         elif backbone == "resnet50":
             self.base = deeplabv3plus_resnet50(num_classes=2, pretrained_backbone=True)
         if keep_hidden:
-            return_all_layers=True
+            return_all_layers = True
         else:
-            return_all_layers=False
+            return_all_layers = False
         self.lstm = ConvLSTM(input_dim=2, hidden_dim=[2], kernel_size=(3, 3), num_layers=1, batch_first=True,
                              bias=True,
                              return_all_layers=return_all_layers)
         self.hidden = None
         self.tmp_hidden = None
-        self.keep_hidden=keep_hidden
+        self.keep_hidden = keep_hidden
+        self.tmp_old_pred = [None, None]
+        self.old_pred = [None, None]
 
     def reset(self):
         self.hidden = None
+        self.old_pred = [None, None]
 
     def start_eval(self):
         self.tmp_hidden = self.hidden
         self.hidden = None
+        self.tmp_old_pred = self.old_pred
+        self.old_pred = [None, None]
 
     def end_eval(self):
         self.hidden = self.tmp_hidden
         self.tmp_hidden = None
+        self.old_pred = self.tmp_old_pred
+        self.tmp_old_pred = [None, None]
 
     def forward(self, x, *args):
         input_shape = x.shape[-2:]
         x = self.base(x)
         out = F.interpolate(x, size=input_shape, mode='bilinear', align_corners=False)
         out = out.unsqueeze(1)
-        if len(args) != 0:
-            old_pred = args[0]
-            # initialize if necessary
-            if None in old_pred:
-                for i in range(len(old_pred)):
-                    old_pred[i] = torch.zeros_like(out)
-            # match shape
-            elif len(old_pred[0].shape) != len(out.shape):
-                for i in range(len(old_pred)):
-                    old_pred[i] = old_pred[i].unsqueeze(1)
-            out = old_pred + [out]
-            out = torch.cat(out, dim=1)
+
+        # initialize if necessary
+        if None in self.old_pred:
+            for i in range(len(self.old_pred)):
+                self.old_pred[i] = torch.zeros_like(out)
+        # match shape
+        elif len(self.old_pred[0].shape) != len(out.shape):
+            for i in range(len(self.old_pred)):
+                self.old_pred[i] = self.old_pred[i].unsqueeze(1)
+        out = self.old_pred + [out]
+        out = torch.cat(out, dim=1)
         if self.keep_hidden:
             out, self.hidden = self.lstm(out, self.hidden)
         else:
             out, self.hidden = self.lstm(out)
-        out = out[0][:, 0, :, :, :]  # <--- not to sure if 0 or -1
+        out = out[0][:, -1, :, :, :]  # <--- not to sure if 0 or -1
         self.hidden = [tuple(state.detach() for state in i) for i in self.hidden]
+        self.hidden = [tuple(state.detach() for state in i) for i in self.hidden]
+        self.old_pred[0] = self.old_pred[1]  # oldest at 0 position
+        self.old_pred[1] = out.unsqueeze(1).detach()
         return out
 
 
@@ -270,7 +282,6 @@ class Deeplabv3Plus_gruV1(nn.Module):
         self.hidden = [None]
         self.tmp_hidden = None
 
-
     def reset(self):
         self.hidden = [None]
 
@@ -287,7 +298,7 @@ class Deeplabv3Plus_gruV1(nn.Module):
         x = x.unsqueeze(1)
         out, self.hidden = self.gru(x, self.hidden[-1])
         self.hidden = [tuple(state.detach() for state in i) for i in self.hidden]
-        out = out[0][:, 0, :, :, :]  # <--- not to sure if 0 or -1
+        out = out[0][:, -1, :, :, :]  # <--- not to sure if 0 or -1
         return out
 
 
@@ -301,39 +312,52 @@ class Deeplabv3Plus_gruV2(nn.Module):
 
         self.gru = ConvGRU(input_size=(270, 512), input_dim=2, hidden_dim=[2], kernel_size=(3, 3), num_layers=1,
                            dtype=torch.FloatTensor, batch_first=True, bias=True, return_all_layers=True)
+        self.conv3d = nn.Sequential(
+            nn.Conv3d(in_channels=3, out_channels=1, kernel_size=1, padding=0, stride=1),
+            nn.BatchNorm3d(num_features=1),
+            nn.ReLU()
+        )
         self.hidden = [None]
         self.tmp_hidden = [None]
+        self.old_pred = [None, None]
+        self.tmp_old_pred = [None, None]
 
     def reset(self):
         self.hidden = [None]
+        self.old_pred = [None, None]
 
     def start_eval(self):
         self.tmp_hidden = self.hidden
         self.hidden = [None]
+        self.tmp_old_pred = self.old_pred
+        self.old_pred = [None, None]
 
     def end_eval(self):
         self.hidden = self.tmp_hidden
         self.tmp_hidden = [None]
+        self.old_pred = self.tmp_old_pred
+        self.tmp_old_pred = [None, None]
 
     def forward(self, x, *args):
         out = self.base(x)
         out = out.unsqueeze(1)  # add "timestep" dimension
 
-        if len(args) != 0:
-            old_pred = args[0]
-            # initialize if necessary
-            if None in old_pred:
-                for i in range(len(old_pred)):
-                    old_pred[i] = torch.zeros_like(out)
-            # match shape
-            elif len(old_pred[0].shape) != len(out.shape):
-                for i in range(len(old_pred)):
-                    old_pred[i] = old_pred[i].unsqueeze(1)  # add "timestep" dimension
-            out = old_pred + [out]
-            out = torch.cat(out, dim=1)
+        if None in self.old_pred:
+            for i in range(len(self.old_pred)):
+                self.old_pred[i] = torch.zeros_like(out)
+        # match shape
+        elif len(self.old_pred[0].shape) != len(out.shape):
+            for i in range(len(self.old_pred)):
+                self.old_pred[i] = self.old_pred[i].unsqueeze(1)  # add "timestep" dimension
+        out = self.old_pred + [out]
+        out = torch.cat(out, dim=1)
         out, self.hidden = self.gru(out, self.hidden[-1])
         self.hidden = [tuple(state.detach() for state in i) for i in self.hidden]
-        out = out[0][:, 0, :, :, :]  # <--- not to sure if 0 or -1
+        out = out[0]
+        out = self.conv3d(out)
+        out = out[:, -1, :, :, :]  # <--- not to sure if 0 or -1
+        self.old_pred[0] = self.old_pred[1]  # oldest at 0 position
+        self.old_pred[1] = out.unsqueeze(1).detach()  # newest at 1 position
         return out
 
 
@@ -350,20 +374,28 @@ class Deeplabv3Plus_gruV3(nn.Module):
             low_level_channels = 256
 
         self.backbone = self.base.backbone
-        self.classifier = DeepLabHeadV3PlusGRU(in_channels, low_level_channels, 2, [12, 24, 36]).to(device)
-        self.hidden = None
+        self.classifier = DeepLabHeadV3PlusGRU(in_channels, low_level_channels, 2, [12, 24, 36],
+                                               store_previous=False).to(device)
+        self.hidden = self.classifier.hidden
         self.tmp_hidden = None
+        self.classifier.old_pred = [None, None]
+        self.tmp_old_pred = [None, None]
 
     def reset(self):
-        self.hidden = None
+        self.classifier.hidden = [None]
+        self.classifier.old_pred = [None, None]
 
     def start_eval(self):
-        self.tmp_hidden = self.hidden
-        self.hidden = None
+        self.tmp_hidden = self.classifier.hidden
+        self.tmp_old_pred = self.classifier.old_pred
+        self.classifier.hidden = [None]
+        self.classifier.old_pred = [None, None]
 
     def end_eval(self):
-        self.hidden = self.tmp_hidden
-        self.tmp_hidden = None
+        self.classifier.hidden = self.tmp_hidden
+        self.classifier.old_pred = self.tmp_old_pred
+        self.tmp_hidden = [None]
+        self.tmp_old_pred = [None, None]
 
     def forward(self, x, *args):
         input_shape = x.shape[-2:]
@@ -386,20 +418,28 @@ class Deeplabv3Plus_gruV4(nn.Module):
             low_level_channels = 256
 
         self.backbone = self.base.backbone
-        self.classifier = DeepLabHeadV3PlusGRU(in_channels, low_level_channels, 2, [12, 24, 36], store_previous=True).to(device)
-        self.hidden = None
+        self.classifier = DeepLabHeadV3PlusGRU(in_channels, low_level_channels, 2, [12, 24, 36],
+                                               store_previous=True).to(device)
+        self.hidden = self.classifier.hidden
         self.tmp_hidden = None
+        self.classifier.old_pred = [None, None]
+        self.tmp_old_pred = [None, None]
 
     def reset(self):
-        self.hidden = None
+        self.classifier.hidden = [None]
+        self.classifier.old_pred = [None, None]
 
     def start_eval(self):
-        self.tmp_hidden = self.hidden
-        self.hidden = None
+        self.tmp_hidden = self.classifier.hidden
+        self.tmp_old_pred = self.classifier.old_pred
+        self.classifier.hidden = [None]
+        self.classifier.old_pred = [None, None]
 
     def end_eval(self):
-        self.hidden = self.tmp_hidden
-        self.tmp_hidden = None
+        self.classifier.hidden = self.tmp_hidden
+        self.classifier.old_pred = self.tmp_old_pred
+        self.tmp_hidden = [None]
+        self.tmp_old_pred = [None, None]
 
     def forward(self, x, *args):
         input_shape = x.shape[-2:]
@@ -436,6 +476,7 @@ class Deeplab_Res101(nn.Module):
     def forward(self, x, *args):
         x = self.base(x)
         return x["out"]
+
 
 class Deeplab_Res101V2(nn.Module):
     def __init__(self):

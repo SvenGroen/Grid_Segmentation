@@ -56,7 +56,7 @@ class YT_Greenscreen(data.Dataset):
 
         self.train = train
         self.mode = "train" if train else "test"
-        with open("data/Images/Greenscreen_Video_frames/" + self.mode + "/out_log.json", "r") as json_file:
+        with open("data/Images/YT_mini_4sec/" + self.mode + "/out_log.json", "r") as json_file:
             self.data = json.load(json_file)
         self.start_index = start_index if isinstance(start_index, int) else start_index[0].item()
         self.seed = random.randint(-999, 999)  # makes sure the transformations are applied equally
@@ -87,7 +87,6 @@ class YT_Greenscreen(data.Dataset):
             self.seed = random.randint(-999, 999)
         img = Image.open(self.data["Inputs"][idx][0])
         lbl = Image.open(self.data["Labels"][idx][0]).convert("L")
-        print(self.seed)
         random.seed(self.seed)
         inp = self.transform(img)
         random.seed(self.seed)
@@ -127,10 +126,10 @@ class Segmentation_transform:
         self.seed = seed
         self.angle = 0
         self.translate = (0,0)
-        self.shear = random.randint(-5, 5)
+        self.shear = random.randint(-7, 7)
         self.scale = 1
         self.hflip = random.randint(0, 1)
-        self.brightness = random.choice([0.6, 0.8, 1, 1.2, 1.4])
+        self.brightness = random.choice([0.6, 0.8, 1.2, 1.4])
         self.random_apply()
 
     def __call__(self, img, label=False):
@@ -144,12 +143,12 @@ class Segmentation_transform:
         return img
 
     def random_apply(self):
-        if random.random() < 0.3:
-            self.angle = random.randint(-8, 8)
-            self.scale = random.choice([1.2, 1.4, 1.5])
+        if random.random() < 0.4:
+            self.angle = random.randint(-10, 10)
+            self.scale = random.choice([1.2, 1.1, 1.3])
         if random.random() > 0.6:
             self.translate = (random.randint(-10, 10), random.randint(-10, 10))
-            self.scale = random.choice([1.2, 1.4, 1.5])
+            self.scale = random.choice([1.2, 1.1, 1.3])
         if random.random() > 0.4:
             self.shear = 0
         if random.random() > 0.7:
@@ -163,18 +162,18 @@ if __name__ == "__main__":
 
     # TF.hflip()
 
-    dataset = YT_Greenscreen(train=True, start_index=160)
+    dataset = YT_Greenscreen(train=True, start_index=230)
     loader = DataLoader(dataset=dataset, batch_size=1, shuffle=False)
     to_pil = T.ToPILImage()
     iter = 0
-    for i in loader:
-        idx, next_vid, (inp, label) = i
-        inp = to_pil(inp.squeeze(0).float())
-        label = to_pil(label.float())
-        inp.show()
-        label.show()
-        iter += 1
-        if iter == 10: break
+    # for i in loader:
+    #     idx, next_vid, (inp, label) = i
+    #     inp = to_pil(inp.squeeze(0).float())
+    #     label = to_pil(label.float())
+    #     inp.show()
+    #     label.show()
+    #     iter += 1
+    #     if iter == 10: break
 
     # for img in inp[0,:,:,:,:]:
     #     img=to_pil(img)
@@ -182,4 +181,4 @@ if __name__ == "__main__":
     # lbl = to_pil(label[0,:,:])
     # lbl.show()
 
-    dataset.show(10, start_idx=160)
+    dataset.show(10, start_idx=230)

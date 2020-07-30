@@ -46,13 +46,18 @@ class DeepLabHeadV3PlusGRU(nn.Module):
             nn.ReLU(inplace=True),
             nn.Conv2d(256, num_classes, 1)
         )
-        input_shape =(68, 128) if in_channels == 2048 else (67, 128)
+        input_shape = (68, 128) if in_channels == 2048 else (67, 128)
         self._init_weight()
         self.gru = ConvGRU(input_size=input_shape, input_dim=304, hidden_dim=[304], kernel_size=(3, 3), num_layers=1,
                            dtype=torch.FloatTensor, batch_first=True, bias=True, return_all_layers=True)
         self.hidden = [None]
         self.store_previous = store_previous
         self.old_pred = [None, None]
+        self.conv3d = nn.Sequential(
+            nn.Conv3d(in_channels=3 if store_previous else 1, out_channels=1, kernel_size=1, padding=0, stride=1),
+            nn.BatchNorm3d(num_features=1),
+            nn.ReLU()
+        )
 
     def forward(self, feature):
         low_level_feature = self.project(feature['low_level'])
@@ -61,11 +66,7 @@ class DeepLabHeadV3PlusGRU(nn.Module):
                                        align_corners=False)
         concat = torch.cat([low_level_feature, output_feature], dim=1)
         out = concat.unsqueeze(1)
-        if self.gru is None:
-            self.gru = ConvGRU(input_size=tuple(out.shape[-2:]), input_dim=304, hidden_dim=[304], kernel_size=(3, 3),
-                               num_layers=1,
-                               dtype=torch.FloatTensor, batch_first=True, bias=True, return_all_layers=True)
-            self.gru = self.gru.to(device)
+
         if self.store_previous:
             if None in self.old_pred:
                 for i in range(len(self.old_pred)):
@@ -74,11 +75,12 @@ class DeepLabHeadV3PlusGRU(nn.Module):
 
         out, self.hidden = self.gru(out, self.hidden[-1])
         self.hidden = [tuple(state.detach() for state in i) for i in self.hidden]
-        out = out[0][:, -1, :, :, :]
+        out = out[0]
+        out = self.conv3d(out)
         if self.store_previous:
             self.old_pred[0] = self.old_pred[1]  # oldest at 0 position
-            self.old_pred[1] = out.unsqueeze(1).detach()  # newest at 1 position
-        return self.classifier(out)
+            self.old_pred[1] = out.detach()  # newest at 1 position
+        return self.classifier(out[:, -1, :, :, :])
 
     def _init_weight(self):
         for m in self.modules():
@@ -106,6 +108,11 @@ class DeepLabHeadV3PlusLSTM(nn.Module):
             nn.ReLU(inplace=True),
             nn.Conv2d(256, num_classes, 1)
         )
+        self.conv3d = nn.Sequential(
+            nn.Conv3d(in_channels=3 if store_previous else 1, out_channels=1, kernel_size=1, padding=0, stride=1),
+            nn.BatchNorm3d(num_features=1),
+            nn.ReLU()
+        )
         self._init_weight()
         self.lstm = ConvLSTM(input_dim=304, hidden_dim=[304], kernel_size=(3, 3), num_layers=1, batch_first=True,
                              bias=True,
@@ -127,11 +134,12 @@ class DeepLabHeadV3PlusLSTM(nn.Module):
 
         out, self.hidden = self.lstm(out, self.hidden)
         self.hidden = [tuple(state.detach() for state in i) for i in self.hidden]
-        out = out[0][:, -1, :, :, :]
+        out = out[0]
+        out = self.conv3d(out)
         if self.store_previous:
             self.old_pred[0] = self.old_pred[1]  # oldest at 0 position
-            self.old_pred[1] = out.unsqueeze(1).detach()  # newest at 1 position
-        return self.classifier(out)
+            self.old_pred[1] = out.detach()  # newest at 1 position
+        return self.classifier(out[:, -1, :, :, :])
 
     def _init_weight(self):
         for m in self.modules():
