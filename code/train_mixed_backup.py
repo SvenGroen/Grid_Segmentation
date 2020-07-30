@@ -80,13 +80,21 @@ elif config["model"] == "Deep_mobile_lstmV1":
     net = Deeplabv3Plus_lstmV1(backbone="mobilenet")
     upper_lr_bound = 0.002
     lower_lr_bound = upper_lr_bound / 6
-elif config["model"] == "Deep_mobile_lstmV2":
-    net = Deeplabv3Plus_lstmV2(backbone="mobilenet")
-    upper_lr_bound = 0.002
+elif config["model"] == "Deep_mobile_lstmV2_1":
+    net = Deeplabv3Plus_lstmV2(backbone="mobilenet", activate_3d=False, hidden_return_layer=0)
+    upper_lr_bound = 0.02
+    lower_lr_bound = upper_lr_bound / 6
+elif config["model"] == "Deep_mobile_lstmV2_2":
+    net = Deeplabv3Plus_lstmV2(backbone="mobilenet", activate_3d=False, hidden_return_layer=-1)
+    upper_lr_bound = 0.02
+    lower_lr_bound = upper_lr_bound / 6
+elif config["model"] == "Deep_mobile_lstmV2_3":
+    net = Deeplabv3Plus_lstmV2(backbone="mobilenet", activate_3d=True, hidden_return_layer=0)
+    upper_lr_bound = 0.02
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_lstmV3":
     net = Deeplabv3Plus_lstmV3(backbone="mobilenet")
-    upper_lr_bound = 0.0022
+    upper_lr_bound = 0.005
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_lstmV4":
     net = Deeplabv3Plus_lstmV4(backbone="mobilenet")
@@ -94,27 +102,27 @@ elif config["model"] == "Deep_mobile_lstmV4":
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_lstmV5_1":
     net = Deeplabv3Plus_lstmV5(backbone="mobilenet", keep_hidden=True)
-    upper_lr_bound = 0.0023
+    upper_lr_bound = 0.02
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_lstmV5_2":
     net = Deeplabv3Plus_lstmV5(backbone="mobilenet", keep_hidden=False)
-    upper_lr_bound = 0.001
+    upper_lr_bound = 0.02
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_gruV1":
     net = Deeplabv3Plus_gruV1(backbone="mobilenet")
-    upper_lr_bound = 0.00055
+    upper_lr_bound = 0.001
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_gruV2":
     net = Deeplabv3Plus_gruV2(backbone="mobilenet")
-    upper_lr_bound = 0.001
+    upper_lr_bound = 0.01
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_gruV3":
     net = Deeplabv3Plus_gruV3(backbone="mobilenet")
-    upper_lr_bound = 0.00005
+    upper_lr_bound = 0.0005
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_gruV4":
     net = Deeplabv3Plus_gruV4(backbone="mobilenet")
-    upper_lr_bound = 0.00025
+    upper_lr_bound = 0.00030
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep+_resnet50":
     net = Deeplabv3Plus_base(backbone="resnet50")
@@ -126,7 +134,7 @@ elif config["model"] == "Deep_resnet50_lstmV1":
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_resnet50_lstmV2":
     net = Deeplabv3Plus_lstmV2(backbone="resnet50")
-    upper_lr_bound = 0.001
+    upper_lr_bound = 0.01
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_resnet50_lstmV3":
     net = Deeplabv3Plus_lstmV3(backbone="resnet50")
@@ -142,19 +150,19 @@ elif config["model"] == "Deep_resnet50_lstmV5":
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_resnet50_gruV1":
     net = Deeplabv3Plus_gruV1(backbone="resnet50")
-    upper_lr_bound = 0.00055
+    upper_lr_bound = 0.0004
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_resnet50_gruV2":
     net = Deeplabv3Plus_gruV2(backbone="resnet50")
-    upper_lr_bound = 0.001
+    upper_lr_bound = 0.01
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_resnet50_gruV3":
     net = Deeplabv3Plus_gruV3(backbone="resnet50")
-    upper_lr_bound = 0.000055
+    upper_lr_bound = 0.00055
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_resnet50_gruV4":
     net = Deeplabv3Plus_gruV4(backbone="resnet50")
-    upper_lr_bound = 0.00026
+    upper_lr_bound = 0.0005
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_Res101":
     net = Deeplab_Res101()
@@ -200,14 +208,14 @@ dataset = Youtube_Greenscreen_mini(start_index=batch_index, batch_size=config["b
 train_loader = DataLoader(dataset=dataset, batch_size=config["batch_size"], shuffle=False)
 
 
-# optimizer = optim.Adam(net.parameters(), lr=lower_lr_bound, weight_decay=0.0001)
-optimizer = optim.SGD(net.parameters(), lr=lower_lr_bound, weight_decay=0.0001, momentum=0.9)
+optimizer = optim.Adam(net.parameters(), lr=lower_lr_bound, weight_decay=0.0001)
+# optimizer = optim.SGD(net.parameters(), lr=lower_lr_bound, weight_decay=0.0001, momentum=0.9)
 # scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=config["scheduler_step_size"], gamma=0.1)
 # scheduler = PolynomialLRDecay(optimizer, max_decay_steps=config["num_epochs"], end_learning_rate=config["lr"]*0.001, power=2.0)
 # scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min')
 sys.stderr.write(f"\nlen(loader) = {len(train_loader)}\n")
-scheduler = optim.lr_scheduler.CyclicLR(optimizer, base_lr=lower_lr_bound, max_lr=upper_lr_bound, cycle_momentum=True,
-                                        mode="triangular2", step_size_up=4*len(train_loader))
+scheduler = optim.lr_scheduler.CyclicLR(optimizer, base_lr=lower_lr_bound, max_lr=upper_lr_bound, cycle_momentum=False,
+                                        mode="triangular2", step_size_up=2*len(train_loader))
 
 
 
@@ -224,6 +232,7 @@ with open(str(model_save_path / "train_config.json"), "w") as js:  # save learn 
 
 # try to load previous model state
 lrs = []
+lrs_batch = []
 LOAD_POSITION = -1
 print("Trying to load previous Checkpoint ...")
 metric_log = defaultdict(list)
@@ -235,6 +244,7 @@ try:
     start_epoch = checkpoint["epoch"][LOAD_POSITION]
     loss_values = checkpoint["loss_values"]
     lrs = checkpoint["lr"]
+    lrs_batch = checkpoint["lrs_batch"]
     scheduler.load_state_dict(checkpoint["scheduler"])
     for param_group in optimizer.param_groups:
         param_group['lr'] = lrs[LOAD_POSITION]
@@ -250,6 +260,7 @@ except IOError:
     checkpoint["optimizer_state_dict"] = optimizer.state_dict()
     checkpoint["epoch"].append(start_epoch)
     checkpoint["lr"] = lrs
+    checkpoint["lrs_batch"] = lrs_batch
     checkpoint["batchsize"].append(config["batch_size"])
     checkpoint["loss_values"] = loss_values
     checkpoint["runtime"] = time.time() - start_time
@@ -294,6 +305,7 @@ def save_checkpoint(checkpoint, filename=str(model_save_path / train_name) + ".p
     checkpoint["optimizer_state_dict"] = optimizer.state_dict()
     checkpoint["epoch"].append(epoch)
     checkpoint["lr"] = lrs
+    checkpoint["lrs_batch"] = lrs_batch
     checkpoint["batchsize"].append(config["batch_size"])
     checkpoint["loss_values"] = loss_values
     checkpoint["runtime"] = time.time() - start_time
@@ -399,7 +411,7 @@ dataset.set_start_index(checkpoint["batch_index"])  # continue training at datas
 epoch_start = time.time()
 sys.stderr.write("\nEpoch starting at: {}".format(time.ctime(epoch_start)))
 
-lrs_batch = []
+
 for epoch in tqdm(range(start_epoch, config["num_epochs"])):
     old_pred = [None, None]
     running_loss = 0
@@ -455,6 +467,7 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
         scheduler.step()
         lr_step = optimizer.state_dict()["param_groups"][0]["lr"]
         lrs_batch.append(lr_step)
+
 
     lrs.append(lr_step)
     # if epoch % evaluation_steps == 0:

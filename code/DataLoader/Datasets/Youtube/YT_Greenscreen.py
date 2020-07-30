@@ -1,6 +1,6 @@
 import glob
 import random
-
+import sys
 import cv2
 from PIL import Image
 import torchvision.transforms as T
@@ -52,7 +52,7 @@ def hstack(images):
 
 class YT_Greenscreen(data.Dataset):
 
-    def __init__(self, norm_ImageNet=False, train=True, start_index=torch.tensor([0])):
+    def __init__(self, norm_ImageNet=False, train=True, start_index=torch.tensor([0]), batch_size=1):
 
         self.train = train
         self.mode = "train" if train else "test"
@@ -61,9 +61,13 @@ class YT_Greenscreen(data.Dataset):
         self.start_index = start_index if isinstance(start_index, int) else start_index[0].item()
         self.seed = random.randint(-999, 999)  # makes sure the transformations are applied equally
         self.transform = Segmentation_transform(seed=self.seed)
+        self.batch_size = batch_size
+        sys.stderr.write("\nlen(data) = {}; len(dataset) = {}\n".format(len(self.data["Inputs"]), self.__len__()))
 
     def __len__(self):
-        return len(self.data["Inputs"])
+        length = len(self.data["Inputs"])
+        rest = length % self.batch_size
+        return length - rest
 
     def set_start_index(self, idx):
         if isinstance(idx, int):
@@ -75,7 +79,7 @@ class YT_Greenscreen(data.Dataset):
 
         idx = idx + self.start_index
         if idx >= self.__len__():
-            return 0, 0, (0, 0)
+            return 0, False, (0, 0)
         video_start = bool(int(self.data["Inputs"][idx][1]))
         if video_start:
             self.transform = Segmentation_transform(seed=random.randint(-999, 999))
@@ -121,10 +125,10 @@ class YT_Greenscreen(data.Dataset):
 class Segmentation_transform:
     def __init__(self, seed):
         self.seed = seed
-        self.angle = random.randint(-10, 10)
-        self.translate = (random.randint(-10, 10), random.randint(-10, 10))
-        self.shear = random.randint(-10, 10)
-        self.scale = random.choice([0.8, 0.9, 1, 1.1, 1.2])
+        self.angle = 0
+        self.translate = (0,0)
+        self.shear = random.randint(-5, 5)
+        self.scale = 1
         self.hflip = random.randint(0, 1)
         self.brightness = random.choice([0.6, 0.8, 1, 1.2, 1.4])
         self.random_apply()
@@ -140,14 +144,14 @@ class Segmentation_transform:
         return img
 
     def random_apply(self):
-        if random.random() > 1:
-            self.angle = 0
-        if random.random() > 0.4:
-            self.translate = (0, 0)
+        if random.random() < 0.3:
+            self.angle = random.randint(-8, 8)
+            self.scale = random.choice([1.2, 1.4, 1.5])
+        if random.random() > 0.6:
+            self.translate = (random.randint(-10, 10), random.randint(-10, 10))
+            self.scale = random.choice([1.2, 1.4, 1.5])
         if random.random() > 0.4:
             self.shear = 0
-        if random.random() > 0.5:
-            self.scale = 1
         if random.random() > 0.7:
             self.brightness = 1
 

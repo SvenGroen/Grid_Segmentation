@@ -30,7 +30,7 @@ def add_noise(image):
     return noisy
 
 
-vid_path = Path(Path.cwd()) / "data/Videos/YT_originals_sorted_test"
+vid_path = Path(Path.cwd()) / "data/Videos/YT_mini"
 video_names = [vid.stem for vid in vid_path.glob("*")]
 output_size = (int(2048 / 4), int(1080 / 4))
 fps = 29
@@ -50,7 +50,7 @@ for split in splits:
     input_out_path = out_path / "Input"
     label_out_path.mkdir(parents=True, exist_ok=True)
     input_out_path.mkdir(parents=True, exist_ok=True)
-    bgpath = Path("data/Images/Backgrounds2") / split
+    bgpath = Path("data/Images/other/background_dataset") / split
     frame_counter = 0
     out_log = defaultdict(list)
     for i, vid in enumerate(video_names):
@@ -67,7 +67,7 @@ for split in splits:
         bgimg = str(bgimg[i % len(bgimg)])
         bgimg = cv2.imread(bgimg)
         bgimg = cv2.resize(bgimg, output_size)
-        bgimg = np.clip(add_noise(bgimg), a_min=0, a_max=255)
+        #bgimg = np.clip(add_noise(bgimg), a_min=0, a_max=255)
         start = True
 
         while cap.isOpened():
