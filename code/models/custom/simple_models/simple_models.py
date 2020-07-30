@@ -82,7 +82,7 @@ class Deeplabv3Plus_lstmV2(nn.Module):
                              bias=True,
                              return_all_layers=False)
         self.conv3d= nn.Sequential(
-            nn.Conv3d(in_channels=3, out_channels=1, kernel_size=3, padding=1, stride=1),
+            nn.Conv3d(in_channels=3, out_channels=1, kernel_size=1, padding=0, stride=1),
             nn.BatchNorm3d(num_features=1),
             nn.ReLU()
         )
