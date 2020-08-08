@@ -12,7 +12,8 @@ import os
 from collections import defaultdict
 from pathlib import Path
 from sklearn.model_selection import train_test_split
-
+import sys
+sys.stderr.write("Start of file")
 
 def add_noise(image):
     row, col, ch = image.shape
@@ -26,14 +27,14 @@ def add_noise(image):
 
 random.seed(42)
 for split in ["train", "test"]:
-    vid_path_inp = Path(Path.cwd()) / "data/Videos/YT_mini_4sec" / split / "Input"
+    vid_path_inp = Path("data/Videos/YT_4sec") / split / "Input"
     video_names = [vid.stem for vid in vid_path_inp.glob("*")]
     random.shuffle(video_names)
     output_size = (int(2048 / 4), int(1080 / 4))
     lower_green = np.array([0, 125, 0])
     upper_green = np.array([100, 255, 120])
     MAX_DURATION = 4
-    out_path = Path("data/Images/YT_mini_4sec") / split
+    out_path = Path("data/Images/YT_4sec") / split
     bgpath = Path("data/Images/other/background_dataset") / split
     label_out_path = out_path / "Labels"
     input_out_path = out_path / "Input"
@@ -43,6 +44,7 @@ for split in ["train", "test"]:
     count_lbl = 0
     out_log = defaultdict(list)
     for i,vid in enumerate(video_names):
+        sys.stderr.write("Video: {}".format(vid))
         bgimg = [img for img in bgpath.glob("*")]
         bgimg = str(bgimg[i % len(bgimg)])
         bgimg = cv2.imread(bgimg)

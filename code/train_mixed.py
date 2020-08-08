@@ -75,27 +75,27 @@ if config["model"] == "UNet":
     net = UNet(in_channels=3, out_channels=2, n_class=2, kernel_size=3, padding=1, stride=1)
 elif config["model"] == "Deep+_mobile":
     net = Deeplabv3Plus_base(backbone="mobilenet")  # https://github.com/VainF/DeepLabV3Plus-Pytorch
-    upper_lr_bound = 0.0002
+    upper_lr_bound = 0.0001
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_lstmV1":
     net = Deeplabv3Plus_lstmV1(backbone="mobilenet")
-    upper_lr_bound = 0.002
+    upper_lr_bound = 5e-5
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_lstmV2_1":
     net = Deeplabv3Plus_lstmV2(backbone="mobilenet", activate_3d=False)
-    upper_lr_bound = 0.002
+    upper_lr_bound = 2e-5
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_lstmV2_2":
     net = Deeplabv3Plus_lstmV2(backbone="mobilenet", activate_3d=True)
-    upper_lr_bound = 0.002
+    upper_lr_bound = 3e-3
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_lstmV3":
     net = Deeplabv3Plus_lstmV3(backbone="mobilenet")
-    upper_lr_bound = 0.0022
+    upper_lr_bound = 1e-2
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_lstmV4":
     net = Deeplabv3Plus_lstmV4(backbone="mobilenet")
-    upper_lr_bound = 0.0021
+    upper_lr_bound = 3e-5
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_lstmV5_1":
     net = Deeplabv3Plus_lstmV5(backbone="mobilenet", keep_hidden=True)
@@ -103,23 +103,23 @@ elif config["model"] == "Deep_mobile_lstmV5_1":
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_lstmV5_2":
     net = Deeplabv3Plus_lstmV5(backbone="mobilenet", keep_hidden=False)
-    upper_lr_bound = 0.001
+    upper_lr_bound = 1e-5
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_gruV1":
     net = Deeplabv3Plus_gruV1(backbone="mobilenet")
-    upper_lr_bound = 0.00055
+    upper_lr_bound = 1e-5
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_gruV2":
     net = Deeplabv3Plus_gruV2(backbone="mobilenet")
-    upper_lr_bound = 0.001
+    upper_lr_bound = 5e-4
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_gruV3":
     net = Deeplabv3Plus_gruV3(backbone="mobilenet")
-    upper_lr_bound = 0.00005
+    upper_lr_bound = 1e-4 #1e-5
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_gruV4":
     net = Deeplabv3Plus_gruV4(backbone="mobilenet")
-    upper_lr_bound = 0.00025
+    upper_lr_bound = 7e-5
     lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep+_resnet50":
     net = Deeplabv3Plus_base(backbone="resnet50")
@@ -213,14 +213,15 @@ dataset = YT_Greenscreen(train=True, start_index=batch_index, batch_size=config[
 # dataset = Youtube_Greenscreen_mini(start_index=batch_index, batch_size=config["batch_size"])
 train_loader = DataLoader(dataset=dataset, batch_size=config["batch_size"], shuffle=False)
 
-optimizer = optim.Adam(net.parameters(), lr=lower_lr_bound*1.15, weight_decay=0.0001)
+optimizer = optim.Adam(net.parameters(), lr=lower_lr_bound, weight_decay=0.0001)
 # optimizer = optim.SGD(net.parameters(), lr=lower_lr_bound, weight_decay=0.0001, momentum=0.9)
 # scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=config["scheduler_step_size"], gamma=0.1)
-scheduler = PolynomialLRDecay(optimizer, max_decay_steps=config["num_epochs"], end_learning_rate=upper_lr_bound*0.01, power=2.0)
+# scheduler = PolynomialLRDecay(optimizer, max_decay_steps=config["num_epochs"], end_learning_rate=upper_lr_bound * 0.01,
+#                              power=2.0)
 # scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min')
 sys.stderr.write(f"\nlen(loader) = {len(train_loader)}\n")
-# scheduler = optim.lr_scheduler.CyclicLR(optimizer, base_lr=lower_lr_bound, max_lr=upper_lr_bound, cycle_momentum=False,
-                                        # mode="triangular2", step_size_up=4 * len(train_loader))
+scheduler = optim.lr_scheduler.CyclicLR(optimizer, base_lr=lower_lr_bound*0.01, max_lr=upper_lr_bound*0.01, cycle_momentum=False,
+                                        mode="triangular2", step_size_up=4 * len(train_loader))
 
 # ----------------------------------------------------------------------------------------------------
 # saving the models
@@ -304,6 +305,7 @@ def save_checkpoint(checkpoint, filename=str(model_save_path / train_name) + ".p
     checkpoint["state_dict"] = net.state_dict()
     checkpoint["optimizer_state_dict"] = optimizer.state_dict()
     checkpoint["epoch"].append(epoch)
+    if len(lrs) == 0: lrs.append(optimizer.state_dict()["param_groups"][0]["lr"])
     checkpoint["lr"] = lrs
     checkpoint["batchsize"].append(config["batch_size"])
     checkpoint["loss_values"] = loss_values
@@ -311,7 +313,7 @@ def save_checkpoint(checkpoint, filename=str(model_save_path / train_name) + ".p
     checkpoint["scheduler"] = scheduler.state_dict()
     checkpoint["batch_index"] = batch_index
     checkpoint["running_loss"] = running_loss
-    checkpoint["old_pred"] = old_pred
+
     checkpoint["metric_log"] = metric_log
     torch.save(checkpoint, Path(filename))
 
@@ -321,6 +323,8 @@ def restart_script():
     from subprocess import call
     sys.stderr.write("restarting script ID: {}".format(str(config["track_ID"])))
     VRAM = "9G"
+    if "gruV4" in config["model"]:
+        VRAM = "11G"
     recallParameter = 'qsub -N ' + "id" + str(config["track_ID"]) + "e" + str(epoch) + config[
         "model"] + ' -l nv_mem_free=' + VRAM + ' -v CFG=' + str(
         model_save_path / "train_config.json") + ' train_mixed.sge'
@@ -335,7 +339,6 @@ def evaluate(model, train=False, eval_length=29 * 6, epoch=0, random_start=True)
     metrics = defaultdict(AverageMeter)
     to_PIL = T.ToPILImage()
 
-    old_pred = [None, None]
     dset = YT_Greenscreen(train=train, start_index=batch_index, batch_size=1)
     if random_start:
         start_index = np.random.choice(range(len(dset) - eval_length))
@@ -353,10 +356,8 @@ def evaluate(model, train=False, eval_length=29 * 6, epoch=0, random_start=True)
         if torch.any(video_start.bool()):
             print(video_start)
             model.reset()
-        pred = model(images, old_pred)  # predict
+        pred = model(images)  # predict
         outputs = torch.argmax(pred, dim=1).float()
-        old_pred[0] = old_pred[1]  # oldest at 0 position
-        old_pred[1] = pred.unsqueeze(1).detach()  # newest at 1 position
         # Conversion for metric evaluations
         labels = labels.type(torch.uint8)
         outputs = outputs.type(torch.uint8)
@@ -450,7 +451,7 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
             loss = criterion(pred, labels)
 
         optimizer.zero_grad()
-        # loss.backward()
+        loss.backward()
         optimizer.step()
         running_loss += loss.item() * images.size(0)
 
@@ -462,8 +463,6 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
         scheduler.step()
         lr_step = optimizer.state_dict()["param_groups"][0]["lr"]
         lrs_batch.append(lr_step)
-        print(loss)
-        break
 
     lrs.append(lr_step)
     if epoch % evaluation_steps == 0:

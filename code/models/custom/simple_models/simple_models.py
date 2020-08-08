@@ -262,7 +262,6 @@ class Deeplabv3Plus_lstmV5(nn.Module):
             out, self.hidden = self.lstm(out)
         out = out[0][:, -1, :, :, :]  # <--- not to sure if 0 or -1
         self.hidden = [tuple(state.detach() for state in i) for i in self.hidden]
-        self.hidden = [tuple(state.detach() for state in i) for i in self.hidden]
         self.old_pred[0] = self.old_pred[1]  # oldest at 0 position
         self.old_pred[1] = out.unsqueeze(1).detach()
         return out

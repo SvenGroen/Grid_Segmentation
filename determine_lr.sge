@@ -26,7 +26,7 @@ echo "PWD: "
 echo $PWD
 
 
-setup_file=code/train_mixed.py
+setup_file=code/determine_lr.py
 #setup_file=code/determine_lr.py
 
 env_name=torch

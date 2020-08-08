@@ -28,6 +28,9 @@ from DataLoader.Datasets.Youtube.Youtube_Greenscreen import *
 from DataLoader.Datasets.Youtube.Youtube_Greenscreen_mini import *
 from utils.torch_poly_lr_decay import PolynomialLRDecay
 import math
+from DataLoader.Datasets.Youtube.YT_Greenscreen import *
+
+#https://towardsdatascience.com/adaptive-and-cyclical-learning-rates-using-pytorch-2bf904d18dee
 
 start_time = time.time()
 sys.stderr.write("Starting at: {}\n".format(time.ctime(start_time)))
@@ -74,46 +77,100 @@ if config["model"] == "UNet":
     net = UNet(in_channels=3, out_channels=2, n_class=2, kernel_size=3, padding=1, stride=1)
 elif config["model"] == "Deep+_mobile":
     net = Deeplabv3Plus_base(backbone="mobilenet")  # https://github.com/VainF/DeepLabV3Plus-Pytorch
+    upper_lr_bound = 0.0002
+    lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_lstmV1":
     net = Deeplabv3Plus_lstmV1(backbone="mobilenet")
-elif config["model"] == "Deep_mobile_lstmV2":
-    net = Deeplabv3Plus_lstmV2(backbone="mobilenet")
+    upper_lr_bound = 0.002
+    lower_lr_bound = upper_lr_bound / 6
+elif config["model"] == "Deep_mobile_lstmV2_1":
+    net = Deeplabv3Plus_lstmV2(backbone="mobilenet", activate_3d=False)
+    upper_lr_bound = 0.002
+    lower_lr_bound = upper_lr_bound / 6
+elif config["model"] == "Deep_mobile_lstmV2_2":
+    net = Deeplabv3Plus_lstmV2(backbone="mobilenet", activate_3d=True)
+    upper_lr_bound = 0.002
+    lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_lstmV3":
     net = Deeplabv3Plus_lstmV3(backbone="mobilenet")
+    upper_lr_bound = 0.0022
+    lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_lstmV4":
     net = Deeplabv3Plus_lstmV4(backbone="mobilenet")
+    upper_lr_bound = 0.0021
+    lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_lstmV5_1":
     net = Deeplabv3Plus_lstmV5(backbone="mobilenet", keep_hidden=True)
+    upper_lr_bound = 0.0023
+    lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_lstmV5_2":
     net = Deeplabv3Plus_lstmV5(backbone="mobilenet", keep_hidden=False)
+    upper_lr_bound = 0.001
+    lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_gruV1":
     net = Deeplabv3Plus_gruV1(backbone="mobilenet")
+    upper_lr_bound = 0.00055
+    lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_gruV2":
     net = Deeplabv3Plus_gruV2(backbone="mobilenet")
+    upper_lr_bound = 0.001
+    lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_gruV3":
     net = Deeplabv3Plus_gruV3(backbone="mobilenet")
+    upper_lr_bound = 0.00005
+    lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_mobile_gruV4":
     net = Deeplabv3Plus_gruV4(backbone="mobilenet")
+    upper_lr_bound = 0.00025
+    lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep+_resnet50":
     net = Deeplabv3Plus_base(backbone="resnet50")
+    upper_lr_bound = 0.00055
+    lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_resnet50_lstmV1":
     net = Deeplabv3Plus_lstmV1(backbone="resnet50")
-elif config["model"] == "Deep_resnet50_lstmV2":
-    net = Deeplabv3Plus_lstmV2(backbone="resnet50")
+    upper_lr_bound = 0.002
+    lower_lr_bound = upper_lr_bound / 6
+elif config["model"] == "Deep_resnet50_lstmV2_1":
+    net = Deeplabv3Plus_lstmV2(backbone="resnet50", activate_3d=False)
+    upper_lr_bound = 0.002
+    lower_lr_bound = upper_lr_bound / 6
+elif config["model"] == "Deep_resnet50_lstmV2_2":
+    net = Deeplabv3Plus_lstmV2(backbone="resnet50", activate_3d=True)
+    upper_lr_bound = 0.002
+    lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_resnet50_lstmV3":
     net = Deeplabv3Plus_lstmV3(backbone="resnet50")
+    upper_lr_bound = 0.00055
+    lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_resnet50_lstmV4":
     net = Deeplabv3Plus_lstmV4(backbone="resnet50")
-elif config["model"] == "Deep_resnet50_lstmV5":
-    net = Deeplabv3Plus_lstmV5(backbone="resnet50")
+    upper_lr_bound = 0.00025
+    lower_lr_bound = upper_lr_bound / 6
+elif config["model"] == "Deep_resnet50_lstmV5_1":
+    net = Deeplabv3Plus_lstmV5(backbone="resnet50", keep_hidden=True)
+    upper_lr_bound = 0.0023
+    lower_lr_bound = upper_lr_bound / 6
+elif config["model"] == "Deep_resnet50_lstmV5_2":
+    net = Deeplabv3Plus_lstmV5(backbone="resnet50", keep_hidden=False)
+    upper_lr_bound = 0.001
+    lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_resnet50_gruV1":
     net = Deeplabv3Plus_gruV1(backbone="resnet50")
+    upper_lr_bound = 0.00055
+    lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_resnet50_gruV2":
     net = Deeplabv3Plus_gruV2(backbone="resnet50")
+    upper_lr_bound = 0.001
+    lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_resnet50_gruV3":
     net = Deeplabv3Plus_gruV3(backbone="resnet50")
+    upper_lr_bound = 0.000055
+    lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_resnet50_gruV4":
     net = Deeplabv3Plus_gruV4(backbone="resnet50")
+    upper_lr_bound = 0.00026
+    lower_lr_bound = upper_lr_bound / 6
 elif config["model"] == "Deep_Res101":
     net = Deeplab_Res101()
     norm_ImageNet = False
@@ -152,7 +209,7 @@ norm_ImageNet = False
 start_epoch = 0
 # criterion.to(device)
 
-optimizer = optim.Adam(net.parameters(), lr=config["lr"], weight_decay=0.0001)
+optimizer = optim.Adam(net.parameters(), lr=config["lr"], weight_decay=0)
 # scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=config["scheduler_step_size"], gamma=0.1)
 # scheduler = PolynomialLRDecay(optimizer, max_decay_steps=config["num_epochs"], end_learning_rate=config["lr"]*0.001, power=2.0)
 # scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min')
@@ -164,7 +221,7 @@ end_lr = 1
 
 batch_index = torch.tensor(range(config["batch_size"]))
 # dataset = Youtube_Greenscreen(train=True, start_index=batch_index)
-dataset = Youtube_Greenscreen_mini(start_index=batch_index, batch_size=config["batch_size"])
+dataset = YT_Greenscreen(train=True, start_index=batch_index, batch_size=config["batch_size"])
 train_loader = DataLoader(dataset=dataset, batch_size=config["batch_size"], shuffle=False)
 
 sys.stderr.write("\n dataset length: {}\n".format(len(dataset)))
@@ -187,6 +244,8 @@ lrs = []
 LOAD_POSITION = -1
 print("Trying to load previous Checkpoint ...")
 metric_log = defaultdict(list)
+lr_find_loss = []
+lr_find_lr = []
 try:
     checkpoint = torch.load(str(model_save_path / train_name) + ".pth.tar", map_location=torch.device(device))
     print("=> Loading checkpoint at epoch {}".format(checkpoint["epoch"][LOAD_POSITION]))
@@ -202,6 +261,8 @@ try:
     runtime = checkpoint["runtime"]
     batch_index = checkpoint["batch_index"]
     metric_log = checkpoint["metric_log"]
+    lr_find_loss = checkpoint["lr_find_loss"]
+    lr_find_lr = checkpoint["lr_find_lr"]
 except IOError:
     loss_values = []
     print("=> No previous checkpoint found")
@@ -216,7 +277,8 @@ except IOError:
     checkpoint["scheduler"] = scheduler.state_dict()
     checkpoint["batch_index"] = batch_index
     checkpoint["metric_log"] = metric_log
-
+    checkpoint["lr_find_loss"] = lr_find_loss
+    checkpoint["lr_find_lr"] =lr_find_lr
 # Start training
 
 print("--- Learning parameters: ---")
@@ -264,8 +326,9 @@ def save_checkpoint(checkpoint, filename=str(model_save_path / train_name) + ".p
     checkpoint["scheduler"] = scheduler.state_dict()
     checkpoint["batch_index"] = batch_index
     checkpoint["running_loss"] = running_loss
-    checkpoint["old_pred"] = old_pred
     checkpoint["metric_log"] = metric_log
+    checkpoint["lr_find_loss"] = lr_find_loss
+    checkpoint["lr_find_lr"] = lr_find_lr
     torch.save(checkpoint, Path(filename))
 
 
@@ -276,7 +339,7 @@ def restart_script():
     VRAM = "9G"
     recallParameter = 'qsub -N ' + "id" + str(config["track_ID"]) + "e" + str(epoch) + config[
         "model"] + ' -l nv_mem_free=' + VRAM + ' -v CFG=' + str(
-        model_save_path / "train_config.json") + ' train_mixed.sge'
+        model_save_path / "train_config.json") + ' determine_lr.sge'
     call(recallParameter, shell=True)
 
 
@@ -288,7 +351,6 @@ def evaluate(model, train=False, eval_length=29 * 6, epoch=0, random_start=True)
     metrics = defaultdict(AverageMeter)
     to_PIL = T.ToPILImage()
 
-    old_pred = [None, None]
     dset = Youtube_Greenscreen(train=train)
     if random_start:
         start_index = np.random.choice(range(len(dset) - eval_length))
@@ -302,11 +364,9 @@ def evaluate(model, train=False, eval_length=29 * 6, epoch=0, random_start=True)
                               (1536, 270))
     for i, batch in enumerate(loader):
         sys.stderr.write("\nEvaluating\n")
-        idx, (images, labels) = batch
-        pred = model(images, old_pred)  # predict
+        idx, video_start, (images, labels) = batch
+        pred = model(images)  # predict
         outputs = torch.argmax(pred, dim=1).float()
-        old_pred[0] = old_pred[1]  # oldest at 0 position
-        old_pred[1] = pred.unsqueeze(1).detach()  # newest at 1 position
         # Conversion for metric evaluations
         labels = labels.type(torch.uint8)
         outputs = outputs.type(torch.uint8)
@@ -363,12 +423,11 @@ dataset.set_start_index(checkpoint["batch_index"])  # continue training at datas
 epoch_start = time.time()
 sys.stderr.write("\nEpoch starting at: {}".format(time.ctime(epoch_start)))
 
-lr_find_loss = []
-lr_find_lr = []
+
+
 min_lr = 99
 
 for epoch in tqdm(range(start_epoch, config["num_epochs"])):
-    old_pred = [None, None]
     for param_group in optimizer.param_groups:
         lr = param_group['lr']
     lrs.append(lr)
@@ -391,7 +450,7 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
             break
 
         # no restart, continue training
-        idx, (images, labels) = batch
+        idx, video_start, (images, labels) = batch
         sys.stderr.write(f"\nCurrent epoch:{epoch}; \t current batch_idx: {idx}\n")
 
         # check if end of batch is reached
@@ -403,7 +462,7 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
                 break
         else:
             sys.stderr.write(f"\nIndex: {idx}; Length is not equal\n")
-        pred = net(images, old_pred)
+        pred = net(images)
         if config["loss"] == "Boundary":
             mask = metrics.make_one_hot(labels.unsqueeze(1), C=2)
             loss = criterion(pred, labels, mask)
@@ -414,8 +473,6 @@ for epoch in tqdm(range(start_epoch, config["num_epochs"])):
         loss.backward()
         optimizer.step()
         running_loss += loss.item() * images.size(0)
-        old_pred[0] = old_pred[1]  # oldest at 0 position
-        old_pred[1] = pred.unsqueeze(1).detach()  # newest at 1 position
         # (detach so no error is thrown due to multiple backpropagations)
         batch_index = idx
         time_tmp.append(time.time() - batch_start_time)  # meassure time passed

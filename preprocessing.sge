@@ -4,11 +4,7 @@
 #$ -l cuda=2
 #$ -l nv_mem_free=3.8G
 #$ -pe default 4
-#$ -l hostname=!*picture*
-#$ -l hostname=!*cippy19*
-#$ -l hostname=!*cippy21*
-#$ -l hostname=!*cippy25*
-#$ -l hostname=!*cippy12*
+#$ -l hostname=*voxel*
 #$ -N log_prep 
 #$ -l cuda=1
 
@@ -28,9 +24,10 @@ echo "Start"
 echo ""
 
 #setup_file=code/preprocessing/rgb_preprocess_02.py
-#setup_file=code/preprocessing/Vid2Img_preprocess.py
-setup_file=code/preprocessing/YT_preprocess.py
+setup_file=code/preprocessing/Vid2Img_preprocess.py
+#setup_file=code/preprocessing/YT_preprocess.py
 env_name=torch
+
 #Scratch_wd_21 is a variable that stores the path to my scratch folder in which i installed anaconda
 export SCRATCH_WD_21="/net/projects/scratch/summer/valid_until_31_January_2021/sgroen"
 # create the pythonpath variable based on the location of where my anaconda is installed

@@ -56,7 +56,7 @@ class YT_Greenscreen(data.Dataset):
 
         self.train = train
         self.mode = "train" if train else "test"
-        with open("data/Images/YT_mini_4sec/" + self.mode + "/out_log.json", "r") as json_file:
+        with open("data/Images/YT_4sec/" + self.mode + "/out_log.json", "r") as json_file:
             self.data = json.load(json_file)
         self.start_index = start_index if isinstance(start_index, int) else start_index[0].item()
         self.seed = random.randint(-999, 999)  # makes sure the transformations are applied equally
@@ -76,7 +76,6 @@ class YT_Greenscreen(data.Dataset):
             self.start_index = idx[0].item()
 
     def __getitem__(self, idx):
-
         idx = idx + self.start_index
         if idx >= self.__len__():
             return 0, False, (0, 0)
@@ -90,7 +89,7 @@ class YT_Greenscreen(data.Dataset):
         random.seed(self.seed)
         inp = self.transform(img)
         random.seed(self.seed)
-        lbl = self.transform(lbl, label=True).squeeze(0)
+        lbl = (self.transform(lbl, label=True)).squeeze(0)
 
         if torch.cuda.is_available():
             return idx, video_start, (inp.cuda(), lbl.round().long().cuda())
@@ -125,20 +124,25 @@ class Segmentation_transform:
     def __init__(self, seed):
         self.seed = seed
         self.angle = 0
-        self.translate = (0,0)
+        self.translate = (0, 0)
         self.shear = random.randint(-7, 7)
         self.scale = 1
         self.hflip = random.randint(0, 1)
         self.brightness = random.choice([0.6, 0.8, 1.2, 1.4])
         self.random_apply()
+        self.apply_transform = True
+
+    def deactivate_transform(self):
+        self.apply_transform = False
 
     def __call__(self, img, label=False):
-        random.seed(self.seed)
-        if self.hflip:
-            img = TF.hflip(img=img)
-        img = TF.affine(img=img, angle=self.angle, translate=self.translate, shear=self.shear, scale=self.scale)
-        if not label:
-            img = TF.adjust_brightness(img=img, brightness_factor=self.brightness)
+        if self.apply_transform:
+            random.seed(self.seed)
+            if self.hflip:
+                img = TF.hflip(img=img)
+            img = TF.affine(img=img, angle=self.angle, translate=self.translate, shear=self.shear, scale=self.scale)
+            if not label:
+                img = TF.adjust_brightness(img=img, brightness_factor=self.brightness)
         img = TF.to_tensor(img)
         return img
 

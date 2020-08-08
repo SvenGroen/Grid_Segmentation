@@ -4,7 +4,7 @@
 #$ -l cuda=1
 #$ -l mem=4G
 #$ -l nv_mem_free=9G
-#$ -l hostname=!*cippy*
+#$ -l hostname=*vector*
 #$ -l h_rt=00:51:00
 #$ -o /dev/null"
 #$ -m n
